@@ -3,6 +3,7 @@ title: portfolio
 author: Brendan
 date: '2020-11-01'
 slug: portfolio
+draft: false
 categories: []
 tags: []
 bibliography: ["references.bib"]
@@ -37,7 +38,7 @@ We need to get the data
 list.files("student_data")
 ```
 
-data set description: [https://archive.ics.uci.edu/ml/datasets/student+performance#](https://archive.ics.uci.edu/ml/datasets/student+performance#) or [here]()
+data set description: [https://archive.ics.uci.edu/ml/datasets/student+performance#](https://archive.ics.uci.edu/ml/datasets/student+performance#) or [here](/description/)
 
 
 # References
