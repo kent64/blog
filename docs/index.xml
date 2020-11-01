@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Blog</title>
+    <title>blog</title>
     <link>https://kent64.github.io/blog/</link>
-    <description>Recent content on Blog</description>
+    <description>Recent content on blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Sat, 31 Oct 2020 21:49:57 -0700</lastBuildDate><atom:link href="https://kent64.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
@@ -22,7 +22,8 @@
       <pubDate>Sat, 31 Oct 2020 00:00:00 +0000</pubDate>
       
       <guid>https://kent64.github.io/blog/about/</guid>
-      <description>Hi, I&amp;rsquo;m Brendan and apparently I write blogs about data science and hopefully other stuff.</description>
+      <description>Hi, I&amp;rsquo;m Brendan and apparently I write blogs about data science and hopefully other stuff.
+Thanks to https://github.com/jrutheiser/hugo-lithium-theme for the Hugo theme.</description>
     </item>
     
   </channel>
