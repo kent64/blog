@@ -17,6 +17,17 @@
     </item>
     
     <item>
+      <title>portfolio</title>
+      <link>https://kent64.github.io/blog/2020/11/01/portfolio/</link>
+      <pubDate>Sun, 01 Nov 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://kent64.github.io/blog/2020/11/01/portfolio/</guid>
+      <description>1 Introduction 2 Get started References   1 Introduction We explore a student exam performance data set.
+This data set is from a paper by P.Cortez and A. Silva entitled “Using Data Mining to Predict Secondary School Student Performance”. (Cortez and Silva 2008)
+  Student Name: B Kent  Student Number: cxxxxxxxx  Programme Code: TU060  Version R: R version 4.0.3 (2020-10-10)  R packages:      2 Get started We need to get the data</description>
+    </item>
+    
+    <item>
       <title>About</title>
       <link>https://kent64.github.io/blog/about/</link>
       <pubDate>Sat, 31 Oct 2020 00:00:00 +0000</pubDate>
@@ -24,6 +35,15 @@
       <guid>https://kent64.github.io/blog/about/</guid>
       <description>Hi, I&amp;rsquo;m Brendan and apparently I write blogs about data science and hopefully other stuff.
 Thanks to https://github.com/jrutheiser/hugo-lithium-theme for the Hugo theme.</description>
+    </item>
+    
+    <item>
+      <title>Description</title>
+      <link>https://kent64.github.io/blog/description/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://kent64.github.io/blog/description/</guid>
+      <description>body{ /* Normal */ font-size: 10px; } code.r{ /* Code block */ font-size: 10px; } pre { /* Code block - determines code spacing between lines */ font-size: 10px; }  Handy copy of the data description # Attributes for both student-mat.csv (Math course) and student-por.csv (Portuguese language course) datasets: 1 school - student&amp;#39;s school (binary: &amp;quot;GP&amp;quot; - Gabriel Pereira or &amp;quot;MS&amp;quot; - Mousinho da Silveira) 2 sex - student&amp;#39;s sex (binary: &amp;quot;F&amp;quot; - female or &amp;quot;M&amp;quot; - male) 3 age - student&amp;#39;s age (numeric: from 15 to 22) 4 address - student&amp;#39;s home address type (binary: &amp;quot;U&amp;quot; - urban or &amp;quot;R&amp;quot; - rural) 5 famsize - family size (binary: &amp;quot;LE3&amp;quot; - less or equal to 3 or &amp;quot;GT3&amp;quot; - greater than 3) 6 Pstatus - parent&amp;#39;s cohabitation status (binary: &amp;quot;T&amp;quot; - living together or &amp;quot;A&amp;quot; - apart) 7 Medu - mother&amp;#39;s education (numeric: 0 - none, 1 - primary education (4th grade), 2 – 5th to 9th grade, 3 – secondary education or 4 – higher education) 8 Fedu - father&amp;#39;s education (numeric: 0 - none, 1 - primary education (4th grade), 2 – 5th to 9th grade, 3 – secondary education or 4 – higher education) 9 Mjob - mother&amp;#39;s job (nominal: &amp;quot;teacher&amp;quot;, &amp;quot;health&amp;quot; care related, civil &amp;quot;services&amp;quot; (e.</description>
     </item>
     
   </channel>

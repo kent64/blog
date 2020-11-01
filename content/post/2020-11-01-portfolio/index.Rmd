@@ -1,0 +1,43 @@
+---
+title: portfolio
+author: Brendan
+date: '2020-11-01'
+slug: portfolio
+categories: []
+tags: []
+bibliography: ["references.bib"]
+biblio-style: "apalike"
+link-citations: true
+output:
+  blogdown::html_page:
+      number_sections: true
+      toc: TRUE
+---
+
+
+# Introduction
+
+We explore a student exam performance data set. 
+
+This data set is from a paper by P.Cortez and A. Silva entitled "Using  Data  Mining  to  Predict  Secondary  School  Student  Performance". [@cortez2008using]
+
+ |
+------------- | -------------
+Student Name: | B Kent
+Student Number: | cxxxxxxxx
+Programme Code: | TU060
+Version R: | R version 4.0.3 (2020-10-10)
+R packages: | 
+
+# Get started
+We need to get the data
+```{r}
+# download.file(url="https://archive.ics.uci.edu/ml/machine-learning-databases/00320/student.zip", destfile="student.zip")
+# unzip("student.zip",exdir = "student_data")
+list.files("student_data")
+```
+
+data set description: [https://archive.ics.uci.edu/ml/datasets/student+performance#](https://archive.ics.uci.edu/ml/datasets/student+performance#) or [here]()
+
+
+# References

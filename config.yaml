@@ -13,8 +13,8 @@ disableKinds:
   - section
   - '404'
 permalinks:
-  page: /:title/
-  post: /:year/:month/:day/:title/
+  page: /:slug/
+  post: /:year/:month/:day/:slug/
 menu:
   main:
     - name: About

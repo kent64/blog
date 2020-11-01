@@ -1,0 +1,73 @@
+---
+title: portfolio
+author: Brendan
+date: '2020-11-01'
+slug: portfolio
+categories: []
+tags: []
+bibliography: ["references.bib"]
+biblio-style: "apalike"
+link-citations: true
+output:
+  blogdown::html_page:
+      number_sections: true
+      toc: TRUE
+---
+
+<link href="index_files/anchor-sections/anchor-sections.css" rel="stylesheet" />
+<script src="index_files/anchor-sections/anchor-sections.js"></script>
+
+<div id="TOC">
+<ul>
+<li><a href="#introduction"><span class="toc-section-number">1</span> Introduction</a></li>
+<li><a href="#get-started"><span class="toc-section-number">2</span> Get started</a></li>
+<li><a href="#references">References</a></li>
+</ul>
+</div>
+
+<div id="introduction" class="section level1">
+<h1><span class="header-section-number">1</span> Introduction</h1>
+<p>We explore a student exam performance data set.</p>
+<p>This data set is from a paper by P.Cortez and A. Silva entitled “Using Data Mining to Predict Secondary School Student Performance”. <span class="citation">(Cortez and Silva <a href="#ref-cortez2008using" role="doc-biblioref">2008</a>)</span></p>
+<table>
+<tbody>
+<tr class="odd">
+<td>Student Name:</td>
+<td>B Kent</td>
+</tr>
+<tr class="even">
+<td>Student Number:</td>
+<td>cxxxxxxxx</td>
+</tr>
+<tr class="odd">
+<td>Programme Code:</td>
+<td>TU060</td>
+</tr>
+<tr class="even">
+<td>Version R:</td>
+<td>R version 4.0.3 (2020-10-10)</td>
+</tr>
+<tr class="odd">
+<td>R packages:</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="get-started" class="section level1">
+<h1><span class="header-section-number">2</span> Get started</h1>
+<p>We need to get the data</p>
+<pre class="r"><code># download.file(url=&quot;https://archive.ics.uci.edu/ml/machine-learning-databases/00320/student.zip&quot;, destfile=&quot;student.zip&quot;)
+# unzip(&quot;student.zip&quot;,exdir = &quot;student_data&quot;)
+list.files(&quot;student_data&quot;)</code></pre>
+<pre><code>## [1] &quot;student-mat.csv&quot; &quot;student-merge.R&quot; &quot;student-por.csv&quot; &quot;student.txt&quot;</code></pre>
+<p>data set description: <a href="https://archive.ics.uci.edu/ml/datasets/student+performance#">https://archive.ics.uci.edu/ml/datasets/student+performance#</a> or <a href="">here</a></p>
+</div>
+<div id="references" class="section level1 unnumbered">
+<h1>References</h1>
+<div id="refs" class="references">
+<div id="ref-cortez2008using">
+<p>Cortez, Paulo, and Alice Maria Gonçalves Silva. 2008. “Using Data Mining to Predict Secondary School Student Performance.”</p>
+</div>
+</div>
+</div>
