@@ -17,14 +17,13 @@
     </item>
     
     <item>
-      <title>portfolio</title>
-      <link>https://kent64.github.io/blog/2020/11/01/portfolio/</link>
+      <title>Secondary School Student Performance</title>
+      <link>https://kent64.github.io/blog/2020/11/01/sssperformance/</link>
       <pubDate>Sun, 01 Nov 2020 00:00:00 +0000</pubDate>
       
-      <guid>https://kent64.github.io/blog/2020/11/01/portfolio/</guid>
-      <description>1 Introduction 2 Get started References   1 Introduction We explore a student exam performance data set.
-This data set is from a paper by P.Cortez and A. Silva entitled “Using Data Mining to Predict Secondary School Student Performance”. (Cortez and Silva 2008)
-  Student Name: B Kent  Student Number: cxxxxxxxx  Programme Code: TU060  Version R: R version 4.0.3 (2020-10-10)  R packages:      2 Get started We need to get the data</description>
+      <guid>https://kent64.github.io/blog/2020/11/01/sssperformance/</guid>
+      <description>1 Introduction 2 Prepare 3 Get started 3.1 Population vs Sample 3.2 How to infer from a sample to a population  4 Explore 5 Analysis 6 Model 7 Report 8 Using R References   1 Introduction  2 Prepare We explore a student exam performance data set.
+This data set is from a paper by P.Cortez and A. Silva entitled “Using Data Mining to Predict Secondary School Student Performance”.</description>
     </item>
     
     <item>

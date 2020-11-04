@@ -27,11 +27,26 @@ a {
   outline: none;
 }
 
-code {
+/* code {
+  padding: 1em;
   max-width: 100%;
   overflow: auto;
   display: block;
+  background: #f9f9f9;
+} */
+/* code */
+pre {
+  border: 1px solid #ddd;
+  box-shadow: 5px 5px 5px #eee;
+  overflow-x: auto;
+  padding: 1em;
+  max-width: 100%;
 }
+code { 
+  background: #f9f9f9; 
+}
+pre code { background: none; }
+
 
 img {
   max-width: 100%;

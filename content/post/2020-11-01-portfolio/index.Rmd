@@ -1,8 +1,8 @@
 ---
-title: portfolio
+title: Secondary School Student Performance 
 author: Brendan
 date: '2020-11-01'
-slug: portfolio
+slug: sssperformance
 draft: false
 categories: []
 tags: []
@@ -17,6 +17,8 @@ output:
 
 
 # Introduction
+
+# Prepare
 
 We explore a student exam performance data set. 
 
@@ -39,6 +41,87 @@ list.files("student_data")
 ```
 
 data set description: [https://archive.ics.uci.edu/ml/datasets/student+performance#](https://archive.ics.uci.edu/ml/datasets/student+performance#) or [here](/blog/description/)
+
+read in the data
+```{r}
+mat=read.table("student_data/student-mat.csv",sep=";",header=TRUE, stringsAsFactors=TRUE)
+por=read.table("student_data/student-por.csv",sep=";",header=TRUE, stringsAsFactors=TRUE)
+
+matpor_data=merge(x=mat,y=por,by=c("school","sex","age","address","famsize","Pstatus","Medu","Fedu","Mjob","Fjob","reason","nursery","internet"))
+nrow(matpor_data)
+```
+
+So we have 382 records in our data set. 
+
+Let's see what variables we have in each record.
+```{r}
+colnames(matpor_data)
+```
+
+## Population vs Sample
+
+We are interested in finding results for the entire population of students that have completed exams in maths and Portuguese in Portugal, but we know that is not possible, so what we have is a sample. We will use this sample to infer things about the population as a whole. 
+
+The numbers used to describe a population are called parameters, whereas for our sample which is a subset of the pollution, we call them statistics. 
+
+Samples are collected because there are easier to contact, less time consuming and less costly. 
+
+We now need to ask ourselves some questions. 
+
+* Does our sample represent the population well?
+* Is our sample biased? 
+
+In order to answer these questions, we need to explore the data. The first thing we know is that the size of the data set is 382. This is not ideal to represent the full population, too small a sample can lead to conclusions which are invalid.
+
+Usually the bigger the sample the more likely it is to reflect the whole population. 
+
+Now to the 2nd question, a biased sample is one which differs from the population from which it is taken. This can happen if the sample is not collected randomly. If the students in this sample were picked, then it would not be a representative sample. 
+There is a limit to this randomness, we have to acknowledge that, looking at the paper[@cortez2008using], we see that data was only collected during one year and only in two public schools. This year and these schools might not represent the population's Portugese school system in other parts of the country and in other years. Doing a quick Google search I can see that these schools are in rural and less dense areas of Portugal. 
+
+<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3194283.005649975!2d-10.17086483750003!3d38.57024409999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd19e50ed36b8271%3A0xa2f44287b70a82c0!2sEscola%20Gabriel%20pereira!5e0!3m2!1sen!2sie!4v1604499877562!5m2!1sen!2sie" width="300" height="450" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
+<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4445653.247860987!2d-10.805082784867597!3d39.909816886764695!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x39781f2296c8dbc3!2sMouzinho%20da%20Silveira%20High%20School!5e0!3m2!1sen!2sie!4v1604501863240!5m2!1sen!2sie" width="300" height="450" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
+
+```{r pressure, echo=FALSE, fig.cap="Population density of Portugal @wikiportmap", out.width = '50%'}
+knitr::include_graphics("https://upload.wikimedia.org/wikipedia/commons/b/b1/Densidade_populacional_por_concelho_-_INE_2001.png")
+```
+
+We can also check the if the sample percentages match what we would imagine for a popluation, for example:
+Let checks the students involved, are both sexes represented  
+counts:
+```{r}
+.Table <- with(matpor_data, table(sex))
+.Table
+```
+Percentages
+```{r}
+round(100*.Table/sum(.Table), 2)
+```
+
+
+To make good decisions to these question, we will calculate some simple statistics for our sample. These statistics we will start to examine in the next section.
+
+## How to infer from a sample to a population
+
+So depending on the variable of interest in the record, we can make small basic models to see if we can infer information about the population from it. The first is mean. First thing we should note is that you can only get a mean from variable which are either interval or Ratio (these types are referred to as numeric in [here](/blog/description/)). The other types types such as Nominal and Ordinal don't have a mean. 
+
+Once we have our mean we need to check the fit of that mean using the sum of the squares, variance and standard deviations. 
+
+Lets take an example to explain, we will look a the Math final Grade scores for the 382 students:
+
+```{r}
+```
+
+
+# Explore
+
+# Analysis
+
+# Model
+
+# Report
+
+# Using R
+
 
 
 # References
