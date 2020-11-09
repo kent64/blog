@@ -52,7 +52,7 @@
 
   <article class="article">
     
-    <span class="article-duration">4 min read</span>
+    <span class="article-duration">14 min read</span>
     
 
     <h1 class="article-title">Secondary School Student Performance</h1>
@@ -72,7 +72,17 @@
 <li><a href="#prepare"><span class="toc-section-number">2</span> Prepare</a></li>
 <li><a href="#get-started"><span class="toc-section-number">3</span> Get started</a><ul>
 <li><a href="#population-vs-sample"><span class="toc-section-number">3.1</span> Population vs Sample</a></li>
-<li><a href="#how-to-infer-from-a-sample-to-a-population"><span class="toc-section-number">3.2</span> How to infer from a sample to a population</a></li>
+<li><a href="#how-to-infer-from-a-sample-to-a-population"><span class="toc-section-number">3.2</span> How to infer from a sample to a population</a><ul>
+<li><a href="#normal-distrubution"><span class="toc-section-number">3.2.1</span> Normal Distrubution</a></li>
+<li><a href="#central-tendency"><span class="toc-section-number">3.2.2</span> Central Tendency</a></li>
+<li><a href="#dispersion"><span class="toc-section-number">3.2.3</span> Dispersion</a></li>
+<li><a href="#confidence-interval"><span class="toc-section-number">3.2.4</span> Confidence interval</a></li>
+<li><a href="#z-score"><span class="toc-section-number">3.2.5</span> Z-score</a></li>
+<li><a href="#skew-and-kurtosis-analysis"><span class="toc-section-number">3.2.6</span> skew and kurtosis analysis</a></li>
+<li><a href="#shapirowilk-test"><span class="toc-section-number">3.2.7</span> Shapiro–Wilk test</a></li>
+<li><a href="#using-normal-distribution-to-find-outliers"><span class="toc-section-number">3.2.8</span> Using Normal Distribution to find outliers</a></li>
+</ul></li>
+<li><a href="#chooing-a-hypothessis-test-for-correlation"><span class="toc-section-number">3.3</span> Chooing a Hypothessis test for Correlation</a></li>
 </ul></li>
 <li><a href="#explore"><span class="toc-section-number">4</span> Explore</a></li>
 <li><a href="#analysis"><span class="toc-section-number">5</span> Analysis</a></li>
@@ -118,37 +128,30 @@
 <div id="get-started" class="section level1">
 <h1><span class="header-section-number">3</span> Get started</h1>
 <p>We need to get the data</p>
-<pre class="r"><code># download.file(url=&quot;https://archive.ics.uci.edu/ml/machine-learning-databases/00320/student.zip&quot;, destfile=&quot;student.zip&quot;)
-# unzip(&quot;student.zip&quot;,exdir = &quot;student_data&quot;)
-list.files(&quot;student_data&quot;)</code></pre>
 <pre><code>## [1] &quot;student-mat.csv&quot; &quot;student-merge.R&quot; &quot;student-por.csv&quot; &quot;student.txt&quot;</code></pre>
 <p>data set description: <a href="https://archive.ics.uci.edu/ml/datasets/student+performance#">https://archive.ics.uci.edu/ml/datasets/student+performance#</a> or <a href="/blog/description/">here</a></p>
 <p>read in the data</p>
-<pre class="r"><code>mat=read.table(&quot;student_data/student-mat.csv&quot;,sep=&quot;;&quot;,header=TRUE, stringsAsFactors=TRUE)
-por=read.table(&quot;student_data/student-por.csv&quot;,sep=&quot;;&quot;,header=TRUE, stringsAsFactors=TRUE)
-
-matpor_data=merge(x=mat,y=por,by=c(&quot;school&quot;,&quot;sex&quot;,&quot;age&quot;,&quot;address&quot;,&quot;famsize&quot;,&quot;Pstatus&quot;,&quot;Medu&quot;,&quot;Fedu&quot;,&quot;Mjob&quot;,&quot;Fjob&quot;,&quot;reason&quot;,&quot;nursery&quot;,&quot;internet&quot;))
-nrow(matpor_data)</code></pre>
-<pre><code>## [1] 382</code></pre>
+<pre><code>[1] 382</code></pre>
 <p>So we have 382 records in our data set.</p>
 <p>Let’s see what variables we have in each record.</p>
-<pre class="r"><code>colnames(matpor_data)</code></pre>
+<pre class="r"><code>colnames(studentdf)</code></pre>
 <pre><code>##  [1] &quot;school&quot;       &quot;sex&quot;          &quot;age&quot;          &quot;address&quot;      &quot;famsize&quot;     
-##  [6] &quot;Pstatus&quot;      &quot;Medu&quot;         &quot;Fedu&quot;         &quot;Mjob&quot;         &quot;Fjob&quot;        
+##  [6] &quot;pstatus&quot;      &quot;medu&quot;         &quot;fedu&quot;         &quot;mjob&quot;         &quot;fjob&quot;        
 ## [11] &quot;reason&quot;       &quot;nursery&quot;      &quot;internet&quot;     &quot;guardian.x&quot;   &quot;traveltime.x&quot;
 ## [16] &quot;studytime.x&quot;  &quot;failures.x&quot;   &quot;schoolsup.x&quot;  &quot;famsup.x&quot;     &quot;paid.x&quot;      
 ## [21] &quot;activities.x&quot; &quot;higher.x&quot;     &quot;romantic.x&quot;   &quot;famrel.x&quot;     &quot;freetime.x&quot;  
-## [26] &quot;goout.x&quot;      &quot;Dalc.x&quot;       &quot;Walc.x&quot;       &quot;health.x&quot;     &quot;absences.x&quot;  
-## [31] &quot;G1.x&quot;         &quot;G2.x&quot;         &quot;G3.x&quot;         &quot;guardian.y&quot;   &quot;traveltime.y&quot;
+## [26] &quot;goout.x&quot;      &quot;dalc.x&quot;       &quot;walc.x&quot;       &quot;health.x&quot;     &quot;absences.x&quot;  
+## [31] &quot;g1.x&quot;         &quot;g2.x&quot;         &quot;g3.x&quot;         &quot;guardian.y&quot;   &quot;traveltime.y&quot;
 ## [36] &quot;studytime.y&quot;  &quot;failures.y&quot;   &quot;schoolsup.y&quot;  &quot;famsup.y&quot;     &quot;paid.y&quot;      
 ## [41] &quot;activities.y&quot; &quot;higher.y&quot;     &quot;romantic.y&quot;   &quot;famrel.y&quot;     &quot;freetime.y&quot;  
-## [46] &quot;goout.y&quot;      &quot;Dalc.y&quot;       &quot;Walc.y&quot;       &quot;health.y&quot;     &quot;absences.y&quot;  
-## [51] &quot;G1.y&quot;         &quot;G2.y&quot;         &quot;G3.y&quot;</code></pre>
+## [46] &quot;goout.y&quot;      &quot;dalc.y&quot;       &quot;walc.y&quot;       &quot;health.y&quot;     &quot;absences.y&quot;  
+## [51] &quot;g1.y&quot;         &quot;g2.y&quot;         &quot;g3.y&quot;</code></pre>
 <div id="population-vs-sample" class="section level2">
 <h2><span class="header-section-number">3.1</span> Population vs Sample</h2>
 <p>We are interested in finding results for the entire population of students that have completed exams in maths and Portuguese in Portugal, but we know that is not possible, so what we have is a sample. We will use this sample to infer things about the population as a whole.</p>
 <p>The numbers used to describe a population are called parameters, whereas for our sample which is a subset of the pollution, we call them statistics.</p>
 <p>Samples are collected because there are easier to contact, less time consuming and less costly.</p>
+<p>However taking samples as shortcut to finding out answers about a population is always prone to sampling error.</p>
 <p>We now need to ask ourselves some questions.</p>
 <ul>
 <li>Does our sample represent the population well?</li>
@@ -160,9 +163,9 @@ nrow(matpor_data)</code></pre>
 There is a limit to this randomness, we have to acknowledge that, looking at the paper<span class="citation">(Cortez and Silva <a href="#ref-cortez2008using" role="doc-biblioref">2008</a>)</span>, we see that data was only collected during one year and only in two public schools. This year and these schools might not represent the population’s Portugese school system in other parts of the country and in other years. Doing a quick Google search I can see that these schools are in rural and less dense areas of Portugal.</p>
 <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3194283.005649975!2d-10.17086483750003!3d38.57024409999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd19e50ed36b8271%3A0xa2f44287b70a82c0!2sEscola%20Gabriel%20pereira!5e0!3m2!1sen!2sie!4v1604499877562!5m2!1sen!2sie" width="300" height="450" frameborder="0" style="border:0;" allowfullscreen aria-hidden="false" tabindex="0">
 </iframe>
-<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4445653.247860987!2d-10.805082784867597!3d39.909816886764695!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x39781f2296c8dbc3!2sMouzinho%20da%20Silveira%20High%20School!5e0!3m2!1sen!2sie!4v1604501863240!5m2!1sen!2sie" width="300" height="450" frameborder="0" style="border:0;" allowfullscreen aria-hidden="false" tabindex="0">
+<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4445653.247860987!2d-10.805082784867597!3d39.909816886764695!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x39781f2296c8dbc3!2sMouzinho%20da%20Silveira%20High%20School!5e0!3m2!1sen!2sie!4v1604501863240!5m2!1sen!2sie" width="300" height="450" frameborder="0" style="border:0;" allowfullscreen aria-hidden="true" tabindex="0">
 </iframe>
-<div class="figure"><span id="fig:pressure"></span>
+<div class="figure"><span id="fig:unnamed-chunk-4"></span>
 <img src="https://upload.wikimedia.org/wikipedia/commons/b/b1/Densidade_populacional_por_concelho_-_INE_2001.png" alt="Population density of Portugal @wikiportmap" width="50%" />
 <p class="caption">
 Figure 3.1: Population density of Portugal <span class="citation">(“Wikipedia” <a href="#ref-wikiportmap" role="doc-biblioref">2020</a>)</span>
@@ -171,23 +174,460 @@ Figure 3.1: Population density of Portugal <span class="citation">(“Wikipedia�
 <p>We can also check the if the sample percentages match what we would imagine for a popluation, for example:
 Let checks the students involved, are both sexes represented<br />
 counts:</p>
-<pre class="r"><code>.Table &lt;- with(matpor_data, table(sex))
-.Table</code></pre>
 <pre><code>## sex
 ##   F   M 
 ## 198 184</code></pre>
 <p>Percentages</p>
-<pre class="r"><code>round(100*.Table/sum(.Table), 2)</code></pre>
 <pre><code>## sex
 ##     F     M 
 ## 51.83 48.17</code></pre>
-<p>To make good decisions to these question, we will calculate some simple statistics for our sample. These statistics we will start to examine in the next section.</p>
+<p>To make good decisions to these questions, we will calculate some simple statistics for our sample. These statistics we will start to examine in the next section.</p>
 </div>
 <div id="how-to-infer-from-a-sample-to-a-population" class="section level2">
 <h2><span class="header-section-number">3.2</span> How to infer from a sample to a population</h2>
-<p>So depending on the variable of interest in the record, we can make small basic models to see if we can infer information about the population from it. The first is mean. First thing we should note is that you can only get a mean from variable which are either interval or Ratio (these types are referred to as numeric in <a href="/blog/description/">here</a>). The other types types such as Nominal and Ordinal don’t have a mean.</p>
-<p>Once we have our mean we need to check the fit of that mean using the sum of the squares, variance and standard deviations.</p>
-<p>Lets take an example to explain, we will look a the Math final Grade scores for the 382 students:</p>
+<p>In order to show how well a sample is representing a population we need to understand some basics about the variables in our data set.
+Each variable falls into a “level of Measurement” category. There are 4 levels:</p>
+<ul>
+<li>Nominal - or Categorical, can we binary variables such as dead or alive or nominal like Guinness, Harp, Smithwicks.</li>
+<li>Ordinal - kinda of the same as nominal but have an order, like A,B,C for an exam result.</li>
+<li>Interval - have a score and the differences between these scores are equivalent.</li>
+<li>Ratio - same as interval but the score of say 12 must mean twice a score of 6. 0 has a meaning.</li>
+</ul>
+<p>So depending on the variable of interest in the record, we can make small basic models to see if we can infer information about the population from it. The first is mean. First thing we should note is that you can only get a mean from variable which are either interval or Ratio (these types are referred to as numeric in <a href="/blog/description/">here</a>). The other types types such as Nominal and Ordinal don’t have a mean. They use other statistics to describe what we call a Central Tendency. Here is a table to explain:</p>
+<table>
+<thead>
+<tr class="header">
+<th>level</th>
+<th>Mode</th>
+<th>Median</th>
+<th>Mean</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Nominal</td>
+<td>yes</td>
+<td>no</td>
+<td>no</td>
+</tr>
+<tr class="even">
+<td>Ordinal</td>
+<td>yes</td>
+<td>yes</td>
+<td>no</td>
+</tr>
+<tr class="odd">
+<td>Interval</td>
+<td>yes</td>
+<td>yes</td>
+<td>yes</td>
+</tr>
+<tr class="even">
+<td>Ratio</td>
+<td>yes</td>
+<td>yes</td>
+<td>yes</td>
+</tr>
+</tbody>
+</table>
+<p>The best measure of Central Tendency is Mean if it is available for that level. If not, then median and if not median then mode. However whether to choose mean or median depends on another term called “skew”. If a variable has skew then median may be better than mode.</p>
+<p>To explain these levels, we will use examples in our data set.</p>
+<p>Nominal in student data set “reason”</p>
+<pre><code>11 reason - reason to choose this school (nominal: close to &quot;home&quot;, school &quot;reputation&quot;, &quot;course&quot; preference or &quot;other&quot;)</code></pre>
+<p>Interval in the student data set “g3”</p>
+<pre><code>32 G3 - final grade (numeric: from 0 to 20, output target)</code></pre>
+<div id="normal-distrubution" class="section level3">
+<h3><span class="header-section-number">3.2.1</span> Normal Distrubution</h3>
+<p>We would like to find a variable which has a normal distribution, because we can use parametric tests on this variable. This is ideal when we want to make inference from our sample to our population. These parametric tests are more powerful because they use all values a variable has. Let’s check if grade results fits the bill for us.</p>
+Finally we get to draw a chart. First the humble scatter plot:
+<div class="figure"><span id="fig:unnamed-chunk-7"></span>
+<img src="index_files/figure-html/unnamed-chunk-7-1.png" alt="G3 - final grade unsorted" width="672" />
+<p class="caption">
+Figure 3.2: G3 - final grade unsorted
+</p>
+</div>
+Or if we sort the grades in ascending order.
+<div class="figure"><span id="fig:unnamed-chunk-8"></span>
+<img src="index_files/figure-html/unnamed-chunk-8-1.png" alt="G3 - final grade sorted" width="672" />
+<p class="caption">
+Figure 3.3: G3 - final grade sorted
+</p>
+</div>
+<p>We can see here that there are grade marked as 0. We don’t know if that means the student didn’t do the exam or they got 0 after attempting it. That’s 10.21 % of the data.</p>
+To understand skew we need to starting visualizing the data. We do this by plotting what is known as a frequency distribution or histogram.<br />
+
+<div class="figure"><span id="fig:unnamed-chunk-9"></span>
+<img src="index_files/figure-html/unnamed-chunk-9-1.png" alt="G3 - final grade histogram" width="672" />
+<p class="caption">
+Figure 3.4: G3 - final grade histogram
+</p>
+</div>
+<p>From the Frequency distribution chart we can say that the zeros are outliers here, as we said above. WHy? because we expect the distribution for grade results to be normal, to match what we call a <a href="https://www.mathsisfun.com/data/standard-normal-distribution.html">Normal Distrbtion</a>. All normal distributions are symmetric and have bell-shaped density curves with a single peak. This histogram above is bimodal because of the zeros. We will remove those now, for all grade results.</p>
+<p>These zeros which we find the grade results could also be a result of missing data.
+and now again we check the histogram</p>
+<pre><code>## Warning: Removed 39 rows containing non-finite values (stat_bin).</code></pre>
+<div class="figure"><span id="fig:unnamed-chunk-11"></span>
+<img src="index_files/figure-html/unnamed-chunk-11-1.png" alt="G3 - final grade histogram no zeros" width="672" />
+<p class="caption">
+Figure 3.5: G3 - final grade histogram no zeros
+</p>
+</div>
+<p>This is much better. Let’s check the Central Tendency measure for this variable</p>
+</div>
+<div id="central-tendency" class="section level3">
+<h3><span class="header-section-number">3.2.2</span> Central Tendency</h3>
+<p>For G3 - final grade in maths</p>
+<table>
+<thead>
+<tr class="header">
+<th>stat</th>
+<th>desc</th>
+<th>value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>mean</td>
+<td>average</td>
+<td>11.5685131</td>
+</tr>
+<tr class="even">
+<td>median</td>
+<td>ranked in order of magnitude, find middle</td>
+<td>11</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="dispersion" class="section level3">
+<h3><span class="header-section-number">3.2.3</span> Dispersion</h3>
+<p>For G3 - final grade in maths</p>
+<table>
+<thead>
+<tr class="header">
+<th>stat</th>
+<th>desc</th>
+<th>value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Range</td>
+<td>lowest and highest</td>
+<td>4, 20</td>
+</tr>
+<tr class="even">
+<td>Quantiles</td>
+<td>cut in 1/4ths</td>
+<td>4, 9, 11, 14, 20</td>
+</tr>
+<tr class="odd">
+<td>1st quantile</td>
+<td>1st 1/4</td>
+<td>4</td>
+</tr>
+<tr class="even">
+<td>Interquartile Range</td>
+<td>cut off the 1st 1/4 and last 1/4</td>
+<td>5</td>
+</tr>
+<tr class="odd">
+<td>Variance</td>
+<td>The average of the squared differences from the Mean</td>
+<td>10.772339</td>
+</tr>
+<tr class="even">
+<td>Standard deviation</td>
+<td>the square root of the variance</td>
+<td>3.2821242</td>
+</tr>
+</tbody>
+</table>
+<p>There are two main ways in which a distribution can deviate from normal:</p>
+<ol style="list-style-type: decimal">
+<li>lack of symmetry (called <strong>skew</strong> ) and</li>
+<li>pointyness (called <strong>kurtosis</strong> )</li>
+</ol>
+<p>Like plot the histogram again and add a normal distribution curve using the grade scores:</p>
+<pre><code>## Warning: Removed 39 rows containing non-finite values (stat_bin).</code></pre>
+<div class="figure"><span id="fig:unnamed-chunk-12"></span>
+<img src="index_files/figure-html/unnamed-chunk-12-1.png" alt="G3 - final grade histogram with normal curve" width="672" />
+<p class="caption">
+Figure 3.6: G3 - final grade histogram with normal curve
+</p>
+</div>
+<p>From a look at this histogram we can say that the Skew is visible. We can see that there is positive skew.
+The kurtosis does not look to be a problem.</p>
+<p>We not need to examine that skew in detail. There is another useful graph that we can inspect to see if a distribution is normal called a
+Q-Q plot (quantile–quantile plot). A quantile is the proportion of cases we find below a certain value.</p>
+<div class="figure"><span id="fig:unnamed-chunk-13"></span>
+<img src="index_files/figure-html/unnamed-chunk-13-1.png" alt="G3 - final grade Q-Q plot" width="672" />
+<p class="caption">
+Figure 3.7: G3 - final grade Q-Q plot
+</p>
+</div>
+<p>The closer the values fall on the diagonal of the plot, the closer the fit we have for a normal distribution.</p>
+<p>We can get values now for Skew and kurtosis. The values of skew and kurtosis should be zero
+in a normal distribution. Positive values of skew indicate a postive skew. Positive values of
+kurtosis indicate a pointy distribution, whereas negative values indicate a flat distribution.</p>
+<p>Generating some summary statistics of the varaible. There are two libraries in R for this:
+using psych::describe :</p>
+<pre class="r"><code>knitr::kable(stack(psych::describe(studentdf$g3.x)))</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="right">values</th>
+<th align="left">ind</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1.0000000</td>
+<td align="left">vars</td>
+</tr>
+<tr class="even">
+<td align="right">343.0000000</td>
+<td align="left">n</td>
+</tr>
+<tr class="odd">
+<td align="right">11.5685131</td>
+<td align="left">mean</td>
+</tr>
+<tr class="even">
+<td align="right">3.2821242</td>
+<td align="left">sd</td>
+</tr>
+<tr class="odd">
+<td align="right">11.0000000</td>
+<td align="left">median</td>
+</tr>
+<tr class="even">
+<td align="right">11.5018182</td>
+<td align="left">trimmed</td>
+</tr>
+<tr class="odd">
+<td align="right">2.9652000</td>
+<td align="left">mad</td>
+</tr>
+<tr class="even">
+<td align="right">4.0000000</td>
+<td align="left">min</td>
+</tr>
+<tr class="odd">
+<td align="right">20.0000000</td>
+<td align="left">max</td>
+</tr>
+<tr class="even">
+<td align="right">16.0000000</td>
+<td align="left">range</td>
+</tr>
+<tr class="odd">
+<td align="right">0.2096557</td>
+<td align="left">skew</td>
+</tr>
+<tr class="even">
+<td align="right">-0.4840774</td>
+<td align="left">kurtosis</td>
+</tr>
+<tr class="odd">
+<td align="right">0.1772180</td>
+<td align="left">se</td>
+</tr>
+</tbody>
+</table>
+<p>using pastecs::stat.desc :</p>
+<pre class="r"><code>options(scipen=999)
+knitr::kable(pastecs::stat.desc(studentdf$g3.x, basic = FALSE, norm = TRUE))</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">x</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">median</td>
+<td align="right">11.0000000</td>
+</tr>
+<tr class="even">
+<td align="left">mean</td>
+<td align="right">11.5685131</td>
+</tr>
+<tr class="odd">
+<td align="left">SE.mean</td>
+<td align="right">0.1772180</td>
+</tr>
+<tr class="even">
+<td align="left">CI.mean.0.95</td>
+<td align="right">0.3485745</td>
+</tr>
+<tr class="odd">
+<td align="left">var</td>
+<td align="right">10.7723390</td>
+</tr>
+<tr class="even">
+<td align="left">std.dev</td>
+<td align="right">3.2821242</td>
+</tr>
+<tr class="odd">
+<td align="left">coef.var</td>
+<td align="right">0.2837118</td>
+</tr>
+<tr class="even">
+<td align="left">skewness</td>
+<td align="right">0.2096557</td>
+</tr>
+<tr class="odd">
+<td align="left">skew.2SE</td>
+<td align="right">0.7960411</td>
+</tr>
+<tr class="even">
+<td align="left">kurtosis</td>
+<td align="right">-0.4840774</td>
+</tr>
+<tr class="odd">
+<td align="left">kurt.2SE</td>
+<td align="right">-0.9216168</td>
+</tr>
+<tr class="even">
+<td align="left">normtest.W</td>
+<td align="right">0.9787651</td>
+</tr>
+<tr class="odd">
+<td align="left">normtest.p</td>
+<td align="right">0.0000598</td>
+</tr>
+</tbody>
+</table>
+<p>We divide the skew statistic by the standard error to get the standardised core for skew and kurtosis
+using semTools::skew :</p>
+<pre class="r"><code>tpskew&lt;-semTools::skew(studentdf$g3.x)
+tpskew</code></pre>
+<pre><code>## skew (g1)        se         z         p 
+## 0.2115020 0.1322600 1.5991380 0.1097899</code></pre>
+<p>and semTools::kurtosis :</p>
+<pre class="r"><code>tpkurt&lt;-semTools::kurtosis(studentdf$g3.x)
+tpkurt</code></pre>
+<pre><code>## Excess Kur (g2)              se               z               p 
+##     -0.45855837      0.26452003     -1.73354877      0.08299818</code></pre>
+<p>Skew and kurtosis are converted to z-scores by dividing by the standard error:</p>
+<pre class="r"><code>tpskew[1]/tpskew[2]</code></pre>
+<pre><code>## skew (g1) 
+##  1.599138</code></pre>
+<pre class="r"><code>tpkurt[1]/tpkurt[2]</code></pre>
+<pre><code>## Excess Kur (g2) 
+##       -1.733549</code></pre>
+<p>Before exploring skew and kurtosis, we need to understand a key term “Confidence interval” and “Z-score”</p>
+</div>
+<div id="confidence-interval" class="section level3">
+<h3><span class="header-section-number">3.2.4</span> Confidence interval</h3>
+<p>In statistics we use confidence intervals to show how sure we are that a value would fall in a range of values.</p>
+<p>The common confidence intervals used are 90%, 95% and 99%. The idea is based on the Normal distribution. To say we are 95% confidence a value will fall into a range of values is the same as saying it will fall inside -1.96 standard deviations and +1.96 standard deviations of the mean. A 90% chance would correspond to 1.645 and a 99% chance would correspond to 2.576 deviations.</p>
+<p>Which confidence interval we decide to use depends on the population variance and also the size of the sample. A wide variance in a population would mean a large confidence interval. Certain industries use different confidence intervals to report their results when they are doing tests to answers questions. These tests usually involves fitting a statistical model to data and testing a prediction. To decide if the model works, they need to know if the result is statistically significant. To do this the confidence intervals are used, if the test result is outside these intervals, or above a certain alpha value (usually 0.05), it unlikely the model is getting the right answer by chance. We will discuss this more later in hypothesis testing.</p>
+</div>
+<div id="z-score" class="section level3">
+<h3><span class="header-section-number">3.2.5</span> Z-score</h3>
+<p>We only need the standard deviation and mean to use Confidence Intervals. To help us understand what are the critical values and their related probabilities. We need to standardize our Normal Distribution. To do this, we use z-scores. A standard Normal distribution has a mean of zero and standard deviation of one. The z-score is a number on the horizontal which corresponds to a number of standard deviations. So a z-score of 3 means that we are 3 standard deviations from the mean to the right. A z-score also comes with a z-score table, we can use this to calculate the area under the standard normal distribution, this area will give us a probability (and of course there is tools in R to help so we never really need to check a table, although could be useful with electricity goes out). If our distribution is normal for a give variable, then these z-score make it real easy to see for each value the probability of getting that value and the distance the value is from the mean.</p>
+<p>The critical values for a 95% confidence is -1.96 or +1.96 as we said above, these are the values in terms of z-score or standard deviations. If we get a z-score higher or lower than this, we know that that value is statistically unlikely.</p>
+<div class="figure"><span id="fig:unnamed-chunk-20"></span>
+<img src="normaldistri.png" alt="Standard Normal Distribution" width="100%" />
+<p class="caption">
+Figure 3.8: Standard Normal Distribution
+</p>
+</div>
+<p>In the diagram above, you can see how a 95% confidence interval relates to a 19.96 z-score. 2.5% of the area is shaded in in blue, twice that on each side is 5% which is 100% - 5%.</p>
+</div>
+<div id="skew-and-kurtosis-analysis" class="section level3">
+<h3><span class="header-section-number">3.2.6</span> skew and kurtosis analysis</h3>
+<p>We would expect the calculation of skew and kurtosis to be at least less than approx absolute 2 (1.96 for a 95% confidence interval at p &lt; .05)
+We see we have quite high values. However our sample size is quite big, Discovery Statistics with R <span class="citation">(<a href="#ref-field2012discovering" role="doc-biblioref">2012</a>)</span> estimates that if we have a sample size of 200 or more, it may be more important to look at the shape of the distribution c and pay less attention to these scores above.</p>
+<p>We can also use do these estimations using pastecs::stat.desc
+Using Skew.2SE from pastecs::stat.desc, which is the skew divided by 2 standard errors.
+We can determine if the skew is significant, skew.2SE is 0.79604109916. To be significant at p &lt; 0.05, this value should be greater than 1.96/2 = 0.98</p>
+<p>and for kurtosis</p>
+<p>Using kurt.2SE from pastecs::stat.desc, which is kurtosis divided by 2 standard errors we have -0.92161679721.
+This is significant for our confidence interval of p &lt; 0.5, because 0.9216168 &gt; 0.98
+But again as said above, visually this kurtosis looks ok, the sample size is big. Discovery Statistics with R <span class="citation">(<a href="#ref-field2012discovering" role="doc-biblioref">2012</a>)</span> suggest that these tests are likely to be significant even when skew and kurtosis are not too different from normal.</p>
+</div>
+<div id="shapirowilk-test" class="section level3">
+<h3><span class="header-section-number">3.2.7</span> Shapiro–Wilk test</h3>
+<p>Another way to check if our variable has a normal distribution is do the Shapiro–Wilk test.
+The null hypotheses here is that the data is normally distributed.</p>
+<pre class="r"><code>shapiro.test(studentdf$g3.x)</code></pre>
+<pre><code>## 
+##  Shapiro-Wilk normality test
+## 
+## data:  studentdf$g3.x
+## W = 0.97877, p-value = 0.00005978</code></pre>
+<p>The test result shows the test statistic and the p-value. A p-value less from 0.05 would suggest the data is not normal.
+Our result with p &lt; 0.01 would suggest the data is deviates significantly from a normal distribution.</p>
+<p>The test results, W = 0.97 and p &lt; 0.01 show the data is significantly non-normal. However we need to take into account the large sample size and the histograms plotted above. A test result like this does not mean the effect is zero. The effect is this case is that the data is normal. This is not helpful for us here.</p>
+</div>
+<div id="using-normal-distribution-to-find-outliers" class="section level3">
+<h3><span class="header-section-number">3.2.8</span> Using Normal Distribution to find outliers</h3>
+<p>Now by calculating the percentage of standardized scores for the variable itself that are outside our acceptable range
+we can see how far they are away from being normal.
+Calculate the percentage of standardised scores that are greater than 1.96</p>
+<pre class="r"><code>ztpcoiss&lt;- abs(scale(studentdf$g3.x))
+
+FSA::perc(as.numeric(ztpcoiss), 1.96, &quot;gt&quot;)</code></pre>
+<pre><code>## [1] 4.081633</code></pre>
+<pre class="r"><code>FSA::perc(as.numeric(ztpcoiss), 2.58, &quot;gt&quot;)</code></pre>
+<pre><code>## [1] 0</code></pre>
+<pre class="r"><code>FSA::perc(as.numeric(ztpcoiss), 3.29, &quot;gt&quot;)</code></pre>
+<pre><code>## [1] 0</code></pre>
+<p>So 4% of our data lies outside 1.96 standard deviations of the mean or outside the 95% confidence range.
+0% are outside of the 99% confidence interval and of course that means also 0% of our data lies outside the 99.9% confidence interval.</p>
+<p>95% of our data is within the acceptable range, so we can treat the data as normal. 😌</p>
+<p>Since our sample size is larger than 80, a case is an outlier if it’s standard score is +/- 3.29. So we have no outliers. HOwever at the moment we are ignoring missing data, that’s eh values we made NA earlier.</p>
+<div id="g3-grades-summary" class="section level4">
+<h4><span class="header-section-number">3.2.8.1</span> G3 Grades Summary</h4>
+<table>
+<thead>
+<tr class="header">
+<th>Heuristic</th>
+<th>value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Standarised score of skew</td>
+<td>1.599138</td>
+</tr>
+<tr class="even">
+<td>Standarised score of kurtosis</td>
+<td>-1.733549</td>
+</tr>
+<tr class="odd">
+<td>Standarised score of variables</td>
+<td>4.1 % outside +/- 1.96</td>
+</tr>
+<tr class="even">
+<td>Standarised score of variables</td>
+<td>0% outside +/- 3.29 (no outliers)</td>
+</tr>
+<tr class="odd">
+<td>Currently ignoring missing data.</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="chooing-a-hypothessis-test-for-correlation" class="section level2">
+<h2><span class="header-section-number">3.3</span> Chooing a Hypothessis test for Correlation</h2>
+<p>Parametric or non parametric
+pearson for correlation</p>
+<p>non para:
+spearson kendall
+kendall more reilable</p>
+<p>Which can I use to compare?</p>
+<!-- 5.3. Assumptions of parametric data -->
+<!-- alpha 0.05 fo education grades have an error -->
+<!-- ok to use this -->
+<!-- but in medical testing, more regigroous, 0.05 -->
 </div>
 </div>
 <div id="explore" class="section level1">
@@ -210,6 +650,9 @@ counts:</p>
 <div id="refs" class="references">
 <div id="ref-cortez2008using">
 <p>Cortez, Paulo, and Alice Maria Gonçalves Silva. 2008. “Using Data Mining to Predict Secondary School Student Performance.”</p>
+</div>
+<div id="ref-field2012discovering">
+<p>Field, A., J. Miles, and Z. Field. 2012. <em>Discovering Statistics Using R</em>. SAGE Publications. <a href="https://books.google.ie/books?id=wd2K2zC3swIC">https://books.google.ie/books?id=wd2K2zC3swIC</a>.</p>
 </div>
 <div id="ref-wikiportmap">
 <p>“Wikipedia.” 2020. Website. <a href="https://en.wikipedia.org/wiki/Portugal">https://en.wikipedia.org/wiki/Portugal</a>.</p>

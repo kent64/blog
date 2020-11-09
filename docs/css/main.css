@@ -41,12 +41,17 @@ pre {
   overflow-x: auto;
   padding: 1em;
   max-width: 100%;
+  background: #cbe7c5; 
 }
 code { 
   background: #f9f9f9; 
 }
-pre code { background: none; }
-
+pre code { 
+  background: none; 
+}
+.r { 
+  background:#e5e5e5; 
+}
 
 img {
   max-width: 100%;
@@ -272,6 +277,25 @@ img {
   top: 6px;
   margin-left: 2px;
 }
+.flat-table {
+  display: block;
+  -webkit-font-smoothing: antialiased;
+  font-size: 100%;
+  overflow: auto;
+  width: auto;
+}
+  th {
+    background-color: rgb(112, 196, 105);
+    color: white;
+    font-weight: normal;
+    padding: 5px 5px;
+    text-align: center;
+  }
+  td {
+    background-color: rgb(238, 238, 238);
+    color: rgb(111, 111, 111);
+    padding: 5px 5px;
+  }
 
 @media (min-width: 600px) {
   .header {
