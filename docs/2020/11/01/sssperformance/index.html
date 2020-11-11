@@ -73,14 +73,15 @@
 <li><a href="#get-started"><span class="toc-section-number">3</span> Get started</a><ul>
 <li><a href="#population-vs-sample"><span class="toc-section-number">3.1</span> Population vs Sample</a></li>
 <li><a href="#how-to-infer-from-a-sample-to-a-population"><span class="toc-section-number">3.2</span> How to infer from a sample to a population</a><ul>
-<li><a href="#central-tendency"><span class="toc-section-number">3.2.1</span> Central Tendency</a></li>
-<li><a href="#dispersion"><span class="toc-section-number">3.2.2</span> Dispersion</a></li>
-<li><a href="#confidence-interval"><span class="toc-section-number">3.2.3</span> Confidence interval</a></li>
-<li><a href="#z-score"><span class="toc-section-number">3.2.4</span> Z-score</a></li>
-<li><a href="#skew-and-kurtosis-analysis"><span class="toc-section-number">3.2.5</span> skew and kurtosis analysis</a></li>
-<li><a href="#hypothesis-testing"><span class="toc-section-number">3.2.6</span> Hypothesis Testing</a></li>
-<li><a href="#shapirowilk-test"><span class="toc-section-number">3.2.7</span> Shapiro–Wilk test</a></li>
-<li><a href="#using-normal-distribution-to-find-outliers"><span class="toc-section-number">3.2.8</span> Using Normal Distribution to find outliers</a></li>
+<li><a href="#normal-distrubution"><span class="toc-section-number">3.2.1</span> Normal Distrubution</a></li>
+<li><a href="#central-tendency"><span class="toc-section-number">3.2.2</span> Central Tendency</a></li>
+<li><a href="#dispersion"><span class="toc-section-number">3.2.3</span> Dispersion</a></li>
+<li><a href="#confidence-interval"><span class="toc-section-number">3.2.4</span> Confidence interval</a></li>
+<li><a href="#z-score"><span class="toc-section-number">3.2.5</span> Z-score</a></li>
+<li><a href="#skew-and-kurtosis-analysis"><span class="toc-section-number">3.2.6</span> skew and kurtosis analysis</a></li>
+<li><a href="#hypothesis-testing"><span class="toc-section-number">3.2.7</span> Hypothesis Testing</a></li>
+<li><a href="#shapirowilk-test"><span class="toc-section-number">3.2.8</span> Shapiro–Wilk test</a></li>
+<li><a href="#using-normal-distribution-to-find-outliers"><span class="toc-section-number">3.2.9</span> Using Normal Distribution to find outliers</a></li>
 </ul></li>
 <li><a href="#missing-data"><span class="toc-section-number">3.3</span> Missing Data</a></li>
 <li><a href="#more"><span class="toc-section-number">3.4</span> More</a></li>
@@ -266,8 +267,9 @@ studentdf$studytime.x = factor(studentdf$studytime.x,levels=c(1:4),labels = c(&q
 studentdf$studytime.y = factor(studentdf$studytime.y,levels=c(1:4),labels = c(&quot;1 - &lt;2 hours&quot;,&quot;2 - 2 to 5 hours&quot;, &quot;3 - 5 to 10 hours&quot;,&quot;4 - &gt;10 hours&quot;), ordered=T)
 t &lt;- studentdf %&gt;% count(medu)
 ggplot(t, aes(x=&quot;&quot;,y=n, fill=medu)) + geom_bar(width = 1, stat = &quot;identity&quot;)</code></pre>
-<p><img src="index_files/figure-html/unnamed-chunk-7-1.png" width="672" />
-### Normal Distrubution</p>
+<p><img src="index_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<div id="normal-distrubution" class="section level3">
+<h3><span class="header-section-number">3.2.1</span> Normal Distrubution</h3>
 <p>We would like to find a variable which has a normal distribution, because we can use parametric tests on this variable. This is ideal when we want to make inference from our sample to our population. These parametric tests are more powerful because they use all values a variable has. Let’s check if grade results fits the bill for us.</p>
 Finally we get to draw a chart. First the humble scatter plot:
 <div class="figure"><span id="fig:unnamed-chunk-8"></span>
@@ -302,8 +304,9 @@ Figure 3.5: G3 - final grade histogram no zeros
 </p>
 </div>
 <p>This is much better. Let’s check the Central Tendency measure for this variable</p>
+</div>
 <div id="central-tendency" class="section level3">
-<h3><span class="header-section-number">3.2.1</span> Central Tendency</h3>
+<h3><span class="header-section-number">3.2.2</span> Central Tendency</h3>
 <p>For G3 - final grade in maths</p>
 <table>
 <thead>
@@ -328,7 +331,7 @@ Figure 3.5: G3 - final grade histogram no zeros
 </table>
 </div>
 <div id="dispersion" class="section level3">
-<h3><span class="header-section-number">3.2.2</span> Dispersion</h3>
+<h3><span class="header-section-number">3.2.3</span> Dispersion</h3>
 <p>For G3 - final grade in maths</p>
 <table>
 <thead>
@@ -549,13 +552,13 @@ tpkurt</code></pre>
 <p>Before exploring skew and kurtosis, we need to understand a key term “Confidence interval” and “Z-score”</p>
 </div>
 <div id="confidence-interval" class="section level3">
-<h3><span class="header-section-number">3.2.3</span> Confidence interval</h3>
+<h3><span class="header-section-number">3.2.4</span> Confidence interval</h3>
 <p>In statistics we use confidence intervals to show how sure we are that a value would fall in a range of values.</p>
 <p>The common confidence intervals used are 90%, 95% and 99%. The idea is based on the Normal distribution. To say we are 95% confidence a value will fall into a range of values is the same as saying it will fall inside -1.96 standard deviations and +1.96 standard deviations of the mean. A 90% chance would correspond to 1.645 and a 99% chance would correspond to 2.576 deviations.</p>
 <p>Which confidence interval we decide to use depends on the population variance and also the size of the sample. A wide variance in a population would mean a large confidence interval. Certain industries use different confidence intervals to report their results when they are doing tests to answers questions. These tests usually involves fitting a statistical model to data and testing a prediction. To decide if the model works, they need to know if the result is statistically significant. To do this the confidence intervals are used, if the test result is outside these intervals, or above a certain alpha value (usually 0.05), it unlikely the model is getting the right answer by chance. We will discuss this more later in hypothesis testing.</p>
 </div>
 <div id="z-score" class="section level3">
-<h3><span class="header-section-number">3.2.4</span> Z-score</h3>
+<h3><span class="header-section-number">3.2.5</span> Z-score</h3>
 <p>We only need the standard deviation and mean to use Confidence Intervals. To help us understand what are the critical values and their related probabilities. We need to standardize our Normal Distribution. To do this, we use z-scores. A standard Normal distribution has a mean of zero and standard deviation of one. The z-score is a number on the horizontal which corresponds to a number of standard deviations. So a z-score of 3 means that we are 3 standard deviations from the mean to the right. A z-score also comes with a z-score table, we can use this to calculate the area under the standard normal distribution, this area will give us a probability (and of course there is tools in R to help so we never really need to check a table, although could be useful with electricity goes out). If our distribution is normal for a give variable, then these z-score make it real easy to see for each value the probability of getting that value and the distance the value is from the mean.</p>
 <p>The critical values for a 95% confidence is -1.96 or +1.96 as we said above, these are the values in terms of z-score or standard deviations. If we get a z-score higher or lower than this, we know that that value is statistically unlikely.</p>
 <div class="figure"><span id="fig:unnamed-chunk-21"></span>
@@ -568,7 +571,7 @@ Figure 3.8: Standard Normal Distribution
 <p>In green you can also see the area which are divided by the -1.96 z-score. These areas are the probabilities or p-values of a event falling into that z-score range.</p>
 </div>
 <div id="skew-and-kurtosis-analysis" class="section level3">
-<h3><span class="header-section-number">3.2.5</span> skew and kurtosis analysis</h3>
+<h3><span class="header-section-number">3.2.6</span> skew and kurtosis analysis</h3>
 We would expect the calculation of skew and kurtosis to be at least less than approx absolute 2 (1.96 for a 95% confidence interval at p &lt; .05). So what we need to do is check the z-score of skew.
 Above we calculated a skew of 1.599138. Putting that on our magnificent Standard Normal Distribution figure below. We see it falls in the p &lt; 0.05 range.
 <div class="figure"><span id="fig:unnamed-chunk-22"></span>
@@ -589,7 +592,7 @@ Using skew.2SE from pastecs::stat.desc</p>
 <p>In other to show another way of testing for skew and kurtosis which is called the Shapiro–Wilk test, we need an introduction to Hypothesis testing.</p>
 </div>
 <div id="hypothesis-testing" class="section level3">
-<h3><span class="header-section-number">3.2.6</span> Hypothesis Testing</h3>
+<h3><span class="header-section-number">3.2.7</span> Hypothesis Testing</h3>
 <p>We make a hypothesis about the outcome of some experiment. We can make an example from our data set, let’s say students who have more “studytime” achieve better grades (“g3”).</p>
 <p>We do the experiment. It’s already done, because we have the data.</p>
 <p><strong>H</strong><sub><strong>0</strong></sub>: The <strong>Null hypothesis</strong> would be that “studytime” has no affect on grade results, that “studytime” makes no difference.</p>
@@ -605,7 +608,7 @@ Using skew.2SE from pastecs::stat.desc</p>
 <p>The strength of the evidence of is determined by the measureed p-value of the test and by the region of acceptance.</p>
 </div>
 <div id="shapirowilk-test" class="section level3">
-<h3><span class="header-section-number">3.2.7</span> Shapiro–Wilk test</h3>
+<h3><span class="header-section-number">3.2.8</span> Shapiro–Wilk test</h3>
 <p>Another way to check if our variable has a normal distribution is do the Shapiro–Wilk test.</p>
 <p>This test compares the mean and standard deviation of our data to a normally distributed set of scores withe h same mean and standard deviation.</p>
 <pre class="r"><code>shapiro.test(studentdf$g3.x)</code></pre>
@@ -621,7 +624,7 @@ The alternative hypothesis is that it’s a normal distribution.</p>
 <p>A p-value of less than 0.05 is statistically significant here, so if our p-value was greater than 0.05. We could not reject <strong>H</strong><sub><strong>0</strong></sub>.</p>
 </div>
 <div id="using-normal-distribution-to-find-outliers" class="section level3">
-<h3><span class="header-section-number">3.2.8</span> Using Normal Distribution to find outliers</h3>
+<h3><span class="header-section-number">3.2.9</span> Using Normal Distribution to find outliers</h3>
 <p>Now by calculating the percentage of standardized scores for the variable itself that are outside our acceptable range
 we can see how far they are away from being normal.
 Calculate the percentage of standardised scores that are greater than 1.96</p>
@@ -638,7 +641,7 @@ FSA::perc(as.numeric(ztpcoiss), 1.96, &quot;gt&quot;)</code></pre>
 <p>95% of our data is within the acceptable range, so we can treat the data as normal. 😌</p>
 <p>Since our sample size is larger than 80, a case is an outlier if it’s standard score is +/- 3.29. So we have no outliers. HOwever at the moment we are ignoring missing data, that’s eh values we made NA earlier.</p>
 <div id="g3-grades-summary" class="section level4">
-<h4><span class="header-section-number">3.2.8.1</span> G3 Grades Summary</h4>
+<h4><span class="header-section-number">3.2.9.1</span> G3 Grades Summary</h4>
 <table>
 <thead>
 <tr class="header">

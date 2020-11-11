@@ -149,6 +149,7 @@ studentdf$studytime.y = factor(studentdf$studytime.y,levels=c(1:4),labels = c("1
 t <- studentdf %>% count(medu)
 ggplot(t, aes(x="",y=n, fill=medu)) + geom_bar(width = 1, stat = "identity")
 ```
+
 ### Normal Distrubution  
 
 We would like to find a variable which has a normal distribution, because we can use parametric tests on this variable. This is ideal when we want to make inference from our sample to our population. These parametric tests are more powerful because they use all values a variable has. Let's check if grade results fits the bill for us. 
