@@ -22,7 +22,7 @@
       <pubDate>Sun, 01 Nov 2020 00:00:00 +0000</pubDate>
       
       <guid>https://kent64.github.io/blog/2020/11/01/sssperformance/</guid>
-      <description>1 Introduction 2 Prepare 3 Get started 3.1 Population vs Sample 3.2 How to infer from a sample to a population 3.2.1 Normal Distrubution 3.2.2 Central Tendency 3.2.3 Dispersion 3.2.4 Confidence interval 3.2.5 Z-score 3.2.6 skew and kurtosis analysis 3.2.7 Shapiro–Wilk test 3.2.8 Using Normal Distribution to find outliers  3.3 Chooing a Hypothessis test for Correlation  4 Explore 5 Analysis 6 Model 7 Report 8 Using R References   1 Introduction  2 Prepare We explore a student exam performance data set.</description>
+      <description>1 Introduction 2 Prepare 3 Get started 3.1 Population vs Sample 3.2 How to infer from a sample to a population 3.2.1 Central Tendency 3.2.2 Dispersion 3.2.3 Confidence interval 3.2.4 Z-score 3.2.5 skew and kurtosis analysis 3.2.6 Hypothesis Testing 3.2.7 Shapiro–Wilk test 3.2.8 Using Normal Distribution to find outliers  3.3 Missing Data 3.4 More  4 Explore 5 Analysis 6 Model 7 Report 8 Using R References   1 Introduction  2 Prepare We explore a student exam performance data set.</description>
     </item>
     
     <item>
@@ -31,7 +31,7 @@
       <pubDate>Sat, 31 Oct 2020 00:00:00 +0000</pubDate>
       
       <guid>https://kent64.github.io/blog/about/</guid>
-      <description>Hi, I&amp;rsquo;m Brendan and apparently I write blogs about data science and hopefully other stuff.
+      <description>Hi, I&amp;rsquo;m Brendan and I write blogs about data science and hopefully other stuff.
 Thanks to https://github.com/jrutheiser/hugo-lithium-theme for the Hugo theme.</description>
     </item>
     
