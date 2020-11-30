@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Secondary School Student Performance</title>
+    <meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+
+
+<link rel="stylesheet" href="/blog/assets/css/bootstrap.min.css"/>
+<link rel="stylesheet" href="/blog/assets/css/layouts/main.css"/>
+<link rel="stylesheet" href="/blog/assets/css/style.css"/>
+<link rel="stylesheet" href="/blog/assets/css/navigators/navbar.css"/>
+
+
+<link href="https://fonts.googleapis.com/css2?family=Muli:wght@300;400;500;600" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" />
+
+
+<link rel="icon" type="image/png" href="/blog/images/site/favicon.png" />
+
+
+<link rel="stylesheet" href="/blog/assets/css/style.css"/>
+
+    
+<meta name="description" content="Secondary School Student Performance" />
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/atom-one-dark.min.css"
+/>
+<link rel="stylesheet" href="/blog/assets/css/layouts/single.css"/>
+<link rel="stylesheet" href="/blog/assets/css/navigators/sidebar.css">
+
+
+    
+    
+      
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-XXXXXXXXX-X', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+    
+  </head>
+
+  <body data-spy="scroll" data-target="#TableOfContents" data-offset="80">
+    <div class="container-fluid bg-dimmed wrapper">
+      
+      
+    
+
+
+  
+
+
+  
+
+
+<nav class="navbar navbar-expand-xl top-navbar final-navbar shadow">
+  <div class="container">
+      <button class="navbar-toggler navbar-light" id="sidebar-toggler" type="button" onclick="toggleSidebar()">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <a class="navbar-brand" href="/blog">
+      <img src="/blog/images/site/main-logo.png">my ePortfolio</a>
+    <button class="navbar-toggler navbar-light" id="toc-toggler" type="button" onclick="toggleTOC()">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse lang-selector" id="top-nav-items">
+      <ul class="navbar-nav ml-auto">
+      
+      </ul>
+    </div>
+  </div>
+  
+  <img src="/blog/images/site/main-logo.png" class="d-none" id="main-logo">
+  <img src="/blog/images/site/inverted-logo.png" class="d-none" id="inverted-logo">
+</nav>
+
+
+
+      
+      
+  <section class="sidebar-section" id="sidebar-section">
+    
+  </section>
+
+
+      
+      
+<section class="content-section" id="content-section">
+  <div class="content">
+    <div class="container p-0 read-area">
+      
+      <div class="hero-area col-sm-12" id="hero-area" style='background-image: url(/blog/assets/images/default-hero.jpg);'>
+      </div>
+
+      
+      <div class="page-content">
+        <div class="author-profile ml-auto align-self-lg-center">
+          <img class="rounded-circle" src='/blog/images/author/brendan.png'/>
+          <h5 class="author-name">Brendan</h5>
+          <p>November 1, 2020</p>
+        </div>
+
+        <div class="title">
+          <h1>Secondary School Student Performance</h1>
+        </div>
+
+        <div class="post-content" id="post-content">
+          
+<link href="/blog/posts/sssperformance/index_files/anchor-sections/anchor-sections.css" rel="stylesheet" />
+<script src="/blog/posts/sssperformance/index_files/anchor-sections/anchor-sections.js"></script>
+
+<div id="TOC">
+<ul>
+<li><a href="#introduction"><span class="toc-section-number">1</span> Introduction</a></li>
+<li><a href="#prepare"><span class="toc-section-number">2</span> Prepare</a></li>
+<li><a href="#get-started"><span class="toc-section-number">3</span> Get started</a><ul>
+<li><a href="#population-vs-sample"><span class="toc-section-number">3.1</span> Population vs Sample</a></li>
+<li><a href="#how-to-infer-from-a-sample-to-a-population"><span class="toc-section-number">3.2</span> How to infer from a sample to a population</a><ul>
+<li><a href="#normal-distrubution"><span class="toc-section-number">3.2.1</span> Normal Distrubution</a></li>
+<li><a href="#central-tendency"><span class="toc-section-number">3.2.2</span> Central Tendency</a></li>
+<li><a href="#dispersion"><span class="toc-section-number">3.2.3</span> Dispersion</a></li>
+<li><a href="#confidence-interval"><span class="toc-section-number">3.2.4</span> Confidence interval</a></li>
+<li><a href="#z-score"><span class="toc-section-number">3.2.5</span> Z-score</a></li>
+<li><a href="#skew-and-kurtosis-analysis"><span class="toc-section-number">3.2.6</span> skew and kurtosis analysis</a></li>
+<li><a href="#hypothesis-testing"><span class="toc-section-number">3.2.7</span> Hypothesis Testing</a></li>
+<li><a href="#shapirowilk-test"><span class="toc-section-number">3.2.8</span> Shapiro–Wilk test</a></li>
+<li><a href="#using-normal-distribution-to-find-outliers"><span class="toc-section-number">3.2.9</span> Using Normal Distribution to find outliers</a></li>
+</ul></li>
+<li><a href="#missing-data"><span class="toc-section-number">3.3</span> Missing Data</a></li>
+<li><a href="#more"><span class="toc-section-number">3.4</span> More</a></li>
+</ul></li>
+<li><a href="#explore"><span class="toc-section-number">4</span> Explore</a></li>
+<li><a href="#analysis"><span class="toc-section-number">5</span> Analysis</a></li>
+<li><a href="#model"><span class="toc-section-number">6</span> Model</a></li>
+<li><a href="#report"><span class="toc-section-number">7</span> Report</a></li>
+<li><a href="#using-r"><span class="toc-section-number">8</span> Using R</a></li>
+<li><a href="#references">References</a></li>
+</ul>
+</div>
+
+<div id="introduction" class="section level1">
+<h1><span class="header-section-number">1</span> Introduction</h1>
+</div>
+<div id="prepare" class="section level1">
+<h1><span class="header-section-number">2</span> Prepare</h1>
+<p>We explore a student exam performance data set.</p>
+<p>This data set is from a paper by P.Cortez and A. Silva entitled “Using Data Mining to Predict Secondary School Student Performance”. <span class="citation">(Cortez and Silva <a href="#ref-cortez2008using" role="doc-biblioref">2008</a>)</span></p>
+<table>
+<tbody>
+<tr class="odd">
+<td>Student Name:</td>
+<td>B Kent</td>
+</tr>
+<tr class="even">
+<td>Student Number:</td>
+<td>cxxxxxxxx</td>
+</tr>
+<tr class="odd">
+<td>Programme Code:</td>
+<td>TU060</td>
+</tr>
+<tr class="even">
+<td>Version R:</td>
+<td>R version 4.0.3 (2020-10-10)</td>
+</tr>
+<tr class="odd">
+<td>R packages:</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="get-started" class="section level1">
+<h1><span class="header-section-number">3</span> Get started</h1>
+<p>We need to get the data</p>
+<pre class="r"><code>#download.file(url=&quot;https://archive.ics.uci.edu/ml/machine-learning-databases/00320/student.zip&quot;, destfile=&quot;student.zip&quot;)
+#unzip(&quot;student.zip&quot;,exdir = &quot;studentdf&quot;)
+list.files(&quot;studentdf&quot;)</code></pre>
+<pre><code>## [1] &quot;student-mat.csv&quot; &quot;student-merge.R&quot; &quot;student-por.csv&quot; &quot;student.txt&quot;</code></pre>
+<p>data set description: <a href="https://archive.ics.uci.edu/ml/datasets/student+performance#">https://archive.ics.uci.edu/ml/datasets/student+performance#</a> or <a href="/blog/description/">here</a></p>
+<p>read in the data</p>
+<pre class="r"><code>matdf=read.table(&quot;studentdf/student-mat.csv&quot;,sep=&quot;;&quot;,header=TRUE, stringsAsFactors=TRUE)
+pordf=read.table(&quot;studentdf/student-por.csv&quot;,sep=&quot;;&quot;,header=TRUE, stringsAsFactors=TRUE)
+
+studentdf=merge(x=matdf,y=pordf,by=c(&quot;school&quot;,&quot;sex&quot;,&quot;age&quot;,&quot;address&quot;,&quot;famsize&quot;,&quot;Pstatus&quot;,&quot;Medu&quot;,&quot;Fedu&quot;,&quot;Mjob&quot;,&quot;Fjob&quot;,&quot;reason&quot;,&quot;nursery&quot;,&quot;internet&quot;))
+colnames(studentdf) &lt;- tolower(colnames(studentdf))
+nrow(studentdf)</code></pre>
+<pre><code>[1] 382</code></pre>
+<p>So we have 382 records in our data set.</p>
+<p>Let’s see what variables we have in each record.</p>
+<pre class="r"><code>colnames(studentdf)</code></pre>
+<pre><code>##  [1] &quot;school&quot;       &quot;sex&quot;          &quot;age&quot;          &quot;address&quot;      &quot;famsize&quot;     
+##  [6] &quot;pstatus&quot;      &quot;medu&quot;         &quot;fedu&quot;         &quot;mjob&quot;         &quot;fjob&quot;        
+## [11] &quot;reason&quot;       &quot;nursery&quot;      &quot;internet&quot;     &quot;guardian.x&quot;   &quot;traveltime.x&quot;
+## [16] &quot;studytime.x&quot;  &quot;failures.x&quot;   &quot;schoolsup.x&quot;  &quot;famsup.x&quot;     &quot;paid.x&quot;      
+## [21] &quot;activities.x&quot; &quot;higher.x&quot;     &quot;romantic.x&quot;   &quot;famrel.x&quot;     &quot;freetime.x&quot;  
+## [26] &quot;goout.x&quot;      &quot;dalc.x&quot;       &quot;walc.x&quot;       &quot;health.x&quot;     &quot;absences.x&quot;  
+## [31] &quot;g1.x&quot;         &quot;g2.x&quot;         &quot;g3.x&quot;         &quot;guardian.y&quot;   &quot;traveltime.y&quot;
+## [36] &quot;studytime.y&quot;  &quot;failures.y&quot;   &quot;schoolsup.y&quot;  &quot;famsup.y&quot;     &quot;paid.y&quot;      
+## [41] &quot;activities.y&quot; &quot;higher.y&quot;     &quot;romantic.y&quot;   &quot;famrel.y&quot;     &quot;freetime.y&quot;  
+## [46] &quot;goout.y&quot;      &quot;dalc.y&quot;       &quot;walc.y&quot;       &quot;health.y&quot;     &quot;absences.y&quot;  
+## [51] &quot;g1.y&quot;         &quot;g2.y&quot;         &quot;g3.y&quot;</code></pre>
+<div id="population-vs-sample" class="section level2">
+<h2><span class="header-section-number">3.1</span> Population vs Sample</h2>
+<p>We are interested in finding results for the entire population of students that have completed exams in maths and Portuguese in Portugal, but we know that is not possible, so what we have is a sample. We will use this sample to infer things about the population as a whole.</p>
+<p>The numbers used to describe a population are called parameters, whereas for our sample which is a subset of the pollution, we call them statistics.</p>
+<p>Samples are collected because there are easier to contact, less time consuming and less costly.</p>
+<p>However taking samples as shortcut to finding out answers about a population is always prone to sampling error.</p>
+<p>We now need to ask ourselves some questions.</p>
+<ul>
+<li>Does our sample represent the population well?</li>
+<li>Is our sample biased?</li>
+</ul>
+<p>In order to answer these questions, we need to explore the data. The first thing we know is that the size of the data set is 382. This is not ideal to represent the full population, too small a sample can lead to conclusions which are invalid.</p>
+<p>Usually the bigger the sample the more likely it is to reflect the whole population.</p>
+<p>Now to the 2nd question, a biased sample is one which differs from the population from which it is taken. This can happen if the sample is not collected randomly. If the students in this sample were picked, then it would not be a representative sample.
+There is a limit to this randomness, we have to acknowledge that, looking at the paper<span class="citation">(Cortez and Silva <a href="#ref-cortez2008using" role="doc-biblioref">2008</a>)</span>, we see that data was only collected during one year and only in two public schools. This year and these schools might not represent the population’s Portugese school system in other parts of the country and in other years. Doing a quick Google search I can see that these schools are in rural and less dense areas of Portugal.</p>
+<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3194283.005649975!2d-10.17086483750003!3d38.57024409999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd19e50ed36b8271%3A0xa2f44287b70a82c0!2sEscola%20Gabriel%20pereira!5e0!3m2!1sen!2sie!4v1604499877562!5m2!1sen!2sie" width="300" height="450" frameborder="0" style="border:0;" allowfullscreen aria-hidden="false" tabindex="0">
+</iframe>
+<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4445653.247860987!2d-10.805082784867597!3d39.909816886764695!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x39781f2296c8dbc3!2sMouzinho%20da%20Silveira%20High%20School!5e0!3m2!1sen!2sie!4v1604501863240!5m2!1sen!2sie" width="300" height="450" frameborder="0" style="border:0;" allowfullscreen aria-hidden="true" tabindex="0">
+</iframe>
+<div class="figure"><span id="fig:unnamed-chunk-4"></span>
+<img src="https://upload.wikimedia.org/wikipedia/commons/b/b1/Densidade_populacional_por_concelho_-_INE_2001.png" alt="Population density of Portugal @wikiportmap" width="50%" />
+<p class="caption">
+Figure 3.1: Population density of Portugal <span class="citation">(“Wikipedia” <a href="#ref-wikiportmap" role="doc-biblioref">2020</a>)</span>
+</p>
+</div>
+<p>We can also check the if the sample percentages match what we would imagine for a population, for example:
+Let checks the students involved, are both sexes represented<br />
+counts:</p>
+<pre><code>## sex
+##   F   M 
+## 198 184</code></pre>
+<p>Percentages</p>
+<pre><code>## sex
+##     F     M 
+## 51.83 48.17</code></pre>
+<p>It is very important that when choosing a sample that any missing data is also random, that there is not pattern between the variables which are missing.</p>
+<p>To make good decisions to the questions outlined above, we will calculate some simple statistics for our sample. These statistics we will start to examine in the next section.</p>
+</div>
+<div id="how-to-infer-from-a-sample-to-a-population" class="section level2">
+<h2><span class="header-section-number">3.2</span> How to infer from a sample to a population</h2>
+<p>In order to show how well a sample is representing a population we need to understand some basics about the variables in our data set.
+Each variable falls into a “level of Measurement” category. There are 4 levels:</p>
+<ul>
+<li>Nominal - or Categorical, can we binary variables such as dead or alive or nominal like Guinness, Harp, Smithwicks.</li>
+<li>Ordinal - kinda of the same as nominal but have an order, like A,B,C for an exam result.</li>
+<li>Interval - have a score and the differences between these scores are equivalent.</li>
+<li>Ratio - same as interval but the score of say 12 must mean twice a score of 6. 0 has a meaning.</li>
+</ul>
+<p>So depending on the variable of interest in the record, we can make small basic models to see if we can infer information about the population from it. The first is mean. First thing we should note is that you can only get a mean from variable which are either interval or Ratio (these types are referred to as numeric in <a href="/blog/description/">here</a>). The other types types such as Nominal and Ordinal don’t have a mean. They use other statistics to describe what we call a Central Tendency. Here is a table to explain:</p>
+<table>
+<thead>
+<tr class="header">
+<th>level</th>
+<th>Mode</th>
+<th>Median</th>
+<th>Mean</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Nominal</td>
+<td>yes</td>
+<td>no</td>
+<td>no</td>
+</tr>
+<tr class="even">
+<td>Ordinal</td>
+<td>yes</td>
+<td>yes</td>
+<td>no</td>
+</tr>
+<tr class="odd">
+<td>Interval</td>
+<td>yes</td>
+<td>yes</td>
+<td>yes</td>
+</tr>
+<tr class="even">
+<td>Ratio</td>
+<td>yes</td>
+<td>yes</td>
+<td>yes</td>
+</tr>
+</tbody>
+</table>
+<p>The best measure of Central Tendency is Mean if it is available for that level. If not, then median and if not median then mode. However whether to choose mean or median depends on another term called “skew”. If a variable has skew then median may be better than mode.</p>
+<p>To explain these levels, we will use examples in our data set.</p>
+<p>Nominal in student data set “reason”</p>
+<pre><code>11 reason - reason to choose this school (nominal: close to &quot;home&quot;, school &quot;reputation&quot;, &quot;course&quot; preference or &quot;other&quot;)</code></pre>
+<p>Interval in the student data set “g3”</p>
+<pre><code>32 G3 - final grade (numeric: from 0 to 20, output target)</code></pre>
+<p>But first, we have a host of other variables which need the type set in R.</p>
+<pre class="r"><code>library(&quot;dplyr&quot;)</code></pre>
+<pre><code>## 
+## Attaching package: &#39;dplyr&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:stats&#39;:
+## 
+##     filter, lag</code></pre>
+<pre><code>## The following objects are masked from &#39;package:base&#39;:
+## 
+##     intersect, setdiff, setequal, union</code></pre>
+<pre class="r"><code>library(ggplot2) # For creating histograms and plots
+studentdf$medu = factor(studentdf$medu,levels=c(0:4),labels = c(&quot;0 - none&quot;,&quot;1 - primary education (4th grade)&quot;,&quot;2 – 5th to 9th grade&quot;,&quot;3 – secondary education&quot;,&quot;4 – higher education&quot;), ordered=T)
+studentdf$fedu = factor(studentdf$fedu,levels=c(0:4),labels = c(&quot;0 - none&quot;,&quot;1 - primary education (4th grade)&quot;,&quot;2 – 5th to 9th grade&quot;,&quot;3 – secondary education&quot;,&quot;4 – higher education&quot;), ordered=T)
+studentdf$traveltime.x = factor(studentdf$traveltime.x,levels=c(1:4),labels = c(&quot;1 - &lt;15 min&quot;, &quot;2 - 15 to 30 min&quot;, &quot;3 - 30 min. to 1 hour&quot;, &quot;4 - &gt;1 hour&quot;), ordered=T)
+studentdf$traveltime.y = factor(studentdf$traveltime.y,levels=c(1:4),labels = c(&quot;1 - &lt;15 min&quot;, &quot;2 - 15 to 30 min&quot;, &quot;3 - 30 min. to 1 hour&quot;, &quot;4 - &gt;1 hour&quot;), ordered=T)
+studentdf$studytime.x = factor(studentdf$studytime.x,levels=c(1:4),labels = c(&quot;1 - &lt;2 hours&quot;,&quot;2 - 2 to 5 hours&quot;, &quot;3 - 5 to 10 hours&quot;,&quot;4 - &gt;10 hours&quot;), ordered=T)
+studentdf$studytime.y = factor(studentdf$studytime.y,levels=c(1:4),labels = c(&quot;1 - &lt;2 hours&quot;,&quot;2 - 2 to 5 hours&quot;, &quot;3 - 5 to 10 hours&quot;,&quot;4 - &gt;10 hours&quot;), ordered=T)
+t &lt;- studentdf %&gt;% count(medu)
+ggplot(t, aes(x=&quot;&quot;,y=n, fill=medu)) + geom_bar(width = 1, stat = &quot;identity&quot;)</code></pre>
+<p><img src="/blog/posts/sssperformance/index_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<div id="normal-distrubution" class="section level3">
+<h3><span class="header-section-number">3.2.1</span> Normal Distrubution</h3>
+<p>We would like to find a variable which has a normal distribution, because we can use parametric tests on this variable. This is ideal when we want to make inference from our sample to our population. These parametric tests are more powerful because they use all values a variable has. Let’s check if grade results fits the bill for us.</p>
+Finally we get to draw a chart. First the humble scatter plot:
+<div class="figure"><span id="fig:unnamed-chunk-8"></span>
+<img src="/blog/posts/sssperformance/index_files/figure-html/unnamed-chunk-8-1.png" alt="G3 - final grade unsorted" width="672" />
+<p class="caption">
+Figure 3.2: G3 - final grade unsorted
+</p>
+</div>
+Or if we sort the grades in ascending order.
+<div class="figure"><span id="fig:unnamed-chunk-9"></span>
+<img src="/blog/posts/sssperformance/index_files/figure-html/unnamed-chunk-9-1.png" alt="G3 - final grade sorted" width="672" />
+<p class="caption">
+Figure 3.3: G3 - final grade sorted
+</p>
+</div>
+<p>We can see here that there are grade marked as 0. We don’t know if that means the student didn’t do the exam or they got 0 after attempting it. That’s 10.21 % of the data.</p>
+To understand skew we need to starting visualizing the data. We do this by plotting what is known as a frequency distribution or histogram.<br />
+
+<div class="figure"><span id="fig:unnamed-chunk-10"></span>
+<img src="/blog/posts/sssperformance/index_files/figure-html/unnamed-chunk-10-1.png" alt="G3 - final grade histogram" width="672" />
+<p class="caption">
+Figure 3.4: G3 - final grade histogram
+</p>
+</div>
+<p>From the Frequency distribution chart we can say that the zeros are outliers here, as we said above. WHy? because we expect the distribution for grade results to be normal, to match what we call a <a href="https://www.mathsisfun.com/data/standard-normal-distribution.html">Normal Distrbtion</a>. All normal distributions are symmetric and have bell-shaped density curves with a single peak. This histogram above is bimodal because of the zeros. We will remove those now, for all grade results.</p>
+<p>These zeros which we find the grade results could also be a result of missing data.
+and now again we check the histogram</p>
+<div class="figure"><span id="fig:unnamed-chunk-12"></span>
+<img src="/blog/posts/sssperformance/index_files/figure-html/unnamed-chunk-12-1.png" alt="G3 - final grade histogram no zeros" width="672" />
+<p class="caption">
+Figure 3.5: G3 - final grade histogram no zeros
+</p>
+</div>
+<p>This is much better. Let’s check the Central Tendency measure for this variable</p>
+</div>
+<div id="central-tendency" class="section level3">
+<h3><span class="header-section-number">3.2.2</span> Central Tendency</h3>
+<p>For G3 - final grade in maths</p>
+<table>
+<thead>
+<tr class="header">
+<th>stat</th>
+<th>desc</th>
+<th>value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>mean</td>
+<td>average</td>
+<td>11.5685131</td>
+</tr>
+<tr class="even">
+<td>median</td>
+<td>ranked in order of magnitude, find middle</td>
+<td>11</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="dispersion" class="section level3">
+<h3><span class="header-section-number">3.2.3</span> Dispersion</h3>
+<p>For G3 - final grade in maths</p>
+<table>
+<thead>
+<tr class="header">
+<th>stat</th>
+<th>desc</th>
+<th>value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Range</td>
+<td>lowest and highest</td>
+<td>4, 20</td>
+</tr>
+<tr class="even">
+<td>Quantiles</td>
+<td>cut in 1/4ths</td>
+<td>4, 9, 11, 14, 20</td>
+</tr>
+<tr class="odd">
+<td>1st quantile</td>
+<td>1st 1/4</td>
+<td>4</td>
+</tr>
+<tr class="even">
+<td>Interquartile Range</td>
+<td>cut off the 1st 1/4 and last 1/4</td>
+<td>5</td>
+</tr>
+<tr class="odd">
+<td>Variance</td>
+<td>The average of the squared differences from the Mean</td>
+<td>10.772339</td>
+</tr>
+<tr class="even">
+<td>Standard deviation</td>
+<td>the square root of the variance</td>
+<td>3.2821242</td>
+</tr>
+</tbody>
+</table>
+<p>There are two main ways in which a distribution can deviate from normal:</p>
+<ol style="list-style-type: decimal">
+<li>lack of symmetry (called <strong>skew</strong> ) and</li>
+<li>pointyness (called <strong>kurtosis</strong> )</li>
+</ol>
+<p>Like plot the histogram again and add a normal distribution curve using the grade scores:</p>
+<pre><code>## Warning: Removed 39 rows containing non-finite values (stat_bin).</code></pre>
+<div class="figure"><span id="fig:unnamed-chunk-13"></span>
+<img src="/blog/posts/sssperformance/index_files/figure-html/unnamed-chunk-13-1.png" alt="G3 - final grade histogram with normal curve" width="672" />
+<p class="caption">
+Figure 3.6: G3 - final grade histogram with normal curve
+</p>
+</div>
+<p>From a look at this histogram we can say that the Skew is visible. We can see that there is positive skew.
+The kurtosis does not look to be a problem.</p>
+<p>We not need to examine that skew in detail. There is another useful graph that we can inspect to see if a distribution is normal called a
+Q-Q plot (quantile–quantile plot). A quantile is the proportion of cases we find below a certain value.</p>
+<div class="figure"><span id="fig:unnamed-chunk-14"></span>
+<img src="/blog/posts/sssperformance/index_files/figure-html/unnamed-chunk-14-1.png" alt="G3 - final grade Q-Q plot" width="672" />
+<p class="caption">
+Figure 3.7: G3 - final grade Q-Q plot
+</p>
+</div>
+<p>The closer the values fall on the diagonal of the plot, the closer the fit we have for a normal distribution.</p>
+<p>We can get values now for Skew and kurtosis. The values of skew and kurtosis should be zero
+in a normal distribution. Positive values of skew indicate a postive skew. Positive values of
+kurtosis indicate a pointy distribution, whereas negative values indicate a flat distribution.</p>
+<p>Generating some summary statistics of the varaible. There are two libraries in R for this:
+using psych::describe :</p>
+<pre class="r"><code>knitr::kable(stack(psych::describe(studentdf$g3.x)))</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="right">values</th>
+<th align="left">ind</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1.0000000</td>
+<td align="left">vars</td>
+</tr>
+<tr class="even">
+<td align="right">343.0000000</td>
+<td align="left">n</td>
+</tr>
+<tr class="odd">
+<td align="right">11.5685131</td>
+<td align="left">mean</td>
+</tr>
+<tr class="even">
+<td align="right">3.2821242</td>
+<td align="left">sd</td>
+</tr>
+<tr class="odd">
+<td align="right">11.0000000</td>
+<td align="left">median</td>
+</tr>
+<tr class="even">
+<td align="right">11.5018182</td>
+<td align="left">trimmed</td>
+</tr>
+<tr class="odd">
+<td align="right">2.9652000</td>
+<td align="left">mad</td>
+</tr>
+<tr class="even">
+<td align="right">4.0000000</td>
+<td align="left">min</td>
+</tr>
+<tr class="odd">
+<td align="right">20.0000000</td>
+<td align="left">max</td>
+</tr>
+<tr class="even">
+<td align="right">16.0000000</td>
+<td align="left">range</td>
+</tr>
+<tr class="odd">
+<td align="right">0.2096557</td>
+<td align="left">skew</td>
+</tr>
+<tr class="even">
+<td align="right">-0.4840774</td>
+<td align="left">kurtosis</td>
+</tr>
+<tr class="odd">
+<td align="right">0.1772180</td>
+<td align="left">se</td>
+</tr>
+</tbody>
+</table>
+<p>using pastecs::stat.desc :</p>
+<pre class="r"><code>options(scipen=999)
+knitr::kable(pastecs::stat.desc(studentdf$g3.x, basic = FALSE, norm = TRUE))</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">x</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">median</td>
+<td align="right">11.0000000</td>
+</tr>
+<tr class="even">
+<td align="left">mean</td>
+<td align="right">11.5685131</td>
+</tr>
+<tr class="odd">
+<td align="left">SE.mean</td>
+<td align="right">0.1772180</td>
+</tr>
+<tr class="even">
+<td align="left">CI.mean.0.95</td>
+<td align="right">0.3485745</td>
+</tr>
+<tr class="odd">
+<td align="left">var</td>
+<td align="right">10.7723390</td>
+</tr>
+<tr class="even">
+<td align="left">std.dev</td>
+<td align="right">3.2821242</td>
+</tr>
+<tr class="odd">
+<td align="left">coef.var</td>
+<td align="right">0.2837118</td>
+</tr>
+<tr class="even">
+<td align="left">skewness</td>
+<td align="right">0.2096557</td>
+</tr>
+<tr class="odd">
+<td align="left">skew.2SE</td>
+<td align="right">0.7960411</td>
+</tr>
+<tr class="even">
+<td align="left">kurtosis</td>
+<td align="right">-0.4840774</td>
+</tr>
+<tr class="odd">
+<td align="left">kurt.2SE</td>
+<td align="right">-0.9216168</td>
+</tr>
+<tr class="even">
+<td align="left">normtest.W</td>
+<td align="right">0.9787651</td>
+</tr>
+<tr class="odd">
+<td align="left">normtest.p</td>
+<td align="right">0.0000598</td>
+</tr>
+</tbody>
+</table>
+<p>We divide the skew statistic by the standard error to get the standardised core for skew and kurtosis
+using semTools::skew :</p>
+<pre class="r"><code>tpskew&lt;-semTools::skew(studentdf$g3.x)
+tpskew</code></pre>
+<pre><code>## skew (g1)        se         z         p 
+## 0.2115020 0.1322600 1.5991380 0.1097899</code></pre>
+<p>and semTools::kurtosis :</p>
+<pre class="r"><code>tpkurt&lt;-semTools::kurtosis(studentdf$g3.x)
+tpkurt</code></pre>
+<pre><code>## Excess Kur (g2)              se               z               p 
+##     -0.45855837      0.26452003     -1.73354877      0.08299818</code></pre>
+<p>Skew and kurtosis are converted to z-scores by dividing by the standard error:</p>
+<pre class="r"><code>tpskew[1]/tpskew[2]</code></pre>
+<pre><code>## skew (g1) 
+##  1.599138</code></pre>
+<pre class="r"><code>tpkurt[1]/tpkurt[2]</code></pre>
+<pre><code>## Excess Kur (g2) 
+##       -1.733549</code></pre>
+<p>Before exploring skew and kurtosis, we need to understand a key term “Confidence interval” and “Z-score”</p>
+</div>
+<div id="confidence-interval" class="section level3">
+<h3><span class="header-section-number">3.2.4</span> Confidence interval</h3>
+<p>In statistics we use confidence intervals to show how sure we are that a value would fall in a range of values.</p>
+<p>The common confidence intervals used are 90%, 95% and 99%. The idea is based on the Normal distribution. To say we are 95% confidence a value will fall into a range of values is the same as saying it will fall inside -1.96 standard deviations and +1.96 standard deviations of the mean. A 90% chance would correspond to 1.645 and a 99% chance would correspond to 2.576 deviations.</p>
+<p>Which confidence interval we decide to use depends on the population variance and also the size of the sample. A wide variance in a population would mean a large confidence interval. Certain industries use different confidence intervals to report their results when they are doing tests to answers questions. These tests usually involves fitting a statistical model to data and testing a prediction. To decide if the model works, they need to know if the result is statistically significant. To do this the confidence intervals are used, if the test result is outside these intervals, or above a certain alpha value (usually 0.05), it unlikely the model is getting the right answer by chance. We will discuss this more later in hypothesis testing.</p>
+</div>
+<div id="z-score" class="section level3">
+<h3><span class="header-section-number">3.2.5</span> Z-score</h3>
+<p>We only need the standard deviation and mean to use Confidence Intervals. To help us understand what are the critical values and their related probabilities. We need to standardize our Normal Distribution. To do this, we use z-scores. A standard Normal distribution has a mean of zero and standard deviation of one. The z-score is a number on the horizontal which corresponds to a number of standard deviations. So a z-score of 3 means that we are 3 standard deviations from the mean to the right. A z-score also comes with a z-score table, we can use this to calculate the area under the standard normal distribution, this area will give us a probability (and of course there is tools in R to help so we never really need to check a table, although could be useful with electricity goes out). If our distribution is normal for a give variable, then these z-score make it real easy to see for each value the probability of getting that value and the distance the value is from the mean.</p>
+<!-- The significance level is an expression of how rare your results are, under the assumption that the null hypothesis is true. It is usually expressed as a “p-value,” and the lower the p-value, the less likely the results are due purely to chance. -->
+<p>The critical values for a 95% confidence is -1.96 or +1.96 as we said above, these are the values in terms of z-score or standard deviations. If we get a z-score higher or lower than this, we know that that value is statistically unlikely.</p>
+<div class="figure"><span id="fig:unnamed-chunk-21"></span>
+<img src="normaldistri.png" alt="Standard Normal Distribution" width="100%" />
+<p class="caption">
+Figure 3.8: Standard Normal Distribution
+</p>
+</div>
+<p>In the diagram above, you can see how a 95% confidence interval relates to a 19.96 z-score. 2.5% of the area is shaded in in blue, twice that on each side is 5% which is 100% - 5%.</p>
+<p>In green you can also see the area which are divided by the -1.96 z-score. These areas are the probabilities or p-values of a event falling into that z-score range.</p>
+</div>
+<div id="skew-and-kurtosis-analysis" class="section level3">
+<h3><span class="header-section-number">3.2.6</span> skew and kurtosis analysis</h3>
+We would expect the calculation of skew and kurtosis to be at least less than approx absolute 2 (1.96 for a 95% confidence interval at p &lt; .05). So what we need to do is check the z-score of skew.
+Above we calculated a skew of 1.599138. Putting that on our magnificent Standard Normal Distribution figure below. We see it falls in the p &lt; 0.05 range.
+<div class="figure"><span id="fig:unnamed-chunk-22"></span>
+<img src="normaldistri_skew.png" alt="Standard Normal Distribution for skew and kurtosis" width="100%" />
+<p class="caption">
+Figure 3.9: Standard Normal Distribution for skew and kurtosis
+</p>
+</div>
+<p>We also calculated a kurtosis of -1.733549.</p>
+<p>Sometimes a skew and kurtosis maybe outside our confidence range, however Discovery Statistics with R <span class="citation">(<a href="#ref-field2012discovering" role="doc-biblioref">2012</a>)</span> estimates that if we have a sample size of 200 or more, it may be more important to look at the shape of the distribution and pay less attention to these scores above.</p>
+<p>We say the z-value is significant if it is in those blue regions of the figure above. Significant means important and in the case of skew or kurtosis it’s not good if it is very significant.</p>
+<p><em>Another way</em>
+Using skew.2SE from pastecs::stat.desc</p>
+<p>We can determine if the skew is significant also, skew.2SE is 0.79604109916. This statistic is the skew divided by 2 standard errors. For this to be significant. skew.2SE must be greater than ~1 (or 1.96/2 which is 0.98). It’s not.</p>
+<p>Using kurt.2SE from pastecs::stat.desc</p>
+<p>kurtosis divided by 2 standard errors we have -0.92161679721. Again kurtosis is just greater than -1 or we could say the absolute value is less than 1.</p>
+<p><em>Another way</em></p>
+<p>In other to show another way of testing for skew and kurtosis which is called the Shapiro–Wilk test, we need an introduction to Hypothesis testing.</p>
+</div>
+<div id="hypothesis-testing" class="section level3">
+<h3><span class="header-section-number">3.2.7</span> Hypothesis Testing</h3>
+<p>We make a hypothesis about the outcome of some experiment. We can make an example from our data set, let’s say students who have more “studytime” achieve better grades (“g3”).</p>
+<p>We do the experiment. It’s already done, because we have the data.</p>
+<p><strong>H</strong><sub><strong>0</strong></sub>: The <strong>Null hypothesis</strong> would be that “studytime” has no affect on grade results, that “studytime” makes no difference.</p>
+<p><strong>H</strong><sub><strong>1</strong></sub>: The <strong>Alternative hypothesis</strong> would be the hypothesis we made above, that students who have more “studytime” achieve better grades.</p>
+<p>Afterwards…</p>
+<p>For both these hypothesisesesss:</p>
+<p>We can either reject the hypothesis(we were wrong) or fail to reject the hypothesis(we are not completely wrong).</p>
+<p>We would really like to reject the Null hypothesis.</p>
+<p>In order to decide if we reject or fail to reject, we run the data through sometime called a statistical test.</p>
+<p>There are two types of errors which can result form a hypothesis test
+1. type I: when we reject the Null hypothesis when it is true, probability of committing a type I error is called the significance level, also called alpha. alpha for us is usually 0.05. But it’s depends on the area/industry.
+2. type II: when we fail to reject the Null hypothesis when it is false, probability of committing a type I error is called beta. The probability of not committing type II is called the power.</p>
+<p>The strength of the evidence of is determined by the measureed p-value of the test and by the region of acceptance.</p>
+</div>
+<div id="shapirowilk-test" class="section level3">
+<h3><span class="header-section-number">3.2.8</span> Shapiro–Wilk test</h3>
+<p>Another way to check if our variable has a normal distribution is do the Shapiro–Wilk test.</p>
+<p>This test compares the mean and standard deviation of our data to a normally distributed set of scores withe h same mean and standard deviation.</p>
+<pre class="r"><code>shapiro.test(studentdf$g3.x)</code></pre>
+<pre><code>## 
+##  Shapiro-Wilk normality test
+## 
+## data:  studentdf$g3.x
+## W = 0.97877, p-value = 0.00005978</code></pre>
+<p>The test result shows the test statistic and the p-value.</p>
+<p>The Null hypothesis is that there is no normal distribution in this data, it’s just random stuff.
+The alternative hypothesis is that it’s a normal distribution.</p>
+<p>Our result has a very small p-value, so the probability that the Null hypothesis is true is tiny, so we can accept the Alternative.</p>
+<p>A p-value of less than 0.05 is statistically significant here, so if our p-value was greater than 0.05. We could not reject <strong>H</strong><sub><strong>0</strong></sub>.</p>
+</div>
+<div id="using-normal-distribution-to-find-outliers" class="section level3">
+<h3><span class="header-section-number">3.2.9</span> Using Normal Distribution to find outliers</h3>
+<p>Now by calculating the percentage of standardized scores for the variable itself that are outside our acceptable range
+we can see how far they are away from being normal.
+Calculate the percentage of standardised scores that are greater than 1.96</p>
+<pre class="r"><code>ztpcoiss&lt;- abs(scale(studentdf$g3.x))
+
+FSA::perc(as.numeric(ztpcoiss), 1.96, &quot;gt&quot;)</code></pre>
+<pre><code>## [1] 4.081633</code></pre>
+<pre class="r"><code>FSA::perc(as.numeric(ztpcoiss), 2.58, &quot;gt&quot;)</code></pre>
+<pre><code>## [1] 0</code></pre>
+<pre class="r"><code>FSA::perc(as.numeric(ztpcoiss), 3.29, &quot;gt&quot;)</code></pre>
+<pre><code>## [1] 0</code></pre>
+<p>So 4% of our data lies outside 1.96 standard deviations of the mean or outside the 95% confidence range.
+0% are outside of the 99% confidence interval and of course that means also 0% of our data lies outside the 99.9% confidence interval.</p>
+<p>95% of our data is within the acceptable range, so we can treat the data as normal. 😌</p>
+<p>Since our sample size is larger than 80, a case is an outlier if it’s standard score is +/- 3.29. So we have no outliers. HOwever at the moment we are ignoring missing data, that’s eh values we made NA earlier.</p>
+<div id="g3-grades-summary" class="section level4">
+<h4><span class="header-section-number">3.2.9.1</span> G3 Grades Summary</h4>
+<table>
+<thead>
+<tr class="header">
+<th>Heuristic</th>
+<th>value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Standarised score of skew</td>
+<td>1.599138</td>
+</tr>
+<tr class="even">
+<td>Standarised score of kurtosis</td>
+<td>-1.733549</td>
+</tr>
+<tr class="odd">
+<td>Standarised score of variables</td>
+<td>4.1 % outside +/- 1.96</td>
+</tr>
+<tr class="even">
+<td>Standarised score of variables</td>
+<td>0% outside +/- 3.29 (no outliers)</td>
+</tr>
+<tr class="odd">
+<td>Currently ignoring missing data.</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="missing-data" class="section level2">
+<h2><span class="header-section-number">3.3</span> Missing Data</h2>
+<p>Missing data can come as a result of sampling bias or selection bias. Missing data reduces the probability that the test will reject
+<strong>H</strong><sub><strong>0</strong></sub>.</p>
+<p>We can take a quick look at our data set and see if we have many NA values.</p>
+<pre class="r"><code>t &lt;- sapply(studentdf, function(x) sum(is.na(x)))
+t[t&gt;0]</code></pre>
+<pre><code>## g2.x g3.x 
+##   13   39</code></pre>
+<p>It is no surprise here at there is not many NAs. Looking back to <a href="#get-started">Get started</a> we merged the Maths and Portuguese results together using the variables “school”,“sex”,“age”,“address”,“famsize”,“Pstatus”,“Medu”,“Fedu”,“Mjob”,“Fjob”,“reason”,“nursery”,“internet”</p>
+<p>Which means if any of these are missing, we won’t have them in our combined data frame. That means alot of the Portuguese grade data is not contained in the merged data frame.</p>
+<p>Missing data reduces also how well sample represents the population, if we had a lot of missing data, it could also lead to invalid conclusions.</p>
+<p>There are three possible patterns to missing data:</p>
+<ol style="list-style-type: decimal">
+<li>Data missing at random (MAR) - missing data is not random, but not related to other variables</li>
+<li>Data missing completely at random (MCAR) - missing data is random, best scenario!</li>
+<li>Data not missing at random (MNAR) - not random, related to other variables, pretty serious!</li>
+</ol>
+<p>Let us check if any of these patterns are seen in the data. The only variables with missing data are the grade results: g2 and g3 for Maths.</p>
+<pre class="r"><code>library(&quot;dplyr&quot;)
+studentdf %&gt;% filter(is.na(g3.x)) %&gt;% summary()</code></pre>
+<pre><code>##  school  sex         age        address famsize  pstatus
+##  GP:34   F:23   Min.   :15.00   R: 9    GT3:34   A: 2   
+##  MS: 5   M:16   1st Qu.:16.00   U:30    LE3: 5   T:37   
+##                 Median :17.00                           
+##                 Mean   :17.05                           
+##                 3rd Qu.:18.00                           
+##                 Max.   :19.00                           
+##                                                         
+##                                 medu                                   fedu   
+##  0 - none                         : 0   0 - none                         : 0  
+##  1 - primary education (4th grade): 8   1 - primary education (4th grade):13  
+##  2 – 5th to 9th grade             :14   2 – 5th to 9th grade             :10  
+##  3 – secondary education          : 9   3 – secondary education          : 6  
+##  4 – higher education             : 8   4 – higher education             :10  
+##                                                                               
+##                                                                               
+##        mjob          fjob           reason   nursery  internet  guardian.x
+##  at_home : 9   at_home : 3   course    :20   no : 9   no : 7   father: 9  
+##  health  : 2   health  : 0   home      :13   yes:30   yes:32   mother:26  
+##  other   :15   other   :21   other     : 1                     other : 4  
+##  services: 7   services:11   reputation: 5                                
+##  teacher : 6   teacher : 4                                                
+##                                                                           
+##                                                                           
+##                 traveltime.x            studytime.x   failures.x    
+##  1 - &lt;15 min          :22    1 - &lt;2 hours     :13   Min.   :0.0000  
+##  2 - 15 to 30 min     :12    2 - 2 to 5 hours :17   1st Qu.:0.0000  
+##  3 - 30 min. to 1 hour: 4    3 - 5 to 10 hours: 6   Median :1.0000  
+##  4 - &gt;1 hour          : 1    4 - &gt;10 hours    : 3   Mean   :0.9231  
+##                                                     3rd Qu.:1.5000  
+##                                                     Max.   :3.0000  
+##                                                                     
+##  schoolsup.x famsup.x paid.x   activities.x higher.x romantic.x    famrel.x    
+##  no :38      no :14   no :31   no :19       no : 7   no :19     Min.   :1.000  
+##  yes: 1      yes:25   yes: 8   yes:20       yes:32   yes:20     1st Qu.:3.000  
+##                                                                 Median :4.000  
+##                                                                 Mean   :3.795  
+##                                                                 3rd Qu.:5.000  
+##                                                                 Max.   :5.000  
+##                                                                                
+##    freetime.x       goout.x          dalc.x          walc.x     
+##  Min.   :1.000   Min.   :1.000   Min.   :1.000   Min.   :1.000  
+##  1st Qu.:3.000   1st Qu.:2.000   1st Qu.:1.000   1st Qu.:1.000  
+##  Median :3.000   Median :3.000   Median :1.000   Median :1.000  
+##  Mean   :3.103   Mean   :3.128   Mean   :1.333   Mean   :1.821  
+##  3rd Qu.:4.000   3rd Qu.:4.000   3rd Qu.:2.000   3rd Qu.:2.000  
+##  Max.   :5.000   Max.   :5.000   Max.   :3.000   Max.   :5.000  
+##                                                                 
+##     health.x       absences.x      g1.x             g2.x             g3.x    
+##  Min.   :1.000   Min.   :0    Min.   : 4.000   Min.   : 5.000   Min.   : NA  
+##  1st Qu.:2.500   1st Qu.:0    1st Qu.: 6.000   1st Qu.: 5.250   1st Qu.: NA  
+##  Median :4.000   Median :0    Median : 7.000   Median : 7.000   Median : NA  
+##  Mean   :3.641   Mean   :0    Mean   : 7.462   Mean   : 7.115   Mean   :NaN  
+##  3rd Qu.:5.000   3rd Qu.:0    3rd Qu.: 9.000   3rd Qu.: 8.750   3rd Qu.: NA  
+##  Max.   :5.000   Max.   :0    Max.   :12.000   Max.   :10.000   Max.   : NA  
+##                                                NA&#39;s   :13       NA&#39;s   :39   
+##   guardian.y                traveltime.y            studytime.y
+##  father: 9   1 - &lt;15 min          :20    1 - &lt;2 hours     :13  
+##  mother:26   2 - 15 to 30 min     :13    2 - 2 to 5 hours :17  
+##  other : 4   3 - 30 min. to 1 hour: 5    3 - 5 to 10 hours: 6  
+##              4 - &gt;1 hour          : 1    4 - &gt;10 hours    : 3  
+##                                                                
+##                                                                
+##                                                                
+##    failures.y     schoolsup.y famsup.y paid.y   activities.y higher.y
+##  Min.   :0.0000   no :37      no :15   no :38   no :17       no : 7  
+##  1st Qu.:0.0000   yes: 2      yes:24   yes: 1   yes:22       yes:32  
+##  Median :0.0000                                                      
+##  Mean   :0.3333                                                      
+##  3rd Qu.:0.0000                                                      
+##  Max.   :3.0000                                                      
+##                                                                      
+##  romantic.y    famrel.y       freetime.y       goout.y          dalc.y     
+##  no :19     Min.   :1.000   Min.   :1.000   Min.   :1.000   Min.   :1.000  
+##  yes:20     1st Qu.:3.000   1st Qu.:3.000   1st Qu.:2.000   1st Qu.:1.000  
+##             Median :4.000   Median :3.000   Median :3.000   Median :1.000  
+##             Mean   :3.846   Mean   :3.205   Mean   :3.179   Mean   :1.308  
+##             3rd Qu.:5.000   3rd Qu.:4.000   3rd Qu.:4.000   3rd Qu.:2.000  
+##             Max.   :5.000   Max.   :5.000   Max.   :5.000   Max.   :3.000  
+##                                                                            
+##      walc.y         health.y       absences.y          g1.y      
+##  Min.   :1.000   Min.   :1.000   Min.   : 0.000   Min.   : 5.00  
+##  1st Qu.:1.000   1st Qu.:3.000   1st Qu.: 0.000   1st Qu.: 9.00  
+##  Median :2.000   Median :4.000   Median : 4.000   Median :11.00  
+##  Mean   :1.897   Mean   :3.615   Mean   : 5.179   Mean   :10.62  
+##  3rd Qu.:2.000   3rd Qu.:5.000   3rd Qu.: 6.500   3rd Qu.:12.00  
+##  Max.   :5.000   Max.   :5.000   Max.   :22.000   Max.   :16.00  
+##                                                                  
+##       g2.y            g3.y      
+##  Min.   : 7.00   Min.   : 0.00  
+##  1st Qu.: 9.00   1st Qu.:10.00  
+##  Median :11.00   Median :11.00  
+##  Mean   :10.67   Mean   :10.85  
+##  3rd Qu.:12.00   3rd Qu.:13.00  
+##  Max.   :14.00   Max.   :15.00  
+## </code></pre>
+<p>Because our data set is relatively large, we don’t expect missing data to have a serious impact. It all goes back to being representative of the population.</p>
+</div>
+<div id="more" class="section level2">
+<h2><span class="header-section-number">3.4</span> More</h2>
+<p>Parametric are most powerful, more robuseness becuse we use every score
+Parametric or non parametric
+pearson for correlation</p>
+<p>non para:
+spearson kendall
+kendall more reilable</p>
+<p>Which can I use to compare?</p>
+<p>Lecture 5 video 51 minutes</p>
+<p>use cooks if deleting outliers</p>
+<!-- 5.3. Assumptions of parametric data -->
+<!-- alpha 0.05 fo education grades have an error -->
+<!-- ok to use this -->
+<!-- but in medical testing, more regigroous, 0.05 -->
+</div>
+</div>
+<div id="explore" class="section level1">
+<h1><span class="header-section-number">4</span> Explore</h1>
+</div>
+<div id="analysis" class="section level1">
+<h1><span class="header-section-number">5</span> Analysis</h1>
+</div>
+<div id="model" class="section level1">
+<h1><span class="header-section-number">6</span> Model</h1>
+</div>
+<div id="report" class="section level1">
+<h1><span class="header-section-number">7</span> Report</h1>
+</div>
+<div id="using-r" class="section level1">
+<h1><span class="header-section-number">8</span> Using R</h1>
+</div>
+<div id="references" class="section level1 unnumbered">
+<h1>References</h1>
+<div id="refs" class="references">
+<div id="ref-cortez2008using">
+<p>Cortez, Paulo, and Alice Maria Gonçalves Silva. 2008. “Using Data Mining to Predict Secondary School Student Performance.” <a href="http://hdl.handle.net/1822/8024">http://hdl.handle.net/1822/8024</a>.</p>
+</div>
+<div id="ref-field2012discovering">
+<p>Field, A., J. Miles, and Z. Field. 2012. <em>Discovering Statistics Using R</em>. SAGE Publications. <a href="https://books.google.ie/books?id=wd2K2zC3swIC">https://books.google.ie/books?id=wd2K2zC3swIC</a>.</p>
+</div>
+<div id="ref-wikiportmap">
+<p>“Wikipedia.” 2020. Website. <a href="https://en.wikipedia.org/wiki/Portugal">https://en.wikipedia.org/wiki/Portugal</a>.</p>
+</div>
+</div>
+</div>
+
+        </div>
+
+        
+        
+      <hr />
+        <div class="row next-prev-navigator">
+
+
+  
+
+  
+    
+      
+      <div class="col-md-6 previous-article">
+        <a href="/blog/posts/2020-11-30-new-great-thing-i-want-to-say/" class="btn btn-outline-info">
+          <span><i class="fas fa-chevron-circle-left"></i> Prev</span>
+          <br />
+          <span>new great thing I want to say</span>
+        </a>
+      </div>
+      
+    
+    
+      
+        
+        
+          
+              
+          
+        
+        <div class="col-md-6 next-article">
+          <a href="/blog/posts/2015-07-23-r-rmarkdown/" class="btn btn-outline-info">
+            <span>Next <i class="fas fa-chevron-circle-right"></i></span>
+            <br />
+            <span>Hello R Markdown</span>
+          </a>
+        </div>
+      
+    
+  
+
+  
+
+</div>
+
+      <hr />
+      
+      
+          
+
+      
+      </div>
+    </div>
+  </div>
+  
+</section>
+
+
+      
+      
+  <section class="toc-section" id="toc-section">
+    
+    <div class="toc-holder">
+      <h5 class="text-center pl-3">Table of Contents</h5>
+      <hr>
+      <div class="toc">
+        
+      </div>
+    </div>
+    
+  </section>
+
+    </div>
+
+    
+
+  
+
+
+
+
+  
+
+
+
+
+  
+  
+    
+  
+
+
+<footer class="container-fluid text-center align-content-center footer pb-2">
+  <div class="container pt-5">
+    <div class="row text-left">
+      <div class="col-md-4 col-sm-12">
+        <h5>Navigation</h5>
+        
+        <ul>
+            
+              
+              
+                
+              
+              <li class="nav-item">
+                <a class="smooth-scroll" href="#about">About</a>
+              </li>
+            
+            
+              
+              
+                
+              
+              <li class="nav-item">
+                <a class="smooth-scroll" href="#recent-posts">Recent Posts</a>
+              </li>
+            
+        </ul>
+        
+
+      </div>
+      
+      <div class="col-md-4 col-sm-12">
+        <h5></h5>
+        <ul>
+          
+        </ul>
+      </div>
+      
+      
+    </div>
+  </div>
+  <hr />
+  <div class="container">
+    <div class="row text-left">
+      <div class="col-md-4">
+        <a id="theme" href="https://github.com/hossainemruz/toha" target="#">
+          <img src="/blog/assets/images/inverted-logo.png">
+          Toha
+        </a>
+      </div>
+      <div class="col-md-4 text-center">© 2020 Copyright.</div>
+      <div class="col-md-4 text-right">
+        <a id="hugo" href="https://gohugo.io/">Powered by
+        <img
+          src="/blog/assets/images/hugo-logo-wide.svg"
+          alt="Hugo Logo"
+          height="18"
+        />
+        </a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+    <script src="/blog/assets/js/jquery-3.4.1.min.js"></script>
+<script src="/blog/assets/js/popper.min.js"></script>
+<script src="/blog/assets/js/bootstrap.min.js"></script>
+
+<script src="/blog/assets/js/navbar.js"></script>
+<script src="/blog/assets/js/main.js"></script>
+
+
+    
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/highlight.min.js"></script>
+<script src="/blog/assets/js/single.js"></script>
+<script>
+  hljs.initHighlightingOnLoad();
+</script>
+
+
+  </body>
+</html>

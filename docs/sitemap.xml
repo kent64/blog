@@ -4,26 +4,57 @@
   
   <url>
     <loc>https://kent64.github.io/blog/</loc>
-    <lastmod>2020-10-31T21:49:57-07:00</lastmod>
+    <lastmod>2020-11-30T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://kent64.github.io/blog/2020/10/31/hello/</loc>
-    <lastmod>2020-10-31T21:49:57-07:00</lastmod>
+    <loc>https://kent64.github.io/blog/posts/2020-11-30-new-great-thing-i-want-to-say/</loc>
+    <lastmod>2020-11-30T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://kent64.github.io/blog/2020/11/01/sssperformance/</loc>
+    <loc>https://kent64.github.io/blog/posts/</loc>
+    <lastmod>2020-11-30T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://kent64.github.io/blog/posts/sssperformance/</loc>
     <lastmod>2020-11-01T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://kent64.github.io/blog/about/</loc>
-    <lastmod>2020-10-31T00:00:00+00:00</lastmod>
+    <loc>https://kent64.github.io/blog/categories/</loc>
+    <lastmod>2015-07-23T21:13:14-05:00</lastmod>
   </url>
   
   <url>
-    <loc>https://kent64.github.io/blog/description/</loc>
+    <loc>https://kent64.github.io/blog/posts/2015-07-23-r-rmarkdown/</loc>
+    <lastmod>2015-07-23T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://kent64.github.io/blog/tags/plot/</loc>
+    <lastmod>2015-07-23T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://kent64.github.io/blog/categories/r/</loc>
+    <lastmod>2015-07-23T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://kent64.github.io/blog/tags/r-markdown/</loc>
+    <lastmod>2015-07-23T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://kent64.github.io/blog/tags/regression/</loc>
+    <lastmod>2015-07-23T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://kent64.github.io/blog/tags/</loc>
+    <lastmod>2015-07-23T21:13:14-05:00</lastmod>
   </url>
   
 </urlset>

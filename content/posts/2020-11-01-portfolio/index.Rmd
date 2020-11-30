@@ -1,0 +1,501 @@
+---
+title: Secondary School Student Performance 
+author: Brendan
+date: '2020-11-01'
+slug: sssperformance
+draft: false
+categories: []
+tags: []
+bibliography: ["references.bib"]
+biblio-style: "apalike"
+link-citations: true
+output:
+  blogdown::html_page:
+      number_sections: true
+      toc: TRUE
+---
+
+
+# Introduction
+
+# Prepare
+
+We explore a student exam performance data set. 
+
+This data set is from a paper by P.Cortez and A. Silva entitled "Using  Data  Mining  to  Predict  Secondary  School  Student  Performance". [@cortez2008using]
+
+ |
+------------- | -------------
+Student Name: | B Kent
+Student Number: | cxxxxxxxx
+Programme Code: | TU060
+Version R: | R version 4.0.3 (2020-10-10)
+R packages: | 
+
+# Get started
+We need to get the data
+```{r, echo=TRUE}
+#download.file(url="https://archive.ics.uci.edu/ml/machine-learning-databases/00320/student.zip", destfile="student.zip")
+#unzip("student.zip",exdir = "studentdf")
+list.files("studentdf")
+```
+
+data set description: [https://archive.ics.uci.edu/ml/datasets/student+performance#](https://archive.ics.uci.edu/ml/datasets/student+performance#) or [here](/blog/description/)
+
+read in the data
+```{r, echo=TRUE, comment=""}
+matdf=read.table("studentdf/student-mat.csv",sep=";",header=TRUE, stringsAsFactors=TRUE)
+pordf=read.table("studentdf/student-por.csv",sep=";",header=TRUE, stringsAsFactors=TRUE)
+
+studentdf=merge(x=matdf,y=pordf,by=c("school","sex","age","address","famsize","Pstatus","Medu","Fedu","Mjob","Fjob","reason","nursery","internet"))
+colnames(studentdf) <- tolower(colnames(studentdf))
+nrow(studentdf)
+```
+
+So we have 382 records in our data set. 
+
+Let's see what variables we have in each record.
+```{r}
+colnames(studentdf)
+```
+
+## Population vs Sample
+
+We are interested in finding results for the entire population of students that have completed exams in maths and Portuguese in Portugal, but we know that is not possible, so what we have is a sample. We will use this sample to infer things about the population as a whole. 
+
+The numbers used to describe a population are called parameters, whereas for our sample which is a subset of the pollution, we call them statistics. 
+
+Samples are collected because there are easier to contact, less time consuming and less costly. 
+
+However taking samples as shortcut to finding out answers about a population is always prone to sampling error.  
+
+We now need to ask ourselves some questions. 
+
+* Does our sample represent the population well?
+* Is our sample biased? 
+
+In order to answer these questions, we need to explore the data. The first thing we know is that the size of the data set is 382. This is not ideal to represent the full population, too small a sample can lead to conclusions which are invalid.
+
+Usually the bigger the sample the more likely it is to reflect the whole population. 
+
+Now to the 2nd question, a biased sample is one which differs from the population from which it is taken. This can happen if the sample is not collected randomly. If the students in this sample were picked, then it would not be a representative sample. 
+There is a limit to this randomness, we have to acknowledge that, looking at the paper[@cortez2008using], we see that data was only collected during one year and only in two public schools. This year and these schools might not represent the population's Portugese school system in other parts of the country and in other years. Doing a quick Google search I can see that these schools are in rural and less dense areas of Portugal. 
+
+<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3194283.005649975!2d-10.17086483750003!3d38.57024409999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd19e50ed36b8271%3A0xa2f44287b70a82c0!2sEscola%20Gabriel%20pereira!5e0!3m2!1sen!2sie!4v1604499877562!5m2!1sen!2sie" width="300" height="450" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
+<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4445653.247860987!2d-10.805082784867597!3d39.909816886764695!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x39781f2296c8dbc3!2sMouzinho%20da%20Silveira%20High%20School!5e0!3m2!1sen!2sie!4v1604501863240!5m2!1sen!2sie" width="300" height="450" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="true" tabindex="0"></iframe>
+
+```{r, echo=FALSE, fig.cap="Population density of Portugal @wikiportmap", out.width = '50%'}
+knitr::include_graphics("https://upload.wikimedia.org/wikipedia/commons/b/b1/Densidade_populacional_por_concelho_-_INE_2001.png")
+```
+
+We can also check the if the sample percentages match what we would imagine for a population, for example:
+Let checks the students involved, are both sexes represented  
+counts:
+```{r, echo=FALSE}
+.Table <- with(studentdf, table(sex))
+.Table
+```
+Percentages
+```{r, echo=FALSE}
+round(100*.Table/sum(.Table), 2)
+```
+
+It is very important that when choosing a sample that any missing data is also random, that there is not pattern between the variables which are missing. 
+
+To make good decisions to the questions outlined above, we will calculate some simple statistics for our sample. These statistics we will start to examine in the next section.
+
+## How to infer from a sample to a population
+
+In order to show how well a sample is representing a population we need to understand some basics about the variables in our data set.
+Each variable falls into a "level of Measurement" category. There are 4 levels:
+
+* Nominal - or Categorical, can we binary variables such as dead or alive or nominal like Guinness, Harp, Smithwicks.
+* Ordinal - kinda of the same as nominal but have an order, like A,B,C for an exam result. 
+* Interval - have a score and the differences between these scores are equivalent. 
+* Ratio - same as interval but the score of say 12 must mean twice a score of 6. 0 has a meaning. 
+
+So depending on the variable of interest in the record, we can make small basic models to see if we can infer information about the population from it. The first is mean. First thing we should note is that you can only get a mean from variable which are either interval or Ratio (these types are referred to as numeric in [here](/blog/description/)). The other types types such as Nominal and Ordinal don't have a mean. They use other statistics to describe what we call a Central Tendency. Here is a table to explain:
+
+level | Mode | Median | Mean
+---|---|---|---
+Nominal | yes | no | no 
+Ordinal | yes | yes | no 
+Interval | yes | yes | yes 
+Ratio | yes | yes | yes 
+
+The best measure of Central Tendency is Mean if it is available for that level. If not, then median and if not median then mode. However whether to choose mean or median depends on another term called "skew". If a variable has skew then median may be better than mode. 
+
+To explain these levels, we will use examples in our data set. 
+
+Nominal in student data set "reason"
+```
+11 reason - reason to choose this school (nominal: close to "home", school "reputation", "course" preference or "other")
+```
+Interval in the student data set "g3"
+```
+32 G3 - final grade (numeric: from 0 to 20, output target)
+```
+
+But first, we have a host of other variables which need the type set in R. 
+```{r}
+library("dplyr")
+library(ggplot2) # For creating histograms and plots
+studentdf$medu = factor(studentdf$medu,levels=c(0:4),labels = c("0 - none","1 - primary education (4th grade)","2 – 5th to 9th grade","3 – secondary education","4 – higher education"), ordered=T)
+studentdf$fedu = factor(studentdf$fedu,levels=c(0:4),labels = c("0 - none","1 - primary education (4th grade)","2 – 5th to 9th grade","3 – secondary education","4 – higher education"), ordered=T)
+studentdf$traveltime.x = factor(studentdf$traveltime.x,levels=c(1:4),labels = c("1 - <15 min", "2 - 15 to 30 min", "3 - 30 min. to 1 hour", "4 - >1 hour"), ordered=T)
+studentdf$traveltime.y = factor(studentdf$traveltime.y,levels=c(1:4),labels = c("1 - <15 min", "2 - 15 to 30 min", "3 - 30 min. to 1 hour", "4 - >1 hour"), ordered=T)
+studentdf$studytime.x = factor(studentdf$studytime.x,levels=c(1:4),labels = c("1 - <2 hours","2 - 2 to 5 hours", "3 - 5 to 10 hours","4 - >10 hours"), ordered=T)
+studentdf$studytime.y = factor(studentdf$studytime.y,levels=c(1:4),labels = c("1 - <2 hours","2 - 2 to 5 hours", "3 - 5 to 10 hours","4 - >10 hours"), ordered=T)
+t <- studentdf %>% count(medu)
+ggplot(t, aes(x="",y=n, fill=medu)) + geom_bar(width = 1, stat = "identity")
+```
+
+### Normal Distrubution  
+
+We would like to find a variable which has a normal distribution, because we can use parametric tests on this variable. This is ideal when we want to make inference from our sample to our population. These parametric tests are more powerful because they use all values a variable has. Let's check if grade results fits the bill for us. 
+
+Finally we get to draw a chart. First the humble scatter plot:
+```{r, echo=FALSE, fig.cap="G3 - final grade unsorted"}
+ggplot(data = studentdf, aes(x = as.numeric(row.names(studentdf)), y = g3.x)) +  geom_point() + labs(y="G3 - final grade")
+```
+
+
+Or if we sort the grades in ascending order.
+```{r, echo=FALSE, fig.cap="G3 - final grade sorted"}
+ggplot(data = studentdf, aes(x = as.numeric(row.names(studentdf)), y = sort(g3.x))) +  geom_point() + labs(y="G3 - final grade")
+```
+
+We can see here that there are grade marked as 0. We don't know if that means the student didn't do the exam or they got 0 after attempting it. That's `r round(sum(studentdf$g3.x == 0, na.rm = TRUE) / length(studentdf$g3.x) * 100 , 2)` % of the data. 
+
+To understand skew we need to starting visualizing the data. We do this by plotting what is known as a frequency distribution or histogram.  
+```{r, echo=FALSE, fig.cap="G3 - final grade histogram", warning=FALSE}
+library(ggplot2) # For creating histograms and plots
+#We will allocate the histogram to a variable to allow use to manipulate it
+gg <- ggplot(studentdf, aes(x=g3.x))
+#Change the label of the x axis
+gg <- gg + labs(x="G3 - final grade")
+#manage binwidth and colours
+gg <- gg + geom_histogram(binwidth=1, colour="black", aes(y=..density.., fill=..count..))
+gg <- gg + scale_fill_gradient("Count", low="grey", high="green")
+gg
+```
+
+From the Frequency distribution chart we can say that the zeros are outliers here, as we said above. WHy? because we expect the distribution for grade results to be normal, to match what we call a [Normal Distrbtion](https://www.mathsisfun.com/data/standard-normal-distribution.html). All normal distributions are symmetric and have bell-shaped density curves with a single peak. This histogram above is bimodal because of the zeros. We will remove those now, for all grade results. 
+
+```{r, echo=FALSE, warning=FALSE}
+studentdf$g1.x[studentdf$g1.x == 0] <- NA
+studentdf$g2.x[studentdf$g2.x == 0] <- NA
+studentdf$g3.x[studentdf$g3.x == 0] <- NA
+studentdf$g1.y[studentdf$g1.x == 0] <- NA
+studentdf$g2.y[studentdf$g2.x == 0] <- NA
+studentdf$g3.y[studentdf$g3.x == 0] <- NA
+```
+
+These zeros which we find the grade results could also be a result of missing data. 
+and now again we check the histogram
+
+```{r, echo=FALSE, fig.cap="G3 - final grade histogram no zeros", warning=FALSE}
+library(ggplot2) # For creating histograms and plots
+#We will allocate the histogram to a variable to allow use to manipulate it
+gg <- ggplot(studentdf, aes(x=g3.x))
+#Change the label of the x axis
+gg <- gg + labs(x="G3 - final grade")
+#manage binwidth and colours
+gg <- gg + geom_histogram(binwidth=1, colour="black", aes(y=..density.., fill=..count..))
+gg <- gg + scale_fill_gradient("Count", low="grey", high="green")
+gg
+```
+
+This is much better. Let's check the Central Tendency measure for this variable
+
+### Central Tendency 
+For G3 - final grade in maths
+
+stat|desc|value
+--|--|--
+mean| average |  `r mean(studentdf$g3.x, na.rm = TRUE)`
+median| ranked in order of magnitude, find middle |  `r median(studentdf$g3.x, na.rm = TRUE)`
+
+### Dispersion 
+For G3 - final grade in maths
+
+stat|desc|value
+--|--|--
+Range | lowest and highest | `r range(studentdf$g3.x, na.rm = TRUE)`
+Quantiles | cut in 1/4ths | `r quantile(studentdf$g3.x, na.rm = TRUE)`
+1st quantile | 1st 1/4 |  `r x=quantile(studentdf$g3.x, na.rm = TRUE); x[1]`
+Interquartile Range | cut off the 1st 1/4 and last 1/4| `r IQR(studentdf$g3.x, na.rm = TRUE)`
+Variance |The average of the squared differences from the Mean | `r var(studentdf$g3.x, na.rm = TRUE)`
+Standard deviation | the square root of the variance | `r sd(studentdf$g3.x, na.rm = TRUE)`
+
+There are two main ways in which a distribution can deviate from normal: 
+
+1. lack of symmetry (called **skew** ) and 
+2. pointyness (called **kurtosis** )
+
+Like plot the histogram again and add a normal distribution curve using the grade scores:
+```{r, echo=FALSE, fig.cap="G3 - final grade histogram with normal curve"}
+library(ggplot2) # For creating histograms and plots
+#We will allocate the histogram to a variable to allow use to manipulate it
+gg <- ggplot(studentdf, aes(x=g3.x))
+#Change the label of the x axis
+gg <- gg + labs(x="G3 - final grade")
+#manage binwidth and colours
+gg <- gg + geom_histogram(binwidth=1, colour="black", aes(y=..density.., fill=..count..))
+gg <- gg + scale_fill_gradient("Count", low="grey", high="green")
+#adding a normal curve
+#use stat_function to compute a normalised score for each value of tpcoiss
+#pass the mean and standard deviation
+#use the na.rm parameter to say how missing values are handled
+gg <- gg + stat_function(fun=dnorm, color="red",args=list(mean=mean(studentdf$g3.x, na.rm=TRUE), sd=sd(studentdf$g3.x, na.rm=TRUE)))
+
+#to display the graph request the contents of the variable be shown
+gg
+```
+
+From a look at this histogram we can say that the Skew is visible. We can see that there is positive skew. 
+The kurtosis does not look to be a problem. 
+
+We not need to examine that skew in detail. There is another useful graph that we can inspect to see if a distribution is normal called a
+Q-Q plot (quantile–quantile plot). A quantile is the proportion of cases we find below a certain value.
+
+```{r, echo=FALSE, fig.cap="G3 - final grade Q-Q plot"}
+#Create a qqplot
+qqnorm(studentdf$g3.x)
+qqline(studentdf$g3.x, col=2) #show a line on theplot
+```
+
+The closer the values fall on the diagonal of the plot, the closer the fit we have for a normal distribution.
+
+We can get values now for Skew and kurtosis. The values of skew and kurtosis should be zero
+in a normal distribution. Positive values of skew indicate a postive skew. Positive values of
+kurtosis indicate a pointy distribution, whereas negative values indicate a flat distribution.
+
+
+Generating some summary statistics of the varaible. There are two libraries in R for this:
+using psych::describe :
+```{r}
+knitr::kable(stack(psych::describe(studentdf$g3.x)))
+```
+
+using pastecs::stat.desc :
+
+```{r}
+options(scipen=999)
+knitr::kable(pastecs::stat.desc(studentdf$g3.x, basic = FALSE, norm = TRUE))
+```
+```{r, echo=FALSE,eval=FALSE}
+pastecs::stat.desc(studentdf$g3.x, basic = FALSE, norm = TRUE)
+```
+We divide the skew statistic by the standard error to get the standardised core for skew and kurtosis
+using semTools::skew :
+```{r, message=FALSE, warning=FALSE}
+tpskew<-semTools::skew(studentdf$g3.x)
+tpskew
+```
+and semTools::kurtosis :
+```{r, message=FALSE, warning=FALSE}
+tpkurt<-semTools::kurtosis(studentdf$g3.x)
+tpkurt
+```
+
+Skew and kurtosis are converted to z-scores by dividing by the standard error:
+```{r}
+tpskew[1]/tpskew[2]
+tpkurt[1]/tpkurt[2]
+```
+Before exploring skew and kurtosis, we need to understand a key term "Confidence interval" and "Z-score"
+
+### Confidence interval
+
+In statistics we use confidence intervals to show how sure we are that a value would fall in a range of values. 
+
+The common confidence intervals used are 90%, 95% and 99%. The idea is based on the Normal distribution. To say we are 95% confidence a value will fall into a range of values is the same as saying it will fall inside -1.96 standard deviations and +1.96 standard deviations of the mean.  A 90% chance would correspond to 1.645 and a 99% chance would correspond to 2.576 deviations. 
+
+Which confidence interval we decide to use depends on the population variance and also the size of the sample. A wide variance in a population would mean a large confidence interval. Certain industries use different confidence intervals to report their results when they are doing tests to answers questions. These tests usually involves fitting a statistical model to data and testing a prediction. To decide if the model works, they need to know if the result is statistically significant. To do this the confidence intervals are used, if the test result is outside these intervals, or above a certain alpha value (usually 0.05), it unlikely the model is getting the right answer by chance. We will discuss this more later in hypothesis testing. 
+
+### Z-score
+We only need the standard deviation and mean to use Confidence Intervals. To help us understand what are the critical values and their related probabilities. We need to standardize our Normal Distribution. To do this, we use z-scores. A standard Normal distribution has a mean of zero and standard deviation of one. The z-score is a number on the horizontal which corresponds to a number of standard deviations. So a z-score of 3 means that we are 3 standard deviations from the mean to the right. A z-score also comes with a z-score table, we can use this to calculate the area under the standard normal distribution, this area will give us a probability (and of course there is tools in R to help so we never really need to check a table, although could be useful with electricity goes out). If our distribution is normal for a give variable, then these z-score make it real easy to see for each value the probability of getting that value and the distance the value is from the mean. 
+
+<!-- The significance level is an expression of how rare your results are, under the assumption that the null hypothesis is true. It is usually expressed as a “p-value,” and the lower the p-value, the less likely the results are due purely to chance. -->
+
+The critical values for a 95% confidence is -1.96 or +1.96 as we said above, these are the values in terms of z-score or standard deviations. If we get a z-score higher or lower than this, we know that that value is statistically unlikely. 
+
+```{r, echo=FALSE, fig.cap="Standard Normal Distribution", out.width = '100%'}
+knitr::include_graphics("normaldistri.png")
+```
+
+In the diagram above, you can see how a 95% confidence interval relates to a 19.96 z-score. 2.5% of the area is shaded in in blue, twice that on each side is 5% which is 100% - 5%.
+
+In green you can also see the area which are divided by the -1.96 z-score. These areas are the probabilities or p-values of a event falling into that z-score range. 
+
+### skew and kurtosis analysis
+
+We would expect the calculation of skew and kurtosis to be at least less than approx absolute 2 (1.96 for a 95% confidence interval at p < .05). So what we need to do is check the z-score of skew. 
+Above we calculated a skew of 1.599138. Putting that on our magnificent Standard Normal Distribution figure below. We see it falls in the p < 0.05 range. 
+```{r, echo=FALSE, fig.cap="Standard Normal Distribution for skew and kurtosis", out.width = '100%'}
+knitr::include_graphics("normaldistri_skew.png")
+```
+
+We also calculated a kurtosis of -1.733549.
+
+Sometimes a skew and kurtosis maybe outside our confidence range, however Discovery Statistics with R -@field2012discovering estimates that if we have a sample size of 200 or more, it may be more important to look at the shape of the distribution and pay less attention to these scores above. 
+
+We say the z-value is significant if it is in those blue regions of the figure above. Significant means important and in the case of skew or kurtosis it's not good if it is very significant. 
+
+*Another way*
+Using skew.2SE from pastecs::stat.desc
+
+We can determine if the skew is significant also, skew.2SE is 0.79604109916. This statistic is the skew divided by 2 standard errors. For this to be significant. skew.2SE must be greater than ~1 (or 1.96/2 which is `r 1.96/2`). It's not. 
+
+Using kurt.2SE from pastecs::stat.desc
+
+kurtosis divided by 2 standard errors we have -0.92161679721. Again kurtosis is just greater than -1 or we could say the absolute value is less than 1. 
+
+*Another way*
+
+In other to show another way of testing for skew and kurtosis which is called the Shapiro–Wilk test, we need an introduction to Hypothesis testing. 
+
+### Hypothesis Testing
+
+We make a hypothesis about the outcome of some experiment. We can make an example from our data set, let's say students who have more "studytime" achieve better grades ("g3"). 
+
+We do the experiment. It's already done, because we have the data. 
+
+**H**<sub>**0**</sub>: The **Null hypothesis** would be that "studytime" has no affect on grade results, that "studytime" makes no difference.  
+
+**H**<sub>**1**</sub>: The **Alternative hypothesis** would be the hypothesis we made above, that students who have more "studytime" achieve better grades.
+
+
+Afterwards...
+
+For both these hypothesisesesss:
+
+We can either reject the hypothesis(we were wrong) or fail to reject the hypothesis(we are not completely wrong).
+
+We would really like to reject the Null hypothesis. 
+
+In order to decide if we reject or fail to reject, we run the data through sometime called a statistical test.
+
+There are two types of errors which can result form a hypothesis test
+1. type I: when we reject the Null hypothesis when it is true, probability of committing a type I error is called the significance level, also called alpha. alpha for us is usually 0.05. But it's depends on the area/industry. 
+2. type II: when we fail to reject the Null hypothesis when it is false, probability of committing a type I error is called beta. The probability of not committing type II is called the power. 
+
+The strength of the evidence of is determined by the measureed p-value of the test and by the region of acceptance.  
+
+### Shapiro–Wilk test
+
+Another way to check if our variable has a normal distribution is do the Shapiro–Wilk test. 
+
+This test compares the mean and standard deviation of our data to a normally distributed set of scores withe h same mean and standard deviation. 
+
+```{r}
+shapiro.test(studentdf$g3.x)
+```
+
+The test result shows the test statistic and the p-value. 
+
+The Null hypothesis is that there is no normal distribution in this data, it's just random stuff. 
+The alternative hypothesis is that it's a normal distribution.
+
+Our result has a very small p-value, so the probability that the Null hypothesis is true is tiny, so we can accept the Alternative. 
+
+A p-value of less than 0.05 is statistically significant here, so if our p-value was greater than 0.05. We could not reject **H**<sub>**0**</sub>.
+
+### Using Normal Distribution to find outliers 
+Now by calculating the percentage of standardized scores for the variable itself that are outside our acceptable range
+we can see how far they are away from being normal. 
+Calculate the percentage of standardised scores that are greater than 1.96
+```{r}
+ztpcoiss<- abs(scale(studentdf$g3.x))
+
+FSA::perc(as.numeric(ztpcoiss), 1.96, "gt")
+FSA::perc(as.numeric(ztpcoiss), 2.58, "gt")
+FSA::perc(as.numeric(ztpcoiss), 3.29, "gt")
+```
+So 4% of our data lies outside 1.96 standard deviations of the mean or outside the 95% confidence range.
+0% are outside of the 99% confidence interval and of course that means also 0% of our data lies outside the 99.9% confidence interval. 
+
+95% of our data is within the acceptable range, so we can treat the data as normal. :relieved:
+
+Since our sample size is larger than 80, a case is an outlier if it's standard score is +/- 3.29. So we have no outliers. HOwever at the moment we are ignoring missing data, that's eh values we made NA earlier. 
+
+```{r, echo=FALSE,eval=FALSE}
+by(data = cbind(data=studentdf$school,data=studentdf$g3.x), INDICES = studentdf$school, FUN = psych::describe)
+```
+
+#### G3 Grades Summary 
+
+Heuristic| value
+--|--
+Standarised score of skew | 1.599138 
+Standarised score of kurtosis | -1.733549 
+Standarised score of variables | 4.1 % outside +/- 1.96
+Standarised score of variables | 0% outside +/- 3.29 (no outliers)
+Currently ignoring missing data. | 
+
+## Missing Data
+
+Missing data can come as a result of sampling bias or selection bias. Missing data reduces the probability that the test will reject 
+**H**<sub>**0**</sub>. 
+
+We can take a quick look at our data set and see if we have many NA values.
+```{r}
+t <- sapply(studentdf, function(x) sum(is.na(x)))
+t[t>0]
+```
+
+It is no surprise here at there is not many NAs. Looking back to [Get started] we merged the Maths and Portuguese results together using the variables "school","sex","age","address","famsize","Pstatus","Medu","Fedu","Mjob","Fjob","reason","nursery","internet" 
+
+Which means if any of these are missing, we won't have them in our combined data frame.  That means alot of the Portuguese grade data is not contained in the merged data frame. 
+
+Missing data reduces also how well sample represents the population, if we had a lot of missing data, it could also lead to invalid conclusions.  
+
+There are three possible patterns to missing data:
+
+1. Data missing at random (MAR) - missing data is not random, but not related to other variables
+2. Data missing completely at random (MCAR) - missing data is random, best scenario!
+3. Data not missing at random (MNAR) - not random, related to other variables, pretty serious!
+
+Let us check if any of these patterns are seen in the data. The only variables with missing data are the grade results: g2 and g3 for Maths.  
+```{r}
+library("dplyr")
+studentdf %>% filter(is.na(g3.x)) %>% summary()
+```
+
+Because our data set is relatively large, we don't expect missing data to have a serious impact. It all goes back to being representative of the population. 
+
+## More
+Parametric are most powerful, more robuseness becuse we use every score
+Parametric or non parametric
+pearson for correlation 
+
+non para:
+spearson kendall
+kendall more reilable
+
+Which can I use to compare?
+
+Lecture 5 video 51 minutes
+
+use cooks if deleting outliers 
+
+<!-- 5.3. Assumptions of parametric data -->
+
+<!-- alpha 0.05 fo education grades have an error -->
+<!-- ok to use this -->
+<!-- but in medical testing, more regigroous, 0.05 -->
+
+# Explore
+
+# Analysis
+
+# Model
+
+# Report
+
+# Using R
+
+
+
+# References
