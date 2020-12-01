@@ -2,10 +2,11 @@
 title: Secondary School Student Performance 
 author: Brendan
 date: '2020-11-01'
-slug: sssperformance
+slug: studentperf
 draft: false
 categories: []
 tags: []
+hero: /images/site/school.jpg
 bibliography: ["references.bib"]
 biblio-style: "apalike"
 link-citations: true

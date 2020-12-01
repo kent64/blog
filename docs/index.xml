@@ -9,11 +9,13 @@
     <lastBuildDate>Sun, 01 Nov 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://kent64.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Secondary School Student Performance</title>
-      <link>https://kent64.github.io/blog/posts/sssperformance/</link>
+      <link>https://kent64.github.io/blog/posts/studentperf/</link>
       <pubDate>Sun, 01 Nov 2020 00:00:00 +0000</pubDate>
       
-      <guid>https://kent64.github.io/blog/posts/sssperformance/</guid>
-      <description>1 Introduction 2 Prepare 3 Get started 3.1 Population vs Sample 3.2 How to infer from a sample to a population 3.2.1 Normal Distrubution 3.2.2 Central Tendency 3.2.3 Dispersion 3.2.4 Confidence interval 3.2.5 Z-score 3.2.6 skew and kurtosis analysis 3.2.7 Hypothesis Testing 3.2.8 Shapiro–Wilk test 3.2.9 Using Normal Distribution to find outliers  3.3 Missing Data 3.4 More  4 Explore 5 Analysis 6 Model 7 Report 8 Using R References   1 Introduction  2 Prepare We explore a student exam performance data set.</description>
+      <guid>https://kent64.github.io/blog/posts/studentperf/</guid>
+      <description>Introduction Prepare We explore a student exam performance data set.
+This data set is from a paper by P.Cortez and A. Silva entitled “Using Data Mining to Predict Secondary School Student Performance”. (Cortez and Silva 2008)
+         Student Name: B Kent   Student Number: cxxxxxxxx   Programme Code: TU060   Version R: R version 4.0.3 (2020-10-10)   R packages:     Get started We need to get the data</description>
     </item>
     
   </channel>
