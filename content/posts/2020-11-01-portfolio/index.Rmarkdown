@@ -12,8 +12,7 @@ biblio-style: "apalike"
 link-citations: true
 output:
   blogdown::html_page:
-      number_sections: true
-      toc: TRUE
+    toc: true
 ---
 
 
@@ -36,6 +35,8 @@ R packages: |
 # Get started
 We need to get the data
 ```{r, echo=TRUE}
+library("dplyr")
+library(ggplot2) # For creating histograms and plots
 #download.file(url="https://archive.ics.uci.edu/ml/machine-learning-databases/00320/student.zip", destfile="student.zip")
 #unzip("student.zip",exdir = "studentdf")
 list.files("studentdf")
@@ -44,7 +45,7 @@ list.files("studentdf")
 data set description: [https://archive.ics.uci.edu/ml/datasets/student+performance#](https://archive.ics.uci.edu/ml/datasets/student+performance#) or [here](/blog/description/)
 
 read in the data
-```{r, echo=TRUE, comment=""}
+```{r echo=TRUE, comment="", highlight=FALSE}
 matdf=read.table("studentdf/student-mat.csv",sep=";",header=TRUE, stringsAsFactors=TRUE)
 pordf=read.table("studentdf/student-por.csv",sep=";",header=TRUE, stringsAsFactors=TRUE)
 
@@ -75,9 +76,13 @@ We now need to ask ourselves some questions.
 * Does our sample represent the population well?
 * Is our sample biased? 
 
-In order to answer these questions, we need to explore the data. The first thing we know is that the size of the data set is 382. This is not ideal to represent the full population, too small a sample can lead to conclusions which are invalid.
+In order to answer these questions, we need to explore the data. The first thing we know is that the size of the data set is 382. Usually the bigger the sample the more likely it is to reflect the whole population. It is not enough to simply use the number of records to tell us whether we have a sample that represents the population. 
 
-Usually the bigger the sample the more likely it is to reflect the whole population. 
+We need to have some understanding of the population in order to make this decision about our sample representing the population. First thing we know is that this data comes from two Portuguese schools, so if we find some statistics from this data set, we can't say that this applies to students all over the world. We can only use this results as a pointer to further research. 
+
+We ask ourselves this question, because in the end we want to be able to create a model that describes the population, not a model which only describes the sample.
+
+We will show later that there are many statistical tests we can do on a sample set of data to see if we can infer anything about the population. 
 
 Now to the 2nd question, a biased sample is one which differs from the population from which it is taken. This can happen if the sample is not collected randomly. If the students in this sample were picked, then it would not be a representative sample. 
 There is a limit to this randomness, we have to acknowledge that, looking at the paper[@cortez2008using], we see that data was only collected during one year and only in two public schools. This year and these schools might not represent the population's Portugese school system in other parts of the country and in other years. Doing a quick Google search I can see that these schools are in rural and less dense areas of Portugal. 
@@ -126,30 +131,24 @@ Ratio | yes | yes | yes
 
 The best measure of Central Tendency is Mean if it is available for that level. If not, then median and if not median then mode. However whether to choose mean or median depends on another term called "skew". If a variable has skew then median may be better than mode. 
 
-To explain these levels, we will use examples in our data set. 
+To explain these levels, we will use examples in our data set. An example of a Nominal variable, a Numeric variable and a Ratio variable. 
 
-Nominal in student data set "reason"
-```
-11 reason - reason to choose this school (nominal: close to "home", school "reputation", "course" preference or "other")
-```
-Interval in the student data set "g3"
+Ratio in the student data set is "g3"
 ```
 32 G3 - final grade (numeric: from 0 to 20, output target)
 ```
-
-But first, we have a host of other variables which need the type set in R. 
-```{r}
-library("dplyr")
-library(ggplot2) # For creating histograms and plots
-studentdf$medu = factor(studentdf$medu,levels=c(0:4),labels = c("0 - none","1 - primary education (4th grade)","2 – 5th to 9th grade","3 – secondary education","4 – higher education"), ordered=T)
-studentdf$fedu = factor(studentdf$fedu,levels=c(0:4),labels = c("0 - none","1 - primary education (4th grade)","2 – 5th to 9th grade","3 – secondary education","4 – higher education"), ordered=T)
-studentdf$traveltime.x = factor(studentdf$traveltime.x,levels=c(1:4),labels = c("1 - <15 min", "2 - 15 to 30 min", "3 - 30 min. to 1 hour", "4 - >1 hour"), ordered=T)
-studentdf$traveltime.y = factor(studentdf$traveltime.y,levels=c(1:4),labels = c("1 - <15 min", "2 - 15 to 30 min", "3 - 30 min. to 1 hour", "4 - >1 hour"), ordered=T)
-studentdf$studytime.x = factor(studentdf$studytime.x,levels=c(1:4),labels = c("1 - <2 hours","2 - 2 to 5 hours", "3 - 5 to 10 hours","4 - >10 hours"), ordered=T)
-studentdf$studytime.y = factor(studentdf$studytime.y,levels=c(1:4),labels = c("1 - <2 hours","2 - 2 to 5 hours", "3 - 5 to 10 hours","4 - >10 hours"), ordered=T)
-t <- studentdf %>% count(medu)
-ggplot(t, aes(x="",y=n, fill=medu)) + geom_bar(width = 1, stat = "identity")
+Nominal in student data set is "reason"
 ```
+11 reason - reason to choose this school (nominal: close to "home", school "reputation", "course" preference or "other")
+```
+Ordinal in student data set is "studytime"
+```
+14 studytime - weekly study time (numeric: 1 - <2 hours, 2 - 2 to 5 hours, 3 - 5 to 10 hours, or 4 - >10 hours)
+```
+
+## G3 - Final Grade (Ratio)
+
+In this section we will explore the variable G3 in our data set. The Grade G3 variable is a ratio variable because zero has a meaning in this variable. The grade results begins at zero and a student who got 16 did twice as well as a student who received 8. 
 
 ### Normal Distrubution  
 
@@ -425,7 +424,7 @@ Since our sample size is larger than 80, a case is an outlier if it's standard s
 by(data = cbind(data=studentdf$school,data=studentdf$g3.x), INDICES = studentdf$school, FUN = psych::describe)
 ```
 
-#### G3 Grades Summary 
+### G3 Grades Summary 
 
 Heuristic| value
 --|--
@@ -434,6 +433,55 @@ Standarised score of kurtosis | -1.733549
 Standarised score of variables | 4.1 % outside +/- 1.96
 Standarised score of variables | 0% outside +/- 3.29 (no outliers)
 Currently ignoring missing data. | 
+
+## Reason (Nominal)
+
+Reason has the following description in the data set.
+```
+11 reason - reason to choose this school (nominal: close to "home", school "reputation", "course" preference or "other")
+```
+As we explained earlier it is nominal because there is no ordering or direction in this variable. In the R language we call this column a factor. 
+
+The best way to visualize this variable is to use a pie chart, bar chart or a frequency table. 
+```{r, echo=F}
+ggplot(studentdf, aes(x=reason)) + geom_bar()
+studentdf %>% count(reason)
+# Basic piechart
+studentdf %>% 
+  count(reason) %>%
+  mutate(total = sum(n)) %>%
+  group_by(reason) %>%
+  mutate(perc = round((n/total)*100)) %>%
+  ggplot(aes(x="", y=perc, fill=reason)) +
+  geom_bar(stat="identity", width=1, color="white") +
+  coord_polar("y", start=0) +
+  theme_void() + # remove background, grid, numeric labels 
+  geom_text(aes(label = paste(perc, " %" )), color = "white", fontface = "bold", position = position_stack(vjust = 0.5)) +
+  labs(title="Count Pie chart for 11 reason - reason to choose this school", caption="(close to \"home\", school \"reputation\", \"course\" preference or \"other\")")
+```
+
+
+## Studytime (Ordinal)
+
+Studytime has the following description in the data set.
+```
+14 studytime - weekly study time (numeric: 1 - <2 hours, 2 - 2 to 5 hours, 3 - 5 to 10 hours, or 4 - >10 hours)
+```
+It is ordinal because it has an order, but it is not interval because the different between each value is not the same, also we can't add or subtract values.  
+
+
+But first, we have a host of other variables which need the type set in R. 
+```{r}
+studentdf$medu = factor(studentdf$medu,levels=c(0:4),labels = c("0 - none","1 - primary education (4th grade)","2 – 5th to 9th grade","3 – secondary education","4 – higher education"), ordered=T)
+studentdf$fedu = factor(studentdf$fedu,levels=c(0:4),labels = c("0 - none","1 - primary education (4th grade)","2 – 5th to 9th grade","3 – secondary education","4 – higher education"), ordered=T)
+studentdf$traveltime.x = factor(studentdf$traveltime.x,levels=c(1:4),labels = c("1 - <15 min", "2 - 15 to 30 min", "3 - 30 min. to 1 hour", "4 - >1 hour"), ordered=T)
+studentdf$traveltime.y = factor(studentdf$traveltime.y,levels=c(1:4),labels = c("1 - <15 min", "2 - 15 to 30 min", "3 - 30 min. to 1 hour", "4 - >1 hour"), ordered=T)
+studentdf$studytime.x = factor(studentdf$studytime.x,levels=c(1:4),labels = c("1 - <2 hours","2 - 2 to 5 hours", "3 - 5 to 10 hours","4 - >10 hours"), ordered=T)
+studentdf$studytime.y = factor(studentdf$studytime.y,levels=c(1:4),labels = c("1 - <2 hours","2 - 2 to 5 hours", "3 - 5 to 10 hours","4 - >10 hours"), ordered=T)
+t <- studentdf %>% count(medu)
+ggplot(t, aes(x="",y=n, fill=medu)) + geom_bar(width = 1, stat = "identity")
+```
+
 
 ## Missing Data
 
