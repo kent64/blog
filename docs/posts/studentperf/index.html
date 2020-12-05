@@ -26,7 +26,7 @@
 <meta name="description" content="Secondary School Student Performance" />
 <link
   rel="stylesheet"
-  href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/atom-one-dark.min.css"
+  href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.2/styles/school-book.min.css"
 />
 <link rel="stylesheet" href="/blog/assets/css/layouts/single.css"/>
 <link rel="stylesheet" href="/blog/assets/css/navigators/sidebar.css">
@@ -116,9 +116,7 @@ if (!doNotTrack) {
 
         <div class="post-content" id="post-content">
           <h1 id="introduction">Introduction</h1>
-<h1 id="prepare">Prepare</h1>
-<p>We explore a student exam performance data set.</p>
-<p>This data set is from a paper by P.Cortez and A. Silva entitled “Using Data Mining to Predict Secondary School Student Performance”. (Cortez and Silva <a href="#ref-cortez2008using">2008</a>)</p>
+<p>I am writing this blog as part of an assignment. My Details:</p>
 <table>
 <thead>
 <tr>
@@ -149,9 +147,33 @@ if (!doNotTrack) {
 </tr>
 </tbody>
 </table>
-<h1 id="get-started">Get started</h1>
+<h1 id="getting-started">Getting started</h1>
+<p>We explore a student exam performance data set. This is a data set about secondary school academical achievements in Portugal. The data contains two set of results, one set for results in Maths and one set for results in Portuguese. These are merged together to form one data set which I will endeavor to break down in order to learn about the basic properties of statistics, describing the Frequency and probabilities, hypothesis testing, Normality, Missing data, Relationships, Component Analysis and more.</p>
+<p>This data set is from a paper by P.Cortez and A. Silva entitled “Using Data Mining to Predict Secondary School Student Performance”. (Cortez and Silva <a href="#ref-cortez2008using">2008</a>)</p>
 <p>We need to get the data</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#75715e">#download.file(url=&#34;https://archive.ics.uci.edu/ml/machine-learning-databases/00320/student.zip&#34;, destfile=&#34;student.zip&#34;)</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#a6e22e">library</span>(<span style="color:#e6db74">&#34;dplyr&#34;</span>)
+</code></pre></div><pre><code>## 
+## Attaching package: 'dplyr'
+
+## The following objects are masked from 'package:stats':
+## 
+##     filter, lag
+
+## The following objects are masked from 'package:base':
+## 
+##     intersect, setdiff, setequal, union
+</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#a6e22e">library</span>(<span style="color:#e6db74">&#34;finalfit&#34;</span>) <span style="color:#75715e"># for ff_glimpse(studentdf)</span>
+<span style="color:#a6e22e">library</span>(<span style="color:#e6db74">&#34;gridExtra&#34;</span>) <span style="color:#75715e"># for plots in a grid</span>
+</code></pre></div><pre><code>## 
+## Attaching package: 'gridExtra'
+
+## The following object is masked from 'package:dplyr':
+## 
+##     combine
+</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#a6e22e">library</span>(<span style="color:#e6db74">&#34;ggplot2&#34;</span>) <span style="color:#75715e"># For creating histograms and plots</span>
+<span style="color:#75715e">#download.file(url=&#34;https://archive.ics.uci.edu/ml/machine-learning-databases/00320/student.zip&#34;, destfile=&#34;student.zip&#34;)</span>
 <span style="color:#75715e">#unzip(&#34;student.zip&#34;,exdir = &#34;studentdf&#34;)</span>
 <span style="color:#a6e22e">list.files</span>(<span style="color:#e6db74">&#34;studentdf&#34;</span>)
 </code></pre></div><pre><code>## [1] &quot;student-mat.csv&quot; &quot;student-merge.R&quot; &quot;student-por.csv&quot; &quot;student.txt&quot;
@@ -181,6 +203,7 @@ studentdf<span style="color:#f92672">=</span><span style="color:#a6e22e">merge</
 ## [46] &quot;goout.y&quot;      &quot;dalc.y&quot;       &quot;walc.y&quot;       &quot;health.y&quot;     &quot;absences.y&quot;  
 ## [51] &quot;g1.y&quot;         &quot;g2.y&quot;         &quot;g3.y&quot;
 </code></pre>
+<p>The data set measures the grades for each students achievements at three time intervals, g1, g2 and g3. So grades at g1 and g2 can been used to predict g3, and from the paper, it can be seen that there is a strong correlation between g3 and g2/g1.</p>
 <h2 id="population-vs-sample">Population vs Sample</h2>
 <p>We are interested in finding results for the entire population of students that have completed exams in maths and Portuguese in Portugal, but we know that is not possible, so what we have is a sample. We will use this sample to infer things about the population as a whole.</p>
 <p>The numbers used to describe a population are called parameters, whereas for our sample which is a subset of the pollution, we call them statistics.</p>
@@ -191,8 +214,10 @@ studentdf<span style="color:#f92672">=</span><span style="color:#a6e22e">merge</
 <li>Does our sample represent the population well?</li>
 <li>Is our sample biased?</li>
 </ul>
-<p>In order to answer these questions, we need to explore the data. The first thing we know is that the size of the data set is 382. This is not ideal to represent the full population, too small a sample can lead to conclusions which are invalid.</p>
-<p>Usually the bigger the sample the more likely it is to reflect the whole population.</p>
+<p>In order to answer these questions, we need to explore the data. The first thing we know is that the size of the data set is 382. Usually the bigger the sample the more likely it is to reflect the whole population. It is not enough to simply use the number of records to tell us whether we have a sample that represents the population.</p>
+<p>We need to have some understanding of the population in order to make this decision about our sample representing the population. First thing we know is that this data comes from two Portuguese schools, so if we find some statistics from this data set, we can’t say that this applies to students all over the world. We can only use this results as a pointer to further research.</p>
+<p>We ask ourselves this question, because in the end we want to be able to create a model that describes the population, not a model which only describes the sample.</p>
+<p>We will show later that there are many statistical tests we can do on a sample set of data to see if we can infer anything about the population. Also we will show that through the use of hypotheses testing we can decide whether there is a relationship in the sample data that is strong enough to use to model the relationship in the population.</p>
 <p>Now to the 2nd question, a biased sample is one which differs from the population from which it is taken. This can happen if the sample is not collected randomly. If the students in this sample were picked, then it would not be a representative sample.
 There is a limit to this randomness, we have to acknowledge that, looking at the paper(Cortez and Silva <a href="#ref-cortez2008using">2008</a>), we see that data was only collected during one year and only in two public schools. This year and these schools might not represent the population’s Portugese school system in other parts of the country and in other years. Doing a quick Google search I can see that these schools are in rural and less dense areas of Portugal.</p>
 <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3194283.005649975!2d-10.17086483750003!3d38.57024409999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd19e50ed36b8271%3A0xa2f44287b70a82c0!2sEscola%20Gabriel%20pereira!5e0!3m2!1sen!2sie!4v1604499877562!5m2!1sen!2sie" width="300" height="450" frameborder="0" style="border:0;" allowfullscreen aria-hidden="false" tabindex="0">
@@ -266,48 +291,30 @@ Each variable falls into a “level of Measurement” category. There are 4 leve
 </tbody>
 </table>
 <p>The best measure of Central Tendency is Mean if it is available for that level. If not, then median and if not median then mode. However whether to choose mean or median depends on another term called “skew”. If a variable has skew then median may be better than mode.</p>
-<p>To explain these levels, we will use examples in our data set.</p>
-<p>Nominal in student data set “reason”</p>
-<pre><code>11 reason - reason to choose this school (nominal: close to &quot;home&quot;, school &quot;reputation&quot;, &quot;course&quot; preference or &quot;other&quot;)
-</code></pre>
-<p>Interval in the student data set “g3”</p>
+<p>To explain these levels, we will use examples in our data set. An example of a Nominal variable, a Numeric variable and a Ratio variable.</p>
+<p>Ratio in the student data set is “g3”</p>
 <pre><code>32 G3 - final grade (numeric: from 0 to 20, output target)
 </code></pre>
-<p>But first, we have a host of other variables which need the type set in R.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#a6e22e">library</span>(<span style="color:#e6db74">&#34;dplyr&#34;</span>)
-</code></pre></div><pre><code>## 
-## Attaching package: 'dplyr'
-
-## The following objects are masked from 'package:stats':
-## 
-##     filter, lag
-
-## The following objects are masked from 'package:base':
-## 
-##     intersect, setdiff, setequal, union
+<p>Nominal in student data set is “reason”</p>
+<pre><code>11 reason - reason to choose this school (nominal: close to &quot;home&quot;, school &quot;reputation&quot;, &quot;course&quot; preference or &quot;other&quot;)
 </code></pre>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#a6e22e">library</span>(ggplot2) <span style="color:#75715e"># For creating histograms and plots</span>
-studentdf<span style="color:#f92672">$</span>medu <span style="color:#f92672">=</span> <span style="color:#a6e22e">factor</span>(studentdf<span style="color:#f92672">$</span>medu,levels<span style="color:#f92672">=</span><span style="color:#a6e22e">c</span>(<span style="color:#ae81ff">0</span><span style="color:#f92672">:</span><span style="color:#ae81ff">4</span>),labels <span style="color:#f92672">=</span> <span style="color:#a6e22e">c</span>(<span style="color:#e6db74">&#34;0 - none&#34;</span>,<span style="color:#e6db74">&#34;1 - primary education (4th grade)&#34;</span>,<span style="color:#e6db74">&#34;2 – 5th to 9th grade&#34;</span>,<span style="color:#e6db74">&#34;3 – secondary education&#34;</span>,<span style="color:#e6db74">&#34;4 – higher education&#34;</span>), ordered<span style="color:#f92672">=</span>T)
-studentdf<span style="color:#f92672">$</span>fedu <span style="color:#f92672">=</span> <span style="color:#a6e22e">factor</span>(studentdf<span style="color:#f92672">$</span>fedu,levels<span style="color:#f92672">=</span><span style="color:#a6e22e">c</span>(<span style="color:#ae81ff">0</span><span style="color:#f92672">:</span><span style="color:#ae81ff">4</span>),labels <span style="color:#f92672">=</span> <span style="color:#a6e22e">c</span>(<span style="color:#e6db74">&#34;0 - none&#34;</span>,<span style="color:#e6db74">&#34;1 - primary education (4th grade)&#34;</span>,<span style="color:#e6db74">&#34;2 – 5th to 9th grade&#34;</span>,<span style="color:#e6db74">&#34;3 – secondary education&#34;</span>,<span style="color:#e6db74">&#34;4 – higher education&#34;</span>), ordered<span style="color:#f92672">=</span>T)
-studentdf<span style="color:#f92672">$</span>traveltime.x <span style="color:#f92672">=</span> <span style="color:#a6e22e">factor</span>(studentdf<span style="color:#f92672">$</span>traveltime.x,levels<span style="color:#f92672">=</span><span style="color:#a6e22e">c</span>(<span style="color:#ae81ff">1</span><span style="color:#f92672">:</span><span style="color:#ae81ff">4</span>),labels <span style="color:#f92672">=</span> <span style="color:#a6e22e">c</span>(<span style="color:#e6db74">&#34;1 - &lt;15 min&#34;</span>, <span style="color:#e6db74">&#34;2 - 15 to 30 min&#34;</span>, <span style="color:#e6db74">&#34;3 - 30 min. to 1 hour&#34;</span>, <span style="color:#e6db74">&#34;4 - &gt;1 hour&#34;</span>), ordered<span style="color:#f92672">=</span>T)
-studentdf<span style="color:#f92672">$</span>traveltime.y <span style="color:#f92672">=</span> <span style="color:#a6e22e">factor</span>(studentdf<span style="color:#f92672">$</span>traveltime.y,levels<span style="color:#f92672">=</span><span style="color:#a6e22e">c</span>(<span style="color:#ae81ff">1</span><span style="color:#f92672">:</span><span style="color:#ae81ff">4</span>),labels <span style="color:#f92672">=</span> <span style="color:#a6e22e">c</span>(<span style="color:#e6db74">&#34;1 - &lt;15 min&#34;</span>, <span style="color:#e6db74">&#34;2 - 15 to 30 min&#34;</span>, <span style="color:#e6db74">&#34;3 - 30 min. to 1 hour&#34;</span>, <span style="color:#e6db74">&#34;4 - &gt;1 hour&#34;</span>), ordered<span style="color:#f92672">=</span>T)
-studentdf<span style="color:#f92672">$</span>studytime.x <span style="color:#f92672">=</span> <span style="color:#a6e22e">factor</span>(studentdf<span style="color:#f92672">$</span>studytime.x,levels<span style="color:#f92672">=</span><span style="color:#a6e22e">c</span>(<span style="color:#ae81ff">1</span><span style="color:#f92672">:</span><span style="color:#ae81ff">4</span>),labels <span style="color:#f92672">=</span> <span style="color:#a6e22e">c</span>(<span style="color:#e6db74">&#34;1 - &lt;2 hours&#34;</span>,<span style="color:#e6db74">&#34;2 - 2 to 5 hours&#34;</span>, <span style="color:#e6db74">&#34;3 - 5 to 10 hours&#34;</span>,<span style="color:#e6db74">&#34;4 - &gt;10 hours&#34;</span>), ordered<span style="color:#f92672">=</span>T)
-studentdf<span style="color:#f92672">$</span>studytime.y <span style="color:#f92672">=</span> <span style="color:#a6e22e">factor</span>(studentdf<span style="color:#f92672">$</span>studytime.y,levels<span style="color:#f92672">=</span><span style="color:#a6e22e">c</span>(<span style="color:#ae81ff">1</span><span style="color:#f92672">:</span><span style="color:#ae81ff">4</span>),labels <span style="color:#f92672">=</span> <span style="color:#a6e22e">c</span>(<span style="color:#e6db74">&#34;1 - &lt;2 hours&#34;</span>,<span style="color:#e6db74">&#34;2 - 2 to 5 hours&#34;</span>, <span style="color:#e6db74">&#34;3 - 5 to 10 hours&#34;</span>,<span style="color:#e6db74">&#34;4 - &gt;10 hours&#34;</span>), ordered<span style="color:#f92672">=</span>T)
-t <span style="color:#f92672">&lt;-</span> studentdf <span style="color:#f92672">%&gt;%</span> <span style="color:#a6e22e">count</span>(medu)
-<span style="color:#a6e22e">ggplot</span>(t, <span style="color:#a6e22e">aes</span>(x<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;&#34;</span>,y<span style="color:#f92672">=</span>n, fill<span style="color:#f92672">=</span>medu)) <span style="color:#f92672">+</span> <span style="color:#a6e22e">geom_bar</span>(width <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>, stat <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;identity&#34;</span>)
-</code></pre></div><p><img src="/blog/posts/studentperf/index_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p>Ordinal in student data set is “studytime”</p>
+<pre><code>14 studytime - weekly study time (numeric: 1 - &lt;2 hours, 2 - 2 to 5 hours, 3 - 5 to 10 hours, or 4 - &gt;10 hours)
+</code></pre>
+<h2 id="g3---final-grade-ratio">G3 - Final Grade (Ratio)</h2>
+<p>In this section we will explore the variable G3 in our data set. The Grade G3 variable is a ratio variable because zero has a meaning in this variable. The grade results begins at zero and a student who got 16 did twice as well as a student who received 8.</p>
 <h3 id="normal-distrubution">Normal Distrubution</h3>
 <p>We would like to find a variable which has a normal distribution, because we can use parametric tests on this variable. This is ideal when we want to make inference from our sample to our population. These parametric tests are more powerful because they use all values a variable has. Let’s check if grade results fits the bill for us.</p>
 <p>Finally we get to draw a chart. First the humble scatter plot:</p>
 <div class="figure">
-<p><img src="/blog/posts/studentperf/index_files/figure-html/unnamed-chunk-8-1.png" alt="G3 - final grade unsorted" width="672" /></p>
+<p><img src="/blog/posts/studentperf/index_files/figure-html/unnamed-chunk-7-1.png" alt="G3 - final grade unsorted" width="672" /></p>
 <p class="caption">
 <p>Figure 2: G3 - final grade unsorted</p>
 </p>
 </div>
 <p>Or if we sort the grades in ascending order.</p>
 <div class="figure">
-<p><img src="/blog/posts/studentperf/index_files/figure-html/unnamed-chunk-9-1.png" alt="G3 - final grade sorted" width="672" /></p>
+<p><img src="/blog/posts/studentperf/index_files/figure-html/unnamed-chunk-8-1.png" alt="G3 - final grade sorted" width="672" /></p>
 <p class="caption">
 <p>Figure 3: G3 - final grade sorted</p>
 </p>
@@ -315,7 +322,7 @@ t <span style="color:#f92672">&lt;-</span> studentdf <span style="color:#f92672"
 <p>We can see here that there are grade marked as 0. We don’t know if that means the student didn’t do the exam or they got 0 after attempting it. That’s 10.21 % of the data.</p>
 <p>To understand skew we need to starting visualizing the data. We do this by plotting what is known as a frequency distribution or histogram.</p>
 <div class="figure">
-<p><img src="/blog/posts/studentperf/index_files/figure-html/unnamed-chunk-10-1.png" alt="G3 - final grade histogram" width="672" /></p>
+<p><img src="/blog/posts/studentperf/index_files/figure-html/unnamed-chunk-9-1.png" alt="G3 - final grade histogram" width="672" /></p>
 <p class="caption">
 <p>Figure 4: G3 - final grade histogram</p>
 </p>
@@ -324,7 +331,7 @@ t <span style="color:#f92672">&lt;-</span> studentdf <span style="color:#f92672"
 <p>These zeros which we find the grade results could also be a result of missing data.
 and now again we check the histogram</p>
 <div class="figure">
-<p><img src="/blog/posts/studentperf/index_files/figure-html/unnamed-chunk-12-1.png" alt="G3 - final grade histogram no zeros" width="672" /></p>
+<p><img src="/blog/posts/studentperf/index_files/figure-html/unnamed-chunk-11-1.png" alt="G3 - final grade histogram no zeros" width="672" /></p>
 <p class="caption">
 <p>Figure 5: G3 - final grade histogram no zeros</p>
 </p>
@@ -405,7 +412,7 @@ and now again we check the histogram</p>
 <pre><code>## Warning: Removed 39 rows containing non-finite values (stat_bin).
 </code></pre>
 <div class="figure">
-<p><img src="/blog/posts/studentperf/index_files/figure-html/unnamed-chunk-13-1.png" alt="G3 - final grade histogram with normal curve" width="672" /></p>
+<p><img src="/blog/posts/studentperf/index_files/figure-html/unnamed-chunk-12-1.png" alt="G3 - final grade histogram with normal curve" width="672" /></p>
 <p class="caption">
 <p>Figure 6: G3 - final grade histogram with normal curve</p>
 </p>
@@ -415,7 +422,7 @@ The kurtosis does not look to be a problem.</p>
 <p>We not need to examine that skew in detail. There is another useful graph that we can inspect to see if a distribution is normal called a
 Q-Q plot (quantile–quantile plot). A quantile is the proportion of cases we find below a certain value.</p>
 <div class="figure">
-<p><img src="/blog/posts/studentperf/index_files/figure-html/unnamed-chunk-14-1.png" alt="G3 - final grade Q-Q plot" width="672" /></p>
+<p><img src="/blog/posts/studentperf/index_files/figure-html/unnamed-chunk-13-1.png" alt="G3 - final grade Q-Q plot" width="672" /></p>
 <p class="caption">
 <p>Figure 7: G3 - final grade Q-Q plot</p>
 </p>
@@ -623,8 +630,17 @@ Using skew.2SE from pastecs::stat.desc</p>
 <p>We would really like to reject the Null hypothesis.</p>
 <p>In order to decide if we reject or fail to reject, we run the data through sometime called a statistical test.</p>
 <p>There are two types of errors which can result form a hypothesis test
-1. type I: when we reject the Null hypothesis when it is true, probability of committing a type I error is called the significance level, also called alpha. alpha for us is usually 0.05. But it’s depends on the area/industry.
-2. type II: when we fail to reject the Null hypothesis when it is false, probability of committing a type I error is called beta. The probability of not committing type II is called the power.</p>
+1. type I: when we reject the Null hypothesis when it is true, probability of committing a type I error is called the significance level, also called alpha. alpha for us is usually 0.05. But it’s depends on the area/industry. False Positive
+2. type II: when we fail to reject the Null hypothesis when it is false, probability of committing a type I error is called beta. The probability of not committing type II is called the power. False Negative</p>
+<p>I liked Wikipedia’s description of these:
+type I: “an innocent person is convicted”
+type II: “a guilty person is not convicted”</p>
+<div class="figure">
+<p><img src="typeI_typeII.png" alt="Type I and Type II Errors" width="100%" /></p>
+<p class="caption">
+<p>Figure 10: Type I and Type II Errors</p>
+</p>
+</div>
 <p>The strength of the evidence of is determined by the measureed p-value of the test and by the region of acceptance.</p>
 <h3 id="shapirowilk-test">Shapiro–Wilk test</h3>
 <p>Another way to check if our variable has a normal distribution is do the Shapiro–Wilk test.</p>
@@ -641,6 +657,8 @@ Using skew.2SE from pastecs::stat.desc</p>
 The alternative hypothesis is that it’s a normal distribution.</p>
 <p>Our result has a very small p-value, so the probability that the Null hypothesis is true is tiny, so we can accept the Alternative.</p>
 <p>A p-value of less than 0.05 is statistically significant here, so if our p-value was greater than 0.05. We could not reject <strong>H</strong><sub><strong>0</strong></sub>.</p>
+<p>This test along with the Kolmogorov-Smirnov test are usually not the greatest indicators to a varaible being non-normal.
+The best way to test for normality is outlined already in the section <a href="#dispersion">dispersion</a>. When testing again for normality I will refer to this section.</p>
 <h3 id="using-normal-distribution-to-find-outliers">Using Normal Distribution to find outliers</h3>
 <p>Now by calculating the percentage of standardized scores for the variable itself that are outside our acceptable range
 we can see how far they are away from being normal.
@@ -660,7 +678,7 @@ FSA<span style="color:#f92672">::</span><span style="color:#a6e22e">perc</span>(
 0% are outside of the 99% confidence interval and of course that means also 0% of our data lies outside the 99.9% confidence interval.</p>
 <p>95% of our data is within the acceptable range, so we can treat the data as normal. 😌</p>
 <p>Since our sample size is larger than 80, a case is an outlier if it’s standard score is +/- 3.29. So we have no outliers. HOwever at the moment we are ignoring missing data, that’s eh values we made NA earlier.</p>
-<h4 id="g3-grades-summary">G3 Grades Summary</h4>
+<h3 id="g3-grades-summary">G3 Grades Summary</h3>
 <table>
 <thead>
 <tr>
@@ -691,6 +709,60 @@ FSA<span style="color:#f92672">::</span><span style="color:#a6e22e">perc</span>(
 </tr>
 </tbody>
 </table>
+<h2 id="reason-nominal">Reason (Nominal)</h2>
+<p>Reason has the following description in the data set.</p>
+<pre><code>11 reason - reason to choose this school (nominal: close to &quot;home&quot;, school &quot;reputation&quot;, &quot;course&quot; preference or &quot;other&quot;)
+</code></pre>
+<p>As we explained earlier it is nominal because there is no ordering or direction in this variable. In the R language we call this column a factor.</p>
+<p>The best way to visualize this variable is to use a pie chart, bar chart or a frequency table.
+<img src="/blog/posts/studentperf/index_files/figure-html/unnamed-chunk-26-1.png" width="672" /></p>
+<pre><code>##       reason   n
+## 1     course 140
+## 2       home 110
+## 3      other  34
+## 4 reputation  98
+</code></pre>
+<p><img src="/blog/posts/studentperf/index_files/figure-html/unnamed-chunk-26-2.png" width="672" /></p>
+<h2 id="studytime-ordinal">Studytime (Ordinal)</h2>
+<p>Studytime has the following description in the data set.</p>
+<pre><code>14 studytime - weekly study time (numeric: 1 - &lt;2 hours, 2 - 2 to 5 hours, 3 - 5 to 10 hours, or 4 - &gt;10 hours)
+</code></pre>
+<p>It is ordinal because it has an order, but it is not interval because the different between each value is not the same, also we can’t add or subtract values.</p>
+<p>From the join we did earlier with the data from the two subject, we have two columns of studytime. Let’s compare them.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#a6e22e">print</span>(<span style="color:#e6db74">&#34;Length of studytime.x&#34;</span>)
+<span style="color:#a6e22e">length</span>(studentdf<span style="color:#f92672">$</span>studytime.x)
+a <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">is.na</span>(studentdf<span style="color:#f92672">$</span>studytime.x)
+<span style="color:#a6e22e">print</span>(<span style="color:#e6db74">&#34;Number of NA values in studytime.x&#34;</span>)
+<span style="color:#a6e22e">length</span>(a[a<span style="color:#f92672">==</span><span style="color:#66d9ef">TRUE</span>])
+<span style="color:#a6e22e">print</span>(<span style="color:#e6db74">&#34;Length of studytime.y&#34;</span>)
+<span style="color:#a6e22e">length</span>(studentdf<span style="color:#f92672">$</span>studytime.y)
+a <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">is.na</span>(studentdf<span style="color:#f92672">$</span>studytime.y)
+<span style="color:#a6e22e">print</span>(<span style="color:#e6db74">&#34;Number of NA values in studytime.y&#34;</span>)
+<span style="color:#a6e22e">length</span>(a[a<span style="color:#f92672">==</span><span style="color:#66d9ef">TRUE</span>])
+<span style="color:#a6e22e">print</span>(<span style="color:#e6db74">&#34;Are they equal? how many of different? &#34;</span>)
+a <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">sort</span>(studentdf<span style="color:#f92672">$</span>studytime.x) <span style="color:#f92672">==</span> <span style="color:#a6e22e">sort</span>(studentdf<span style="color:#f92672">$</span>studytime.y)
+<span style="color:#a6e22e">length</span>(a[a<span style="color:#f92672">==</span><span style="color:#66d9ef">FALSE</span>])
+</code></pre></div><pre><code>## [1] &quot;Length of studytime.x&quot;
+## [1] 382
+## [1] &quot;Number of NA values in studytime.x&quot;
+## [1] 0
+## [1] &quot;Length of studytime.y&quot;
+## [1] 382
+## [1] &quot;Number of NA values in studytime.y&quot;
+## [1] 0
+## [1] &quot;Are they equal? how many of different? &quot;
+## [1] 2
+</code></pre>
+<p>Ok, so the two sets of data for the two subjects might not be joined perfectly, but we are talking about 2 values in 382, so not going to have a huge impact. I will choose to use studytime.x from now on.</p>
+<p>In R, we can add the information from the levels in the description of studytime.x to the variable and we can do this for all similar type variables.
+In R these are known as ordinal factors.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">studentdf<span style="color:#f92672">$</span>medu <span style="color:#f92672">=</span> <span style="color:#a6e22e">factor</span>(studentdf<span style="color:#f92672">$</span>medu,levels<span style="color:#f92672">=</span><span style="color:#a6e22e">c</span>(<span style="color:#ae81ff">0</span><span style="color:#f92672">:</span><span style="color:#ae81ff">4</span>),labels <span style="color:#f92672">=</span> <span style="color:#a6e22e">c</span>(<span style="color:#e6db74">&#34;0 - none&#34;</span>,<span style="color:#e6db74">&#34;1 - primary education (4th grade)&#34;</span>,<span style="color:#e6db74">&#34;2 – 5th to 9th grade&#34;</span>,<span style="color:#e6db74">&#34;3 – secondary education&#34;</span>,<span style="color:#e6db74">&#34;4 – higher education&#34;</span>), ordered<span style="color:#f92672">=</span>T)
+studentdf<span style="color:#f92672">$</span>fedu <span style="color:#f92672">=</span> <span style="color:#a6e22e">factor</span>(studentdf<span style="color:#f92672">$</span>fedu,levels<span style="color:#f92672">=</span><span style="color:#a6e22e">c</span>(<span style="color:#ae81ff">0</span><span style="color:#f92672">:</span><span style="color:#ae81ff">4</span>),labels <span style="color:#f92672">=</span> <span style="color:#a6e22e">c</span>(<span style="color:#e6db74">&#34;0 - none&#34;</span>,<span style="color:#e6db74">&#34;1 - primary education (4th grade)&#34;</span>,<span style="color:#e6db74">&#34;2 – 5th to 9th grade&#34;</span>,<span style="color:#e6db74">&#34;3 – secondary education&#34;</span>,<span style="color:#e6db74">&#34;4 – higher education&#34;</span>), ordered<span style="color:#f92672">=</span>T)
+studentdf<span style="color:#f92672">$</span>traveltime.x <span style="color:#f92672">=</span> <span style="color:#a6e22e">factor</span>(studentdf<span style="color:#f92672">$</span>traveltime.x,levels<span style="color:#f92672">=</span><span style="color:#a6e22e">c</span>(<span style="color:#ae81ff">1</span><span style="color:#f92672">:</span><span style="color:#ae81ff">4</span>),labels <span style="color:#f92672">=</span> <span style="color:#a6e22e">c</span>(<span style="color:#e6db74">&#34;1 - &lt;15 min&#34;</span>, <span style="color:#e6db74">&#34;2 - 15 to 30 min&#34;</span>, <span style="color:#e6db74">&#34;3 - 30 min. to 1 hour&#34;</span>, <span style="color:#e6db74">&#34;4 - &gt;1 hour&#34;</span>), ordered<span style="color:#f92672">=</span>T)
+studentdf<span style="color:#f92672">$</span>traveltime.y <span style="color:#f92672">=</span> <span style="color:#a6e22e">factor</span>(studentdf<span style="color:#f92672">$</span>traveltime.y,levels<span style="color:#f92672">=</span><span style="color:#a6e22e">c</span>(<span style="color:#ae81ff">1</span><span style="color:#f92672">:</span><span style="color:#ae81ff">4</span>),labels <span style="color:#f92672">=</span> <span style="color:#a6e22e">c</span>(<span style="color:#e6db74">&#34;1 - &lt;15 min&#34;</span>, <span style="color:#e6db74">&#34;2 - 15 to 30 min&#34;</span>, <span style="color:#e6db74">&#34;3 - 30 min. to 1 hour&#34;</span>, <span style="color:#e6db74">&#34;4 - &gt;1 hour&#34;</span>), ordered<span style="color:#f92672">=</span>T)
+studentdf<span style="color:#f92672">$</span>studytime.x <span style="color:#f92672">=</span> <span style="color:#a6e22e">factor</span>(studentdf<span style="color:#f92672">$</span>studytime.x,levels<span style="color:#f92672">=</span><span style="color:#a6e22e">c</span>(<span style="color:#ae81ff">1</span><span style="color:#f92672">:</span><span style="color:#ae81ff">4</span>),labels <span style="color:#f92672">=</span> <span style="color:#a6e22e">c</span>(<span style="color:#e6db74">&#34;1 - &lt;2 hours&#34;</span>,<span style="color:#e6db74">&#34;2 - 2 to 5 hours&#34;</span>, <span style="color:#e6db74">&#34;3 - 5 to 10 hours&#34;</span>,<span style="color:#e6db74">&#34;4 - &gt;10 hours&#34;</span>), ordered<span style="color:#f92672">=</span>T)
+studentdf<span style="color:#f92672">$</span>studytime.y <span style="color:#f92672">=</span> <span style="color:#a6e22e">factor</span>(studentdf<span style="color:#f92672">$</span>studytime.y,levels<span style="color:#f92672">=</span><span style="color:#a6e22e">c</span>(<span style="color:#ae81ff">1</span><span style="color:#f92672">:</span><span style="color:#ae81ff">4</span>),labels <span style="color:#f92672">=</span> <span style="color:#a6e22e">c</span>(<span style="color:#e6db74">&#34;1 - &lt;2 hours&#34;</span>,<span style="color:#e6db74">&#34;2 - 2 to 5 hours&#34;</span>, <span style="color:#e6db74">&#34;3 - 5 to 10 hours&#34;</span>,<span style="color:#e6db74">&#34;4 - &gt;10 hours&#34;</span>), ordered<span style="color:#f92672">=</span>T)
+</code></pre></div><p><img src="/blog/posts/studentperf/index_files/figure-html/unnamed-chunk-29-1.png" width="960" /></p>
 <h2 id="missing-data">Missing Data</h2>
 <p>Missing data can come as a result of sampling bias or selection bias. Missing data reduces the probability that the test will reject
 <strong>H</strong><sub><strong>0</strong></sub>.</p>
@@ -700,7 +772,7 @@ t[t<span style="color:#f92672">&gt;</span><span style="color:#ae81ff">0</span>]
 </code></pre></div><pre><code>## g2.x g3.x 
 ##   13   39
 </code></pre>
-<p>It is no surprise here at there is not many NAs. Looking back to <a href="#get-started">Get started</a> we merged the Maths and Portuguese results together using the variables “school”,“sex”,“age”,“address”,“famsize”,“Pstatus”,“Medu”,“Fedu”,“Mjob”,“Fjob”,“reason”,“nursery”,“internet”</p>
+<p>It is no surprise here at there is not many NAs. Looking back to [Get started] we merged the Maths and Portuguese results together using the variables “school”,“sex”,“age”,“address”,“famsize”,“Pstatus”,“Medu”,“Fedu”,“Mjob”,“Fjob”,“reason”,“nursery”,“internet”</p>
 <p>Which means if any of these are missing, we won’t have them in our combined data frame. That means alot of the Portuguese grade data is not contained in the merged data frame.</p>
 <p>Missing data reduces also how well sample represents the population, if we had a lot of missing data, it could also lead to invalid conclusions.</p>
 <p>There are three possible patterns to missing data:</p>
@@ -810,6 +882,198 @@ studentdf <span style="color:#f92672">%&gt;%</span> <span style="color:#a6e22e">
 ## 
 </code></pre>
 <p>Because our data set is relatively large, we don’t expect missing data to have a serious impact. It all goes back to being representative of the population.</p>
+<p>In R we have a library called finalfit which has the function ff_glimpse, whihc we can use to identify missing data.</p>
+<pre><code>## $Continuous
+##                 label var_type   n missing_n missing_percent mean  sd  min
+## age               age    &lt;int&gt; 382         0             0.0 16.6 1.2 15.0
+## failures.x failures.x    &lt;int&gt; 382         0             0.0  0.3 0.7  0.0
+## famrel.x     famrel.x    &lt;int&gt; 382         0             0.0  3.9 0.9  1.0
+## freetime.x freetime.x    &lt;int&gt; 382         0             0.0  3.2 1.0  1.0
+## goout.x       goout.x    &lt;int&gt; 382         0             0.0  3.1 1.1  1.0
+## dalc.x         dalc.x    &lt;int&gt; 382         0             0.0  1.5 0.9  1.0
+## walc.x         walc.x    &lt;int&gt; 382         0             0.0  2.3 1.3  1.0
+## health.x     health.x    &lt;int&gt; 382         0             0.0  3.6 1.4  1.0
+## absences.x absences.x    &lt;int&gt; 382         0             0.0  5.3 7.6  0.0
+## g1.x             g1.x    &lt;int&gt; 382         0             0.0 10.9 3.3  3.0
+## g2.x             g2.x    &lt;int&gt; 369        13             3.4 11.1 3.3  5.0
+## g3.x             g3.x    &lt;int&gt; 343        39            10.2 11.6 3.3  4.0
+## failures.y failures.y    &lt;int&gt; 382         0             0.0  0.1 0.5  0.0
+## famrel.y     famrel.y    &lt;int&gt; 382         0             0.0  3.9 0.9  1.0
+## freetime.y freetime.y    &lt;int&gt; 382         0             0.0  3.2 1.0  1.0
+## goout.y       goout.y    &lt;int&gt; 382         0             0.0  3.1 1.1  1.0
+## dalc.y         dalc.y    &lt;int&gt; 382         0             0.0  1.5 0.9  1.0
+## walc.y         walc.y    &lt;int&gt; 382         0             0.0  2.3 1.3  1.0
+## health.y     health.y    &lt;int&gt; 382         0             0.0  3.6 1.4  1.0
+## absences.y absences.y    &lt;int&gt; 382         0             0.0  3.7 4.9  0.0
+## g1.y             g1.y    &lt;int&gt; 382         0             0.0 12.1 2.6  0.0
+## g2.y             g2.y    &lt;int&gt; 382         0             0.0 12.2 2.5  5.0
+## g3.y             g3.y    &lt;int&gt; 382         0             0.0 12.5 2.9  0.0
+##            quartile_25 median quartile_75  max
+## age               16.0   17.0        17.0 22.0
+## failures.x         0.0    0.0         0.0  3.0
+## famrel.x           4.0    4.0         5.0  5.0
+## freetime.x         3.0    3.0         4.0  5.0
+## goout.x            2.0    3.0         4.0  5.0
+## dalc.x             1.0    1.0         2.0  5.0
+## walc.x             1.0    2.0         3.0  5.0
+## health.x           3.0    4.0         5.0  5.0
+## absences.x         0.0    3.0         8.0 75.0
+## g1.x               8.0   10.5        13.0 19.0
+## g2.x               9.0   11.0        13.0 19.0
+## g3.x               9.0   11.0        14.0 20.0
+## failures.y         0.0    0.0         0.0  3.0
+## famrel.y           4.0    4.0         5.0  5.0
+## freetime.y         3.0    3.0         4.0  5.0
+## goout.y            2.0    3.0         4.0  5.0
+## dalc.y             1.0    1.0         2.0  5.0
+## walc.y             1.0    2.0         3.0  5.0
+## health.y           3.0    4.0         5.0  5.0
+## absences.y         0.0    2.0         6.0 32.0
+## g1.y              10.0   12.0        14.0 19.0
+## g2.y              11.0   12.0        14.0 19.0
+## g3.y              11.0   13.0        14.0 19.0
+## 
+## $Categorical
+##                     label var_type   n missing_n missing_percent levels_n
+## school             school    &lt;fct&gt; 382         0             0.0        2
+## sex                   sex    &lt;fct&gt; 382         0             0.0        2
+## address           address    &lt;fct&gt; 382         0             0.0        2
+## famsize           famsize    &lt;fct&gt; 382         0             0.0        2
+## pstatus           pstatus    &lt;fct&gt; 382         0             0.0        2
+## medu                 medu    &lt;ord&gt; 382         0             0.0        5
+## fedu                 fedu    &lt;ord&gt; 382         0             0.0        5
+## mjob                 mjob    &lt;fct&gt; 382         0             0.0        5
+## fjob                 fjob    &lt;fct&gt; 382         0             0.0        5
+## reason             reason    &lt;fct&gt; 382         0             0.0        4
+## nursery           nursery    &lt;fct&gt; 382         0             0.0        2
+## internet         internet    &lt;fct&gt; 382         0             0.0        2
+## guardian.x     guardian.x    &lt;fct&gt; 382         0             0.0        3
+## traveltime.x traveltime.x    &lt;ord&gt; 382         0             0.0        4
+## studytime.x   studytime.x    &lt;ord&gt; 382         0             0.0        4
+## schoolsup.x   schoolsup.x    &lt;fct&gt; 382         0             0.0        2
+## famsup.x         famsup.x    &lt;fct&gt; 382         0             0.0        2
+## paid.x             paid.x    &lt;fct&gt; 382         0             0.0        2
+## activities.x activities.x    &lt;fct&gt; 382         0             0.0        2
+## higher.x         higher.x    &lt;fct&gt; 382         0             0.0        2
+## romantic.x     romantic.x    &lt;fct&gt; 382         0             0.0        2
+## guardian.y     guardian.y    &lt;fct&gt; 382         0             0.0        3
+## traveltime.y traveltime.y    &lt;ord&gt; 382         0             0.0        4
+## studytime.y   studytime.y    &lt;ord&gt; 382         0             0.0        4
+## schoolsup.y   schoolsup.y    &lt;fct&gt; 382         0             0.0        2
+## famsup.y         famsup.y    &lt;fct&gt; 382         0             0.0        2
+## paid.y             paid.y    &lt;fct&gt; 382         0             0.0        2
+## activities.y activities.y    &lt;fct&gt; 382         0             0.0        2
+## higher.y         higher.y    &lt;fct&gt; 382         0             0.0        2
+## romantic.y     romantic.y    &lt;fct&gt; 382         0             0.0        2
+##                                                                                                                                  levels
+## school                                                                                                                       &quot;GP&quot;, &quot;MS&quot;
+## sex                                                                                                                            &quot;F&quot;, &quot;M&quot;
+## address                                                                                                                        &quot;R&quot;, &quot;U&quot;
+## famsize                                                                                                                    &quot;GT3&quot;, &quot;LE3&quot;
+## pstatus                                                                                                                        &quot;A&quot;, &quot;T&quot;
+## medu         &quot;0 - none&quot;, &quot;1 - primary education (4th grade)&quot;, &quot;2 – 5th to 9th grade&quot;, &quot;3 – secondary education&quot;, &quot;4 – higher education&quot;
+## fedu         &quot;0 - none&quot;, &quot;1 - primary education (4th grade)&quot;, &quot;2 – 5th to 9th grade&quot;, &quot;3 – secondary education&quot;, &quot;4 – higher education&quot;
+## mjob                                                                                &quot;at_home&quot;, &quot;health&quot;, &quot;other&quot;, &quot;services&quot;, &quot;teacher&quot;
+## fjob                                                                                &quot;at_home&quot;, &quot;health&quot;, &quot;other&quot;, &quot;services&quot;, &quot;teacher&quot;
+## reason                                                                                          &quot;course&quot;, &quot;home&quot;, &quot;other&quot;, &quot;reputation&quot;
+## nursery                                                                                                                     &quot;no&quot;, &quot;yes&quot;
+## internet                                                                                                                    &quot;no&quot;, &quot;yes&quot;
+## guardian.x                                                                                                  &quot;father&quot;, &quot;mother&quot;, &quot;other&quot;
+## traveltime.x                                                  &quot;1 - &lt;15 min&quot;, &quot;2 - 15 to 30 min&quot;, &quot;3 - 30 min. to 1 hour&quot;, &quot;4 - &gt;1 hour&quot;
+## studytime.x                                                    &quot;1 - &lt;2 hours&quot;, &quot;2 - 2 to 5 hours&quot;, &quot;3 - 5 to 10 hours&quot;, &quot;4 - &gt;10 hours&quot;
+## schoolsup.x                                                                                                                 &quot;no&quot;, &quot;yes&quot;
+## famsup.x                                                                                                                    &quot;no&quot;, &quot;yes&quot;
+## paid.x                                                                                                                      &quot;no&quot;, &quot;yes&quot;
+## activities.x                                                                                                                &quot;no&quot;, &quot;yes&quot;
+## higher.x                                                                                                                    &quot;no&quot;, &quot;yes&quot;
+## romantic.x                                                                                                                  &quot;no&quot;, &quot;yes&quot;
+## guardian.y                                                                                                  &quot;father&quot;, &quot;mother&quot;, &quot;other&quot;
+## traveltime.y                                                  &quot;1 - &lt;15 min&quot;, &quot;2 - 15 to 30 min&quot;, &quot;3 - 30 min. to 1 hour&quot;, &quot;4 - &gt;1 hour&quot;
+## studytime.y                                                    &quot;1 - &lt;2 hours&quot;, &quot;2 - 2 to 5 hours&quot;, &quot;3 - 5 to 10 hours&quot;, &quot;4 - &gt;10 hours&quot;
+## schoolsup.y                                                                                                                 &quot;no&quot;, &quot;yes&quot;
+## famsup.y                                                                                                                    &quot;no&quot;, &quot;yes&quot;
+## paid.y                                                                                                                      &quot;no&quot;, &quot;yes&quot;
+## activities.y                                                                                                                &quot;no&quot;, &quot;yes&quot;
+## higher.y                                                                                                                    &quot;no&quot;, &quot;yes&quot;
+## romantic.y                                                                                                                  &quot;no&quot;, &quot;yes&quot;
+##                      levels_count                    levels_percent
+## school                    342, 40                            90, 10
+## sex                      198, 184                            52, 48
+## address                   81, 301                            21, 79
+## famsize                  278, 104                            73, 27
+## pstatus                   38, 344                         9.9, 90.1
+## medu           3, 51, 98, 95, 135  0.79, 13.35, 25.65, 24.87, 35.34
+## fedu           2, 77, 105, 99, 99  0.52, 20.16, 27.49, 25.92, 25.92
+## mjob          53, 33, 138, 96, 62      13.9,  8.6, 36.1, 25.1, 16.2
+## fjob         16, 17, 211, 107, 31       4.2,  4.5, 55.2, 28.0,  8.1
+## reason           140, 110, 34, 98            36.6, 28.8,  8.9, 25.7
+## nursery                   72, 310                            19, 81
+## internet                  58, 324                            15, 85
+## guardian.x            91, 275, 16                  23.8, 72.0,  4.2
+## traveltime.x      250, 103, 21, 8            65.4, 27.0,  5.5,  2.1
+## studytime.x      103, 190, 62, 27            27.0, 49.7, 16.2,  7.1
+## schoolsup.x               331, 51                            87, 13
+## famsup.x                 144, 238                            38, 62
+## paid.x                   205, 177                            54, 46
+## activities.x             181, 201                            47, 53
+## higher.x                  18, 364                         4.7, 95.3
+## romantic.x               261, 121                            68, 32
+## guardian.y            91, 275, 16                  23.8, 72.0,  4.2
+## traveltime.y      250, 102, 22, 8            65.4, 26.7,  5.8,  2.1
+## studytime.y      102, 190, 63, 27            26.7, 49.7, 16.5,  7.1
+## schoolsup.y               332, 50                            87, 13
+## famsup.y                 143, 239                            37, 63
+## paid.y                    356, 26                        93.2,  6.8
+## activities.y             182, 200                            48, 52
+## higher.y                  18, 364                         4.7, 95.3
+## romantic.y               259, 123                            68, 32
+</code></pre>
+<p>I am going to ignore missing data, which is one of the thing we can do with missing data.</p>
+<h1 id="relationships">Relationships</h1>
+<p>In this section I will explore the relationships between different variables in our data set. The first relationship I would like to explore is Correlation.</p>
+<p>I have read many times that in order to look at relationships in a data set probably we must first ask the questions, it is very bad practice to look and the data and try to work backwards to determine relationships. We must set our alpha level also before beginning.</p>
+<p>The questions I have for this section are:</p>
+<ol>
+<li>Is there a linear correlation between the number of school absences and the G3 result.</li>
+<li>Is there a linear correlation between the reason to choose this school and the G3 result.</li>
+</ol>
+<h2 id="correlation-absences-and-g3">Correlation (absences and G3)</h2>
+<p>Again we will use hypothesis testing to determine if there is a correlation between the number of school absences and the G3 result.
+To make a correlation, we use tests which give us a correlation coefficient, r. This coefficient tells us the strength and the direction of the linear relationship between the number of school absences and the G3 result.</p>
+<p>Once we get this correlation coefficient, r, we need to then check if it is statistically significant and whether it can be used to apply to the population.</p>
+<p>We start as always with stating the Null and alternative hypothesis:</p>
+<p><strong>H</strong><sub><strong>0</strong></sub>: There is NOT a significant linear relationship between the number of school absences and the G3 result.</p>
+<p><strong>H</strong><sub><strong>a</strong></sub>: There IS a significant linear relationship between the number of school absences and the G3 result.</p>
+<p>We have already studied G3 in the previous section for normality. Let’s study number of school absences now.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#a6e22e">print</span>(<span style="color:#e6db74">&#34;Length of absences.x&#34;</span>)
+<span style="color:#a6e22e">length</span>(studentdf<span style="color:#f92672">$</span>absences.x)
+a <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">is.na</span>(studentdf<span style="color:#f92672">$</span>absences.x)
+<span style="color:#a6e22e">print</span>(<span style="color:#e6db74">&#34;Number of NA values in absences.x&#34;</span>)
+<span style="color:#a6e22e">length</span>(a[a<span style="color:#f92672">==</span><span style="color:#66d9ef">TRUE</span>])
+<span style="color:#a6e22e">print</span>(<span style="color:#e6db74">&#34;Length of absences.y&#34;</span>)
+<span style="color:#a6e22e">length</span>(studentdf<span style="color:#f92672">$</span>absences.y)
+a <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">is.na</span>(studentdf<span style="color:#f92672">$</span>absences.y)
+<span style="color:#a6e22e">print</span>(<span style="color:#e6db74">&#34;Number of NA values in absences.y&#34;</span>)
+<span style="color:#a6e22e">length</span>(a[a<span style="color:#f92672">==</span><span style="color:#66d9ef">TRUE</span>])
+<span style="color:#a6e22e">print</span>(<span style="color:#e6db74">&#34;Are they equal? how many of different? &#34;</span>)
+a <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">sort</span>(studentdf<span style="color:#f92672">$</span>absences.x) <span style="color:#f92672">==</span> <span style="color:#a6e22e">sort</span>(studentdf<span style="color:#f92672">$</span>absences.y)
+<span style="color:#a6e22e">length</span>(a[a<span style="color:#f92672">==</span><span style="color:#66d9ef">FALSE</span>])
+</code></pre></div><pre><code>## [1] &quot;Length of absences.x&quot;
+## [1] 382
+## [1] &quot;Number of NA values in absences.x&quot;
+## [1] 0
+## [1] &quot;Length of absences.y&quot;
+## [1] 382
+## [1] &quot;Number of NA values in absences.y&quot;
+## [1] 0
+## [1] &quot;Are they equal? how many of different? &quot;
+## [1] 210
+</code></pre>
+<p>pastecs::stat.desc(studentdf(absences, basic=F) tpskew&lt;-semTools::skew(studentdf)absences)
+tpkurt&lt;-semTools::kurtosis(studentdf(absences) tpskew[1]/tpskew[2] tpkurt[1]/tpkurt[2] zstabsences&lt;- abs(scale(studentdf)absences))
+FSA::perc(as.numeric(zstabsences), 1.96, “gt”)
+FSA::perc(as.numeric(zstabsences), 3.29, “gt”)
+```</p>
 <h2 id="more">More</h2>
 <p>Parametric are most powerful, more robuseness becuse we use every score
 Parametric or non parametric
@@ -879,14 +1143,14 @@ kendall more reilable</p>
       <hr>
       <div class="toc">
         <nav id="TableOfContents">
-  <ul>
+  <ol>
     <li><a href="#introduction">Introduction</a></li>
-    <li><a href="#prepare">Prepare</a></li>
-    <li><a href="#get-started">Get started</a>
-      <ul>
+    <li><a href="#getting-started">Getting started</a>
+      <ol>
         <li><a href="#population-vs-sample">Population vs Sample</a></li>
-        <li><a href="#how-to-infer-from-a-sample-to-a-population">How to infer from a sample to a population</a>
-          <ul>
+        <li><a href="#how-to-infer-from-a-sample-to-a-population">How to infer from a sample to a population</a></li>
+        <li><a href="#g3---final-grade-ratio">G3 - Final Grade (Ratio)</a>
+          <ol>
             <li><a href="#normal-distrubution">Normal Distrubution</a></li>
             <li><a href="#central-tendency">Central Tendency</a></li>
             <li><a href="#dispersion">Dispersion</a></li>
@@ -895,16 +1159,20 @@ kendall more reilable</p>
             <li><a href="#skew-and-kurtosis-analysis">skew and kurtosis analysis</a></li>
             <li><a href="#hypothesis-testing">Hypothesis Testing</a></li>
             <li><a href="#shapirowilk-test">Shapiro–Wilk test</a></li>
-            <li><a href="#using-normal-distribution-to-find-outliers">Using Normal Distribution to find outliers</a>
-              <ul>
-                <li><a href="#g3-grades-summary">G3 Grades Summary</a></li>
-              </ul>
-            </li>
-          </ul>
+            <li><a href="#using-normal-distribution-to-find-outliers">Using Normal Distribution to find outliers</a></li>
+            <li><a href="#g3-grades-summary">G3 Grades Summary</a></li>
+          </ol>
         </li>
+        <li><a href="#reason-nominal">Reason (Nominal)</a></li>
+        <li><a href="#studytime-ordinal">Studytime (Ordinal)</a></li>
         <li><a href="#missing-data">Missing Data</a></li>
+      </ol>
+    </li>
+    <li><a href="#relationships">Relationships</a>
+      <ol>
+        <li><a href="#correlation-absences-and-g3">Correlation (absences and G3)</a></li>
         <li><a href="#more">More</a></li>
-      </ul>
+      </ol>
     </li>
     <li><a href="#explore">Explore</a></li>
     <li><a href="#analysis">Analysis</a></li>
@@ -912,7 +1180,7 @@ kendall more reilable</p>
     <li><a href="#report">Report</a></li>
     <li><a href="#using-r">Using R</a></li>
     <li><a href="#references">References</a></li>
-  </ul>
+  </ol>
 </nav>
       </div>
     </div>

@@ -10,19 +10,12 @@ hero: /images/site/school.jpg
 bibliography: ["references.bib"]
 biblio-style: "apalike"
 link-citations: true
-output:
-  blogdown::html_page:
-    toc: true
 ---
 
 
 # Introduction
 
-# Prepare
-
-We explore a student exam performance data set. 
-
-This data set is from a paper by P.Cortez and A. Silva entitled "Using  Data  Mining  to  Predict  Secondary  School  Student  Performance". [@cortez2008using]
+I am writing this blog as part of an assignment. My Details:
 
  |
 ------------- | -------------
@@ -32,11 +25,22 @@ Programme Code: | TU060
 Version R: | R version 4.0.3 (2020-10-10)
 R packages: | 
 
-# Get started
+
+# Getting started
+
+We explore a student exam performance data set. This is a data set about secondary school academical achievements in Portugal. The data contains two set of results, one set for results in Maths and one set for results in Portuguese. These are merged together to form one data set which I will endeavor to break down in order to learn about the basic properties of statistics, describing the Frequency and probabilities, hypothesis testing, Normality, Missing data, Relationships, Component Analysis and more. 
+
+This data set is from a paper by P.Cortez and A. Silva entitled "Using  Data  Mining  to  Predict  Secondary  School  Student  Performance". [@cortez2008using]
+
+
+
+
 We need to get the data
 ```{r, echo=TRUE}
-library("dplyr")
-library(ggplot2) # For creating histograms and plots
+library("tidyr")
+library("finalfit") # for ff_glimpse(studentdf)
+library("gridExtra") # for plots in a grid
+library("ggplot2") # For creating histograms and plots
 #download.file(url="https://archive.ics.uci.edu/ml/machine-learning-databases/00320/student.zip", destfile="student.zip")
 #unzip("student.zip",exdir = "studentdf")
 list.files("studentdf")
@@ -45,7 +49,7 @@ list.files("studentdf")
 data set description: [https://archive.ics.uci.edu/ml/datasets/student+performance#](https://archive.ics.uci.edu/ml/datasets/student+performance#) or [here](/blog/description/)
 
 read in the data
-```{r echo=TRUE, comment="", highlight=FALSE}
+```{r echo=TRUE, comment=""}
 matdf=read.table("studentdf/student-mat.csv",sep=";",header=TRUE, stringsAsFactors=TRUE)
 pordf=read.table("studentdf/student-por.csv",sep=";",header=TRUE, stringsAsFactors=TRUE)
 
@@ -61,6 +65,14 @@ Let's see what variables we have in each record.
 colnames(studentdf)
 ```
 
+
+The data set measures the grades for each students achievements at three time intervals, g1, g2 and g3. So grades at g1 and g2 can been used to predict g3, and from the paper, it can be seen that there is a strong correlation between g3 and g2/g1.
+
+let's us pick a random student:
+```{r paged.print=FALSE}
+studentdf %>% 
+  sample_n(1) 
+```
 ## Population vs Sample
 
 We are interested in finding results for the entire population of students that have completed exams in maths and Portuguese in Portugal, but we know that is not possible, so what we have is a sample. We will use this sample to infer things about the population as a whole. 
@@ -82,7 +94,7 @@ We need to have some understanding of the population in order to make this decis
 
 We ask ourselves this question, because in the end we want to be able to create a model that describes the population, not a model which only describes the sample.
 
-We will show later that there are many statistical tests we can do on a sample set of data to see if we can infer anything about the population. 
+We will show later that there are many statistical tests we can do on a sample set of data to see if we can infer anything about the population. Also we will show that through the use of hypotheses testing we can decide whether there is a relationship in the sample data that is strong enough to use to model the relationship in the population. 
 
 Now to the 2nd question, a biased sample is one which differs from the population from which it is taken. This can happen if the sample is not collected randomly. If the students in this sample were picked, then it would not be a representative sample. 
 There is a limit to this randomness, we have to acknowledge that, looking at the paper[@cortez2008using], we see that data was only collected during one year and only in two public schools. This year and these schools might not represent the population's Portugese school system in other parts of the country and in other years. Doing a quick Google search I can see that these schools are in rural and less dense areas of Portugal. 
@@ -378,8 +390,16 @@ We would really like to reject the Null hypothesis.
 In order to decide if we reject or fail to reject, we run the data through sometime called a statistical test.
 
 There are two types of errors which can result form a hypothesis test
-1. type I: when we reject the Null hypothesis when it is true, probability of committing a type I error is called the significance level, also called alpha. alpha for us is usually 0.05. But it's depends on the area/industry. 
-2. type II: when we fail to reject the Null hypothesis when it is false, probability of committing a type I error is called beta. The probability of not committing type II is called the power. 
+1. type I: when we reject the Null hypothesis when it is true, probability of committing a type I error is called the significance level, also called alpha. alpha for us is usually 0.05. But it's depends on the area/industry. False Positive
+2. type II: when we fail to reject the Null hypothesis when it is false, probability of committing a type I error is called beta. The probability of not committing type II is called the power. False Negative
+
+I liked Wikipedia's description of these:
+type I: "an innocent person is convicted"
+type II: "a guilty person is not convicted"
+
+```{r, echo=FALSE, fig.cap="Type I and Type II Errors", out.width = '100%'}
+knitr::include_graphics("typeI_typeII.png")
+```
 
 The strength of the evidence of is determined by the measureed p-value of the test and by the region of acceptance.  
 
@@ -401,6 +421,9 @@ The alternative hypothesis is that it's a normal distribution.
 Our result has a very small p-value, so the probability that the Null hypothesis is true is tiny, so we can accept the Alternative. 
 
 A p-value of less than 0.05 is statistically significant here, so if our p-value was greater than 0.05. We could not reject **H**<sub>**0**</sub>.
+
+This test along with the Kolmogorov-Smirnov test are usually not the greatest indicators to a varaible being non-normal. 
+The best way to test for normality is outlined already in the section [dispersion]. When testing again for normality I will refer to this section. 
 
 ### Using Normal Distribution to find outliers 
 Now by calculating the percentage of standardized scores for the variable itself that are outside our acceptable range
@@ -469,8 +492,27 @@ Studytime has the following description in the data set.
 ```
 It is ordinal because it has an order, but it is not interval because the different between each value is not the same, also we can't add or subtract values.  
 
+From the join we did earlier with the data from the two subject, we have two columns of studytime, one for Maths(x) and one for Portuguese(y). Let's compare them. 
+```{r, results="hold"}
+print("Length of studytime.x")
+length(studentdf$studytime.x)
+a <- is.na(studentdf$studytime.x)
+print("Number of NA values in studytime.x")
+length(a[a==TRUE])
+print("Length of studytime.y")
+length(studentdf$studytime.y)
+a <- is.na(studentdf$studytime.y)
+print("Number of NA values in studytime.y")
+length(a[a==TRUE])
+print("Are they equal? how many of different? ")
+a <- sort(studentdf$studytime.x) == sort(studentdf$studytime.y)
+length(a[a==FALSE])
+```
 
-But first, we have a host of other variables which need the type set in R. 
+Ok, so 2 values in 382. Very similar. But we can see if are not dealing with exactly the same students. 
+
+In R, we can add the information from the levels in the description of studytime.x to the variable and we can do this for all similar type variables. 
+In R these are known as ordinal factors. 
 ```{r}
 studentdf$medu = factor(studentdf$medu,levels=c(0:4),labels = c("0 - none","1 - primary education (4th grade)","2 – 5th to 9th grade","3 – secondary education","4 – higher education"), ordered=T)
 studentdf$fedu = factor(studentdf$fedu,levels=c(0:4),labels = c("0 - none","1 - primary education (4th grade)","2 – 5th to 9th grade","3 – secondary education","4 – higher education"), ordered=T)
@@ -478,8 +520,19 @@ studentdf$traveltime.x = factor(studentdf$traveltime.x,levels=c(1:4),labels = c(
 studentdf$traveltime.y = factor(studentdf$traveltime.y,levels=c(1:4),labels = c("1 - <15 min", "2 - 15 to 30 min", "3 - 30 min. to 1 hour", "4 - >1 hour"), ordered=T)
 studentdf$studytime.x = factor(studentdf$studytime.x,levels=c(1:4),labels = c("1 - <2 hours","2 - 2 to 5 hours", "3 - 5 to 10 hours","4 - >10 hours"), ordered=T)
 studentdf$studytime.y = factor(studentdf$studytime.y,levels=c(1:4),labels = c("1 - <2 hours","2 - 2 to 5 hours", "3 - 5 to 10 hours","4 - >10 hours"), ordered=T)
+```
+
+```{r, fig.width = 10, echo=FALSE}
+# Plot
+t <- studentdf %>% count(studytime.x)
+plot1 <- ggplot(t, aes(x="",y=n, fill=studytime.x)) + geom_bar(width = 1, stat = "identity")
+t <- studentdf %>% count(traveltime.x)
+plot2 <- ggplot(t, aes(x="",y=n, fill=traveltime.x)) + geom_bar(width = 1, stat = "identity")
 t <- studentdf %>% count(medu)
-ggplot(t, aes(x="",y=n, fill=medu)) + geom_bar(width = 1, stat = "identity")
+plot3 <- ggplot(t, aes(x="",y=n, fill=medu)) + geom_bar(width = 1, stat = "identity")
+t <- studentdf %>% count(fedu)
+plot4 <- ggplot(t, aes(x="",y=n, fill=fedu)) + geom_bar(width = 1, stat = "identity")
+grid.arrange(plot1, plot2, plot3, plot4, ncol=2)
 ```
 
 
@@ -513,6 +566,79 @@ studentdf %>% filter(is.na(g3.x)) %>% summary()
 ```
 
 Because our data set is relatively large, we don't expect missing data to have a serious impact. It all goes back to being representative of the population. 
+
+In R we have a library called finalfit which has the function ff_glimpse, whihc we can use to identify missing data.
+```{r, echo=FALSE}
+ff_glimpse(studentdf)
+```
+I am going to ignore missing data, which is one of the thing we can do with missing data. 
+
+# Relationships
+
+In this section I will explore the relationships between different variables in our data set. The first relationship I would like to explore is Correlation. 
+
+I have read many times that in order to look at relationships in a data set probably we must first ask the questions, it is very bad practice to look and the data and try to work backwards to determine relationships. We must set our alpha level also before beginning. 
+
+The questions I have for this section are:
+
+1. Is there a linear correlation between the number of school absences and the G3 result. 
+2. Is there a linear correlation between the reason to choose this school and the G3 result. 
+
+
+## Correlation (absences and G3)
+
+Again we will use hypothesis testing to determine if there is a correlation between the number of school absences and the G3 result. 
+To make a correlation, we use tests which give us a correlation coefficient, r. This coefficient tells us the strength and the direction of the linear relationship between the number of school absences and the G3 result.
+
+Once we get this correlation coefficient, r, we need to then check if it is statistically significant and whether it can be used to apply to the population.
+
+We start as always with stating the Null and alternative hypothesis:
+
+**H**<sub>**0**</sub>: There is NOT a significant linear relationship between the number of school absences for Maths and the Maths G3 result.
+
+**H**<sub>**a**</sub>: There IS a significant linear relationship between the number of school absences for Maths and the Maths G3 result.
+
+We have already studied G3 in the previous section for normality. Let's study number of school absences now. 
+
+```{r,  results="hold"}
+print("Length of absences.x in Maths")
+length(studentdf$absences.x)
+a <- is.na(studentdf$absences.x)
+print("Number of NA values in absences.x in Maths")
+length(a[a==TRUE])
+print("Length of absences.y in Portuguese")
+length(studentdf$absences.y)
+a <- is.na(studentdf$absences.y)
+print("Number of NA values in absences.y in Portuguese")
+length(a[a==TRUE])
+print("Are they equal? how many of different? ")
+a <- sort(studentdf$absences.x) == sort(studentdf$absences.y)
+length(a[a==FALSE])
+```
+
+oK, so I continue with Maths absences. 
+```{r,  results="hold"}
+# studentdf %>%
+#   ggplot(aes(x=absences.x)) +
+#   labs(x="number of school absences for Maths") +
+#   geom_histogram(alpha = .05, binwidth=1, colour="black", aes(y=..density.., fill=..count..)) +
+#   scale_fill_gradient("Count", low="grey", high="green") +
+#   stat_function(fun=dnorm, color="red",args=list(mean=mean(studentdf$absences.x, na.rm=TRUE), sd=sd(studentdf$absences.x, na.rm=TRUE)))
+
+studentdf %>% 
+  select(absences.x, absences.y) %>%
+  gather(key=Type, value=Value) %>% 
+  ggplot(aes(x=Value,fill=Type)) + 
+  geom_density(position="dodge")
+pastecs::stat.desc(studentdf$absences.x, basic=F)
+tpskew<-semTools::skew(studentdf$absences.x)
+tpkurt<-semTools::kurtosis(studentdf$absences.x)
+tpskew[1]/tpskew[2]
+tpkurt[1]/tpkurt[2]
+zstabsences<- abs(scale(studentdf$absences.x))
+FSA::perc(as.numeric(zstabsences), 1.96, "gt")
+FSA::perc(as.numeric(zstabsences), 3.29, "gt")
+```
 
 ## More
 Parametric are most powerful, more robuseness becuse we use every score

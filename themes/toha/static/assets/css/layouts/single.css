@@ -2,6 +2,7 @@ body {
   background-color: #e5e9f2;
   position: relative;
 }
+
 .read-area {
   background-color: #f9fafc;
 }
@@ -16,8 +17,8 @@ body {
 }
 
 .content-section {
-  flex: 70%;
-  max-width: 70%;
+  flex: 65%;
+  max-width: 65%;
   order: 2;
   /* background-color: lightseagreen; */
   padding: 0;
@@ -29,9 +30,9 @@ body {
   background: #e5e9f2;
 }
 .toc-section {
-  flex: 30%;
+  flex: 35%;
   order: 3;
-  max-width: 30%;
+  max-width: 35%;
   /* background-color: lightpink; */
   transition: all ease-out 0.5s;
 }
@@ -221,6 +222,10 @@ pre > code {
   padding: 10px !important;
 }
 */
+.hljs {
+ font-size: 12px; 
+}
+
 a.header-anchor {
   text-decoration: none;
   color: #1c2d41;

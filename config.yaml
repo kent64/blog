@@ -17,6 +17,8 @@ languages:
 # DefaultContentLanguage: fr
 
 # Allow raw html in markdown file
+# https://xyproto.github.io/splash/docs/
+# https://gohugo.io/getting-started/configuration-markup/
 markup:
   goldmark:
     renderer:
@@ -24,7 +26,20 @@ markup:
   tableOfContents:
     startLevel: 1
     endLevel: 6
-    ordered: false
+    ordered: true
+  highlight:
+    anchorLineNos: false
+    codeFences: true
+    guessSyntax: false
+    hl_Lines: ""
+    lineAnchors: ""
+    lineNoStart: 1
+    lineNos: false
+    lineNumbersInTable: true
+    noClasses: true
+    style: monokai
+    # style: solarized-dark
+    tabWidth: 4
 
 # Enable Google Analytics
 googleAnalytics: UA-XXXXXXXXX-X
@@ -61,3 +76,8 @@ params:
   # Currently, you can just hide it from the footer.
   newsletter:
     enable: false
+
+
+
+
+  
