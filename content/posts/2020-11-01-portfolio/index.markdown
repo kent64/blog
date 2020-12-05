@@ -48,6 +48,7 @@ library("dplyr")
     ##     intersect, setdiff, setequal, union
 
 ``` r
+library("tidyr")
 library("finalfit") # for ff_glimpse(studentdf)
 library("gridExtra") # for plots in a grid
 ```
@@ -112,20 +113,20 @@ studentdf %>%
   sample_n(1) 
 ```
 
-    ##   school sex age address famsize pstatus medu fedu     mjob    fjob reason
-    ## 1     GP   M  15       U     GT3       T    4    4 services teacher course
+    ##   school sex age address famsize pstatus medu fedu     mjob  fjob reason
+    ## 1     GP   F  17       U     GT3       T    3    4 services other course
     ##   nursery internet guardian.x traveltime.x studytime.x failures.x schoolsup.x
-    ## 1     yes      yes     father            1           2          0          no
+    ## 1     yes      yes     mother            1           3          0          no
     ##   famsup.x paid.x activities.x higher.x romantic.x famrel.x freetime.x goout.x
-    ## 1      yes     no          yes      yes         no        4          3       3
+    ## 1       no     no           no      yes         no        4          4       5
     ##   dalc.x walc.x health.x absences.x g1.x g2.x g3.x guardian.y traveltime.y
-    ## 1      1      1        5          2   19   18   18     father            1
+    ## 1      1      3        5         16   16   15   15     mother            1
     ##   studytime.y failures.y schoolsup.y famsup.y paid.y activities.y higher.y
-    ## 1           2          0          no      yes     no          yes      yes
+    ## 1           3          0          no       no     no           no      yes
     ##   romantic.y famrel.y freetime.y goout.y dalc.y walc.y health.y absences.y g1.y
-    ## 1         no        4          3       3      1      1        5          0   14
+    ## 1         no        4          4       5      1      3        5          8   11
     ##   g2.y g3.y
-    ## 1   15   15
+    ## 1   13   14
 
 ## Population vs Sample
 
@@ -1040,13 +1041,21 @@ length(a[a==FALSE])
 oK, so I continue with Maths absences.
 
 ``` r
-studentdf %>%
-  ggplot(aes(x=absences.x)) +
-  labs(x="number of school absences for Maths") +
-  geom_histogram(binwidth=1, colour="black", aes(y=..density.., fill=..count..)) +
-  scale_fill_gradient("Count", low="grey", high="green") +
-  stat_function(fun=dnorm, color="red",args=list(mean=mean(studentdf$absences.x, na.rm=TRUE), sd=sd(studentdf$absences.x, na.rm=TRUE)))  
+# studentdf %>%
+#   ggplot(aes(x=absences.x)) +
+#   labs(x="number of school absences for Maths") +
+#   geom_histogram(alpha = .05, binwidth=1, colour="black", aes(y=..density.., fill=..count..)) +
+#   scale_fill_gradient("Count", low="grey", high="green") +
+#   stat_function(fun=dnorm, color="red",args=list(mean=mean(studentdf$absences.x, na.rm=TRUE), sd=sd(studentdf$absences.x, na.rm=TRUE)))
+
+studentdf %>% 
+  select(absences.x, absences.y) %>%
+  gather(key=Type, value=Value) %>% 
+  ggplot(aes(x=Value,fill=Type)) + 
+  geom_density(position="dodge")
 ```
+
+    ## Warning: Width not defined. Set with `position_dodge(width = ?)`
 
 <img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-35-1.png" width="672" />
 

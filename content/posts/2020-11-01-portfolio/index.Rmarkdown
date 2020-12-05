@@ -37,6 +37,7 @@ This data set is from a paper by P.Cortez and A. Silva entitled "Using  Data  Mi
 
 We need to get the data
 ```{r, echo=TRUE}
+library("dplyr")
 library("tidyr")
 library("finalfit") # for ff_glimpse(studentdf)
 library("gridExtra") # for plots in a grid
