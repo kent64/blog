@@ -49,6 +49,12 @@ library("dplyr")
 
 ``` r
 library("tidyr")
+library("viridis")
+```
+
+    ## Loading required package: viridisLite
+
+``` r
 library("finalfit") # for ff_glimpse(studentdf)
 library("gridExtra") # for plots in a grid
 ```
@@ -113,20 +119,18 @@ studentdf %>%
   sample_n(1) 
 ```
 
-    ##   school sex age address famsize pstatus medu fedu     mjob  fjob reason
-    ## 1     GP   F  17       U     GT3       T    3    4 services other course
-    ##   nursery internet guardian.x traveltime.x studytime.x failures.x schoolsup.x
-    ## 1     yes      yes     mother            1           3          0          no
-    ##   famsup.x paid.x activities.x higher.x romantic.x famrel.x freetime.x goout.x
-    ## 1       no     no           no      yes         no        4          4       5
-    ##   dalc.x walc.x health.x absences.x g1.x g2.x g3.x guardian.y traveltime.y
-    ## 1      1      3        5         16   16   15   15     mother            1
-    ##   studytime.y failures.y schoolsup.y famsup.y paid.y activities.y higher.y
-    ## 1           3          0          no       no     no           no      yes
-    ##   romantic.y famrel.y freetime.y goout.y dalc.y walc.y health.y absences.y g1.y
-    ## 1         no        4          4       5      1      3        5          8   11
-    ##   g2.y g3.y
-    ## 1   13   14
+    ##   school sex age address famsize pstatus medu fedu  mjob  fjob reason nursery
+    ## 1     GP   M  16       U     GT3       T    3    4 other other course      no
+    ##   internet guardian.x traveltime.x studytime.x failures.x schoolsup.x famsup.x
+    ## 1      yes     father            3           1          2          no      yes
+    ##   paid.x activities.x higher.x romantic.x famrel.x freetime.x goout.x dalc.x
+    ## 1     no          yes      yes         no        3          4       5      2
+    ##   walc.x health.x absences.x g1.x g2.x g3.x guardian.y traveltime.y studytime.y
+    ## 1      4        2          0    6    5    0     father            3           1
+    ##   failures.y schoolsup.y famsup.y paid.y activities.y higher.y romantic.y
+    ## 1          1          no      yes     no          yes      yes         no
+    ##   famrel.y freetime.y goout.y dalc.y walc.y health.y absences.y g1.y g2.y g3.y
+    ## 1        3          4       5      2      4        2          4    9    9   10
 
 ## Population vs Sample
 
@@ -162,9 +166,9 @@ There is a limit to this randomness, we have to acknowledge that, looking at the
 
 </iframe>
 
-<div class="figure">
+<div class="figure" style="text-align: center">
 
-<img src="https://upload.wikimedia.org/wikipedia/commons/b/b1/Densidade_populacional_por_concelho_-_INE_2001.png" alt="Population density of Portugal @wikiportmap" width="50%" />
+<img src="https://upload.wikimedia.org/wikipedia/commons/b/b1/Densidade_populacional_por_concelho_-_INE_2001.png" alt="Population density of Portugal @wikiportmap" width="60%" />
 
 <p class="caption">
 
@@ -478,7 +482,7 @@ Figure 8: Standard Normal Distribution
 
 </div>
 
-In the diagram above, you can see how a 95% confidence interval relates to a 19.96 z-score. 2.5% of the area is shaded in in blue, twice that on each side is 5% which is 100% - 5%.
+In the diagram above, you can see how a 95% confidence interval relates to a 1.96 z-score. 2.5% of the area is shaded in in blue, twice that on each side is 5% which is 100% - 5%.
 
 In green you can also see the area which are divided by the -1.96 z-score. These areas are the probabilities or p-values of a event falling into that z-score range.
 
@@ -987,14 +991,253 @@ I am going to ignore missing data, which is one of the thing we can do with miss
 
 # Relationships
 
-In this section I will explore the relationships between different variables in our data set. The first relationship I would like to explore is Correlation.
+Before we continue to examine relationships in our data set. We need to discuss the type of tests we can conduct. Depending on the variables types we have a choice of either parametric or non-parametric
+
+  - Parametric tests need to pass some assumptions, that the variable is normally distributed, that the sample variance is homogeneous. These are usually more powerful than non-parametric because we use all the data.
+  - Non-parametric tests don’t need to pass the same assumptions, variables do not need to be normally distributed. Most of these test work on the principle of ranking.
+
+Below I have organized a list of the statistical tests which apply to each search question. I will explain these in the following sections where I will show an example of each.
+
+<div class="figure" style="text-align: center">
+
+<img src="test_table_1.png" alt="Types of test data and types of Analysis" width="55%" id="testtable" />
+
+<p class="caption">
+
+Figure 11: Types of test data and types of Analysis
+
+</p>
+
+</div>
+
+We will first look at correlations that describes the association between two variables and later t-tests which examine where there is a significant difference between two groups. The tools I use in R will use a t-test to assess the strength of evidence against the null hypothesis, which is that there is no correlation.
 
 I have read many times that in order to look at relationships in a data set probably we must first ask the questions, it is very bad practice to look and the data and try to work backwards to determine relationships. We must set our alpha level also before beginning.
 
 The questions I have for this section are:
 
-1.  Is there a linear correlation between the number of school absences and the G3 result.
-2.  Is there a linear correlation between the reason to choose this school and the G3 result.
+1.  Is there a linear correlation between the G2 result and the G3 result for Maths? (Pearson) (paramteric)
+2.  Is there a linear correlation between the number of school absences and the G3 result? (Spearman + Kendall) (non paramteric)
+3.  Grade results in students with a family size greater than 3 differed from those with a smaller family size. (t-test)
+4.  Is there a difference between grade 1 and grade 3 in Maths for students who paid for extra classes? (paired t-test)
+5.  Is there a difference in the health of the students between the students who’s address is rural vs urban?
+
+## Correlation (G2 and G3)
+
+Looking at the two variables for Maths. Please refer to \[skew-and-kurtosis-analysis\] for the g3 analysis of Maths.
+Looking at g2, I know there is some missing data but a very small amount. We need to check the standardized scores for skewness and kurtotsis and plot the histogram and Q-Q plot.
+
+``` r
+studentdf %>%
+  ggplot(aes(x=g2.x)) +
+  labs(x="G2 results for Maths") +
+  geom_histogram(alpha = .05, binwidth=1, colour="black", aes(y=..density.., fill=..count..)) +
+  scale_fill_gradient("Count", low="grey", high="green") +
+  stat_function(fun=dnorm, color="red",args=list(mean=mean(studentdf$g2.x, na.rm=TRUE), sd=sd(studentdf$g2.x, na.rm=TRUE)))
+```
+
+    ## Warning: Removed 13 rows containing non-finite values (stat_bin).
+
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-35-1.png" width="672" />
+
+``` r
+#Create a qqplot
+qqnorm(studentdf$g2.x)
+qqline(studentdf$g2.x, col=2) #show a line on theplot
+```
+
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-35-2.png" width="672" />
+
+``` r
+pastecs::stat.desc(studentdf$g2.x, basic=F)
+tpskew<-semTools::skew(studentdf$g2.x)
+```
+
+    ## Warning in semTools::skew(studentdf$g2.x): Missing observations are removed from
+    ## a vector.
+
+``` r
+tpkurt<-semTools::kurtosis(studentdf$g2.x)
+```
+
+    ## Warning in semTools::kurtosis(studentdf$g2.x): Missing observations are removed
+    ## from a vector.
+
+``` r
+tpskew[1]/tpskew[2]
+tpkurt[1]/tpkurt[2]
+```
+
+    ##       median         mean      SE.mean CI.mean.0.95          var      std.dev 
+    ##   11.0000000   11.0894309    0.1727429    0.3396871   11.0110021    3.3182830 
+    ##     coef.var 
+    ##    0.2992293 
+    ## skew (g1) 
+    ##  1.661684 
+    ## Excess Kur (g2) 
+    ##       -2.320396
+
+The values of skew is good at 1.661684. The Kurtosis is high at -2.320396. We next calculate the percentage of standardized scores that our outside our acceptable range to tell us how big our problem is.
+
+In the histogram, earlier I converted all 0 grades to NA, so in our data for g2.x and g3.x, there are 12 NAs and 39 NA respectively. I will ignore them.
+
+``` r
+studentdf %>%
+  filter(is.na(g2.x)) %>%
+  group_by(g2.x) %>%
+  summarise(n = n())
+```
+
+    ## `summarise()` ungrouping output (override with `.groups` argument)
+
+    ## # A tibble: 1 x 2
+    ##    g2.x     n
+    ##   <int> <int>
+    ## 1    NA    13
+
+``` r
+studentdf %>%
+  filter(is.na(g3.x)) %>%
+  group_by(g3.x) %>%
+  summarise(n = n())
+```
+
+    ## `summarise()` ungrouping output (override with `.groups` argument)
+
+    ## # A tibble: 1 x 2
+    ##    g3.x     n
+    ##   <int> <int>
+    ## 1    NA    39
+
+``` r
+zstabsences<- abs(scale(studentdf$g2.x))
+FSA::perc(as.numeric(zstabsences), 1.96, "gt")
+FSA::perc(as.numeric(zstabsences), 3.29, "gt")
+```
+
+    ## [1] 4.336043
+    ## [1] 0
+
+At 0.05 level, we need 95% of our data to exist within the bounds of a z-score of 1.96 in order to say it is safe to treat our variable as normal. Since only 4.33 % of my variable g2.x is outside of 1.96 standard deviations and because this sample size is large.
+The following are outliers at 1.96 SDs, these students did really well\!
+
+``` r
+studentdf %>%
+  mutate(zscale = scale(g2.x)) %>%
+  filter(zscale > 1.96 | zscale < -1.96) %>%
+  select(zscale, g1.x,g2.x,g3.x)
+```
+
+    ##      zscale g1.x g2.x g3.x
+    ## 1  2.082574   18   18   18
+    ## 2  2.082574   18   18   18
+    ## 3  2.082574   18   18   19
+    ## 4  2.082574   17   18   18
+    ## 5  2.082574   16   18   18
+    ## 6  2.082574   19   18   18
+    ## 7  2.082574   16   18   19
+    ## 8  2.383934   18   19   19
+    ## 9  2.383934   18   19   19
+    ## 10 2.082574   18   18   18
+    ## 11 2.082574   18   18   18
+    ## 12 2.082574   16   18   18
+    ## 13 2.082574   16   18   18
+    ## 14 2.383934   19   19   20
+    ## 15 2.082574   17   18   18
+    ## 16 2.082574   19   18   19
+
+I can treat this as normal and I have no outliers to remove. From earlier analysis we know that g3.x can also be treated as nornal.
+
+### G2 Grades Summary
+
+| Heuristic                        | value                             |
+| -------------------------------- | --------------------------------- |
+| Standarised score of skew        | 1.661684                          |
+| Standarised score of kurtosis    | \-2.320396                        |
+| Standarised score of variables   | 4.33 % outside +/- 1.96           |
+| Standarised score of variables   | 0% outside +/- 3.29 (no outliers) |
+| Currently ignoring missing data. | 12 NAs                            |
+
+### Correlation Scatter plot (G2 and G3)
+
+``` r
+studentdf %>%
+  ggplot(aes(x=g2.x, y=g3.x)) +
+  geom_point() + 
+  geom_smooth(method = "lm", colour = "Green", se = F) + 
+  labs(x = "Grade at Time Inteval 2", y = "Final Grade at Time Inteval 3") 
+```
+
+    ## `geom_smooth()` using formula 'y ~ x'
+
+    ## Warning: Removed 39 rows containing non-finite values (stat_smooth).
+
+    ## Warning: Removed 39 rows containing missing values (geom_point).
+
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-39-1.png" width="672" />
+
+There are three varieties of Correlation test I can perform on g2 and g3.
+
+  - Pearson
+  - Spearman
+  - Kendall
+
+Which I choose to use depends alot on the domain of my analysis. I want to use a correlation test which can be compared with other tests conducted in the same domain. Because both variables are continuous and normal Pearson is a clear choice, but for learning purposes lets look at each below. For Pearson coefficient we make some assumptions; a) our data is continuous (which it is), b) our two variables are paired (we hope they are, although analysis of the data set would say maybe not all are paired) and c) the two grades are independent. d) they should be homoscedasticity (from the plot we can see there is, the variances should be similar as you move along the line, the opposite is heteroscedasticity)
+
+``` r
+#Pearson Correlation
+cor.test(studentdf$g2.x, studentdf$g3.x, method='pearson')
+```
+
+    ## 
+    ##  Pearson's product-moment correlation
+    ## 
+    ## data:  studentdf$g2.x and studentdf$g3.x
+    ## t = 70.015, df = 341, p-value < 0.00000000000000022
+    ## alternative hypothesis: true correlation is not equal to 0
+    ## 95 percent confidence interval:
+    ##  0.9592617 0.9731820
+    ## sample estimates:
+    ##       cor 
+    ## 0.9669345
+
+Spearman and Kandal are only needed if our data did not fit a normal distribution.
+Below i will report Spearman’s rank correlation rho and Kendall’s rank correlation tau:
+
+``` r
+cor.test(studentdf$g2.x, studentdf$g3.x, method = "spearman")
+```
+
+    ## Warning in cor.test.default(studentdf$g2.x, studentdf$g3.x, method =
+    ## "spearman"): Cannot compute exact p-value with ties
+
+    ## 
+    ##  Spearman's rank correlation rho
+    ## 
+    ## data:  studentdf$g2.x and studentdf$g3.x
+    ## S = 254064, p-value < 0.00000000000000022
+    ## alternative hypothesis: true rho is not equal to 0
+    ## sample estimates:
+    ##      rho 
+    ## 0.962224
+
+``` r
+cor.test(studentdf$g2.x, studentdf$g3.x, method = "kendall")
+```
+
+    ## 
+    ##  Kendall's rank correlation tau
+    ## 
+    ## data:  studentdf$g2.x and studentdf$g3.x
+    ## z = 22.796, p-value < 0.00000000000000022
+    ## alternative hypothesis: true tau is not equal to 0
+    ## sample estimates:
+    ##      tau 
+    ## 0.895293
+
+To report Pearson coefficient here we say:
+
+343 student grades at two time intervals, Time 1 G2(M=11.09, SD=3.32) and Time 2 G3(M=11.57, SD=3.28) were investigated. A positive Pearson r correlation coefficient of 0.97 was revealed. There is a really strong correlation between g2 results and the final grade g3 with t(341) = 70 with a p-value \< 0.001
 
 ## Correlation (absences and G3)
 
@@ -1038,26 +1281,35 @@ length(a[a==FALSE])
     ## [1] "Are they equal? how many of different? "
     ## [1] 210
 
-oK, so I continue with Maths absences.
-
 ``` r
-# studentdf %>%
-#   ggplot(aes(x=absences.x)) +
-#   labs(x="number of school absences for Maths") +
-#   geom_histogram(alpha = .05, binwidth=1, colour="black", aes(y=..density.., fill=..count..)) +
-#   scale_fill_gradient("Count", low="grey", high="green") +
-#   stat_function(fun=dnorm, color="red",args=list(mean=mean(studentdf$absences.x, na.rm=TRUE), sd=sd(studentdf$absences.x, na.rm=TRUE)))
-
 studentdf %>% 
+  filter(absences.x < 40,
+         absences.y < 40) %>%
   select(absences.x, absences.y) %>%
   gather(key=Type, value=Value) %>% 
   ggplot(aes(x=Value,fill=Type)) + 
-  geom_density(position="dodge")
+  labs(x="number of school absences") +
+  geom_density(binwidth=1, alpha=0.3, position="dodge")
 ```
+
+    ## Warning: Ignoring unknown parameters: binwidth
 
     ## Warning: Width not defined. Set with `position_dodge(width = ?)`
 
-<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-35-1.png" width="672" />
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-43-1.png" width="672" />
+
+Ok, so I continue with Maths absences.
+
+``` r
+studentdf %>%
+  ggplot(aes(x=absences.x)) +
+  labs(x="number of school absences for Maths") +
+  geom_histogram(alpha = .05, binwidth=1, colour="black", aes(y=..density.., fill=..count..)) +
+  scale_fill_gradient("Count", low="grey", high="green") +
+  stat_function(fun=dnorm, color="red",args=list(mean=mean(studentdf$absences.x, na.rm=TRUE), sd=sd(studentdf$absences.x, na.rm=TRUE)))
+```
+
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-44-1.png" width="672" />
 
 ``` r
 pastecs::stat.desc(studentdf$absences.x, basic=F)
@@ -1080,6 +1332,657 @@ FSA::perc(as.numeric(zstabsences), 3.29, "gt")
     ##         106.969 
     ## [1] 3.403141
     ## [1] 0.7853403
+
+The question we need to ask is our distribution normal? we can see it’s not normal, how far away is it from normal?
+Standardised scores for skewness and kurtosis between -2 and +2 are considered acceptable in order to prove normal univariate distribution. So our values of skew and kurtosis are far outside of normal as can be seen in the the figures above. Therefore we cannot use Pearson coefficient this time. I will use Spearman’s rank correlation and Kendall’s rank correlation.
+
+``` r
+studentdf %>%
+  ggplot(aes(x=absences.x, y=g3.x)) +
+  geom_point() + 
+  geom_smooth(method = "lm", colour = "Blue", se = F) + 
+  labs(x = "Number of absenses in Maths", y = "Final Grade at Time Inteval 3 for Maths") 
+```
+
+    ## `geom_smooth()` using formula 'y ~ x'
+
+    ## Warning: Removed 39 rows containing non-finite values (stat_smooth).
+
+    ## Warning: Removed 39 rows containing missing values (geom_point).
+
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-45-1.png" width="672" />
+
+Looking at this plot I can see that I have a high degree of homoscedasticity.
+
+Using Spearman:
+
+``` r
+cor.test(studentdf$absences.x, studentdf$g3.x, method = "spearman")
+```
+
+    ## Warning in cor.test.default(studentdf$absences.x, studentdf$g3.x, method =
+    ## "spearman"): Cannot compute exact p-value with ties
+
+    ## 
+    ##  Spearman's rank correlation rho
+    ## 
+    ## data:  studentdf$absences.x and studentdf$g3.x
+    ## S = 8503896, p-value = 0.0000006768
+    ## alternative hypothesis: true rho is not equal to 0
+    ## sample estimates:
+    ##        rho 
+    ## -0.2644176
+
+The correlation coefficient between the two variables is moderate at -0.26. It indicates a negative relationship, so the more absent days you have, the worse your G3 results. The significance value is very small at p \< 0.001, so we can reject the NUll hypothesis that there is no relationship.
+
+We could use Kendall also, Kendall is used rather that Spearman when the data set is small and is also useful when the many values of a variables are similar. Kendall produces a Tau.
+
+``` r
+cor.test(studentdf$absences.x, studentdf$g3.x, method = "kendall")
+```
+
+    ## 
+    ##  Kendall's rank correlation tau
+    ## 
+    ## data:  studentdf$absences.x and studentdf$g3.x
+    ## z = -4.9694, p-value = 0.0000006714
+    ## alternative hypothesis: true tau is not equal to 0
+    ## sample estimates:
+    ##        tau 
+    ## -0.1980571
+
+The result is a coefficient that is closer to zero. The significance of the result is the same as Spearman.
+
+Grade g3 results were significantly related with grade g2 results, tau = 0.2, p \< 0.001.
+
+## T-Test (G3 and family size)
+
+The question for this section is:
+
+Grade results in students with a family size greater than 3 differed from those with a smaller family size.
+
+The variables involved are g3.x which is a ratio type and famsize which is a Nominal type varible.
+
+We have investigated g3.x in previous sections already, let us look at the famsize variable. The description of the data set says:
+
+    5 famsize - family size (binary: 'LE3' - less or equal to 3 or 'GT3' - greater than 3)
+
+``` r
+studentdf %>% 
+  group_by(famsize) %>%
+  count(famsize)
+```
+
+    ## # A tibble: 2 x 2
+    ## # Groups:   famsize [2]
+    ##   famsize     n
+    ##   <fct>   <int>
+    ## 1 GT3       278
+    ## 2 LE3       104
+
+We have no missing
+
+``` r
+studentdf %>% 
+  count(famsize) %>%
+  mutate(total = sum(n)) %>%
+  group_by(famsize) %>%
+  mutate(perc = round((n/total)*100)) %>%
+  ggplot(aes(x="", y=perc, fill=famsize)) +
+  geom_bar(stat="identity", width=1, color="white") +
+  coord_polar("y", start=0) +
+  theme_void() + # remove background, grid, numeric labels 
+  geom_text(aes(label = paste(perc, " %" )), color = "white", fontface = "bold", position = position_stack(vjust = 0.5)) +
+  labs(title="G3 Results vs family size", caption="'LE3' - less or equal to 3 or 'GT3' - greater than 3")
+```
+
+<div class="figure" style="text-align: center">
+
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-49-1.png" alt="G3 Results vs family size" width="60%" />
+
+<p class="caption">
+
+Figure 12: G3 Results vs family size
+
+</p>
+
+</div>
+
+Now to plot a histograms for each group. One group is families with more than 3 and the other group is family with less than or equal to 3. We have seen teh distrubtuion for g3 maths results already by now to look at those distributions when we spearate them by famsize.
+
+``` r
+studentdf %>%
+  ggplot(aes(x=g3.x)) + 
+  facet_wrap(vars(famsize)) +
+  geom_histogram(binwidth=2, colour="black") + 
+  scale_fill_gradient("Count", low="#DCDCDC", high="#7C7C7C")
+```
+
+    ## Warning: Removed 39 rows containing non-finite values (stat_bin).
+
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-50-1.png" width="672" />
+
+``` r
+psych::describeBy(studentdf$g3.x, studentdf$famsize, mat=TRUE)
+```
+
+    ##     item group1 vars   n     mean       sd median  trimmed    mad min max range
+    ## X11    1    GT3    1 244 11.47541 3.265263     11 11.41837 2.9652   4  20    16
+    ## X12    2    LE3    1  99 11.79798 3.328847     12 11.71605 2.9652   5  19    14
+    ##          skew   kurtosis        se
+    ## X11 0.1964338 -0.4780809 0.2090371
+    ## X12 0.2324757 -0.5688868 0.3345617
+
+The values of skew and kurtotsis reported by the two are within the acceptable range for both to be considered normal.
+
+Looking at the [Test Table](#testtable), we have a normal distribution variable and 2 independent groups, so our choice of test will be the t-test. One of the assumptions for a t-test is that we have homogeneity of variance. Homogeneous, or equal, variance exists when the standard deviations of samples are approximately equal.
+
+The t-test produces two values as its output: t-value and degrees of freedom. Higher values of the t-value, also called t-score, indicate that a large difference exists between the two sample sets. The smaller the t-value, the more similarity exists between the two sample sets. Degrees of freedom, we will deal with again, it is essentially the number of observations in the data that are free to vary when estimating statistical parameters. It is essential for assessing the importance and the validity of the null hypothesis.
+
+I will state the two hypothesis for this test:
+
+**H**<sub>**0**</sub>: There is no difference in results for a student with a big family to one with a smaller family
+
+**H**<sub>**a**</sub>: There is a difference in results for a student with a big family to one with a smaller family
+
+We now conduct Levene’s test for homogeneity of variance using the library car. The null hypothesis is that variances in groups are equal so to assume homogeneity we would expect probability to not be statistically significant.
+
+``` r
+car::leveneTest(g3.x ~ famsize, data=studentdf)
+```
+
+    ## Levene's Test for Homogeneity of Variance (center = median)
+    ##        Df F value Pr(>F)
+    ## group   1  0.1794 0.6722
+    ##       341
+
+The result gave a p-value of 0.6722, so we cannot reject the Null hypothesis. Therefore it is concluded that there is no difference between the variance in our sample and in the population.
+
+``` r
+studentdf %>%
+  ggplot(aes(x = as.numeric(row.names(studentdf)), y = g3.x, color=famsize)) +
+  geom_point(size=2) + 
+  labs(y="G3 - final grade")
+```
+
+    ## Warning: Removed 39 rows containing missing values (geom_point).
+
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-53-1.png" width="672" />
+
+``` r
+p1 <- studentdf %>%
+  ggplot(aes(x=famsize, y=g3.x, fill=famsize)) +
+    geom_boxplot() +
+    scale_fill_viridis(discrete = TRUE, alpha=0.6) +
+    geom_jitter(color="black", size=0.4, alpha=0.9) +
+    ggtitle("A boxplot with Family size and the Grade 3 results") +
+    ylab("Grade 3 results")
+p2 <- studentdf %>%
+  ggplot(aes(x=famsize, y=g3.x, fill=famsize)) +
+    geom_violin() +
+    scale_fill_viridis(discrete = TRUE, alpha=0.6) +
+    geom_jitter(color="black", size=0.4, alpha=0.9) +
+    ggtitle("A volin plot with Family size and the Grade 3 results") +
+    ylab("Grade 3 results")
+grid.arrange(p1, p2, ncol=2)
+```
+
+    ## Warning: Removed 39 rows containing non-finite values (stat_boxplot).
+
+    ## Warning: Removed 39 rows containing missing values (geom_point).
+
+    ## Warning: Removed 39 rows containing non-finite values (stat_ydensity).
+
+    ## Warning: Removed 39 rows containing missing values (geom_point).
+
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-54-1.png" width="672" />
+
+Now we conduct the t-test using the stats package. Because our variance in g3.x passed the Levee’s test, we can set var.equal = TRUE and then the stats::t.test function will not use the welsh modification.
+
+``` r
+stats::t.test(g3.x~famsize, var.equal=TRUE, data=studentdf)
+```
+
+    ## 
+    ##  Two Sample t-test
+    ## 
+    ## data:  g3.x by famsize
+    ## t = -0.82439, df = 341, p-value = 0.4103
+    ## alternative hypothesis: true difference in means is not equal to 0
+    ## 95 percent confidence interval:
+    ##  -1.0922059  0.4470659
+    ## sample estimates:
+    ## mean in group GT3 mean in group LE3 
+    ##          11.47541          11.79798
+
+Out of interest, let’s check the result with the welsh modification:
+
+``` r
+stats::t.test(g3.x~famsize, var.equal=FALSE, data=studentdf)
+```
+
+    ## 
+    ##  Welch Two Sample t-test
+    ## 
+    ## data:  g3.x by famsize
+    ## t = -0.81767, df = 178.48, p-value = 0.4146
+    ## alternative hypothesis: true difference in means is not equal to 0
+    ## 95 percent confidence interval:
+    ##  -1.1010488  0.4559088
+    ## sample estimates:
+    ## mean in group GT3 mean in group LE3 
+    ##          11.47541          11.79798
+
+The t-test yielded a p-value of 0.41 meaning that no statistically significant difference was found.
+
+To quantify the effect we look for the Effect size. We have saw one of these already with Pearsons Coefficient, Another is Cohen’s d, Cohen’s d can be used as an effect size statistic for a two-sample t-test.
+`$$Cohen\ d\ (effect\ size) = {2 t \over \sqrt{df}}$$`
+
+``` r
+res <- stats::t.test(g3.x~famsize, var.equal=TRUE, data=studentdf)
+#Calculate Cohen's d
+#artithmetically
+effcd=round((2*res$statistic)/sqrt(res$parameter),2)
+#Using function from effectsize package
+effectsize::t_to_d(t = res$statistic, res$parameter)
+```
+
+    ##     d |        95% CI
+    ## ---------------------
+    ## -0.09 | [-0.30, 0.12]
+
+Eta squared
+`$$Eta = {t^2 \over t^2 + df}$$`
+
+``` r
+effes=round((res$statistic*res$statistic)/((res$statistic*res$statistic)+(res$parameter)),3)
+effes
+```
+
+    ##     t 
+    ## 0.002
+
+<div class="figure" style="text-align: center">
+
+<img src="effect_sizes.png" alt="Cohen's d annd Eta" width="40%" id="effect" />
+
+<p class="caption">
+
+Figure 13: Cohen’s d annd Eta
+
+</p>
+
+</div>
+
+Reporting the results with Cohen’s d effect
+An independent-samples t-test was conducted to compare Maths grade 2 results for students who had families less than or equal to 3 and those who had families greater than 3. No significant difference in the Maths grades was found (M= 11.80, SD= 3.23 for students with a family size less than or equal to 3, M=11.48, SD= 3.27 for students who had families greater than 3), t(341) = -0.82, p = 0.41. Cohen’s d also indicated a very weak effect size (-0.09).
+
+Reporting the results with eta squred effect
+An independent-samples t-test was conducted to compare Maths grade 2 results for students who had families less than or equal to 3 and those who had families greater than 3. No significant difference in the Maths grades was found (M= 11.80, SD= 3.23 for students with a family size less than or equal to 3, M=11.48, SD= 3.27 for students who had families greater than 3), t(341) = -0.82, p = 0.41. A very small effect size was also indicted by the eta squared value (0.002).
+
+## Paired t-test
+
+Question: Is there a difference between grade 1 and grade 3 in Maths for students who paid for extra classes?
+
+We have already inspected G3 in Maths for normality, I will quickly show that G1 is also normal.
+
+``` r
+studentdf %>%
+  ggplot(aes(x=g1.x)) +
+  labs(x="G1 results for Maths") +
+  geom_histogram(alpha = .05, binwidth=1, colour="black", aes(y=..density.., fill=..count..)) +
+  scale_fill_gradient("Count", low="grey", high="green") +
+  stat_function(fun=dnorm, color="red",args=list(mean=mean(studentdf$g1.x, na.rm=TRUE), sd=sd(studentdf$g1.x, na.rm=TRUE)))
+```
+
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-60-1.png" width="672" />
+
+``` r
+#Create a qqplot
+qqnorm(studentdf$g1.x)
+qqline(studentdf$g1.x, col=2) #show a line on theplot
+```
+
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-60-2.png" width="672" />
+
+``` r
+pastecs::stat.desc(studentdf$g1.x, basic=F)
+tpskew<-semTools::skew(studentdf$g1.x)
+tpkurt<-semTools::kurtosis(studentdf$g1.x)
+tpskew[1]/tpskew[2]
+tpkurt[1]/tpkurt[2]
+```
+
+    ##       median         mean      SE.mean CI.mean.0.95          var      std.dev 
+    ##   10.5000000   10.8612565    0.1713583    0.3369264   11.2169202    3.3491671 
+    ##     coef.var 
+    ##    0.3083591 
+    ## skew (g1) 
+    ##  2.205097 
+    ## Excess Kur (g2) 
+    ##       -2.742249
+
+Skew and kurtosis are both significant, because they are above 1.96 standard deviations on the z-scale. Need to investigate how big a problem we have.
+
+``` r
+zstabsences<- abs(scale(studentdf$g1.x))
+FSA::perc(as.numeric(zstabsences), 1.96, "gt")
+```
+
+    ## [1] 3.403141
+
+``` r
+FSA::perc(as.numeric(zstabsences), 3.29, "gt")
+```
+
+    ## [1] 0
+
+3.4 % of values are outside 1.96. 0 % of the values are outside 3.29, these would be considered serious outliers. Let’s check what these values outside 1.96 are:
+
+``` r
+studentdf %>%
+  mutate(zscale = scale(g1.x)) %>%
+  filter(zscale > 1.96 | zscale < -1.96) %>%
+  select(zscale, g1.x,g2.x,g3.x)
+```
+
+    ##       zscale g1.x g2.x g3.x
+    ## 1  -2.048646    4   NA   NA
+    ## 2   2.131498   18   18   18
+    ## 3   2.131498   18   18   18
+    ## 4   2.131498   18   18   19
+    ## 5   2.430080   19   18   18
+    ## 6   2.131498   18   19   19
+    ## 7   2.131498   18   19   19
+    ## 8   2.131498   18   18   18
+    ## 9   2.131498   18   18   18
+    ## 10  2.430080   19   19   20
+    ## 11 -2.347227    3    5    5
+    ## 12  2.430080   19   18   19
+    ## 13  2.131498   18   16   16
+
+One poor student had a bad result and missed the others for g2 and g3. Since we are dealing with a large sample set and we have no serious outliers. We shall use the full set of Maths g1 results.
+
+So the last variable of question here is a categorical one:
+
+    18 paid - extra paid classes within the course subject (Math or Portuguese) (binary: yes or no)
+
+We are interested in the variable for Maths.
+
+``` r
+studentdf %>%
+  count(paid.x)
+```
+
+    ##   paid.x   n
+    ## 1     no 205
+    ## 2    yes 177
+
+So what we have in total is one categorical independent variable and one continuous variable measured at two times(G1 adn G3).
+Looking again at the [Test Table](#testtable). Because our continuous variable is normal, we can use the parametric Paired T-test.
+
+So lets look at the subset of these Grades where students had paid classes and a quick check to make sure they’re still normal data.
+
+``` r
+paid_students_maths <- studentdf %>%
+  filter(paid.x == "yes")
+paid_students_maths %>%
+  ggplot(aes(x=g1.x)) +
+  labs(x="G1 results for Maths") +
+  geom_histogram(alpha = .05, binwidth=1, colour="black", aes(y=..density.., fill=..count..)) +
+  scale_fill_gradient("Count", low="grey", high="green") +
+  stat_function(fun=dnorm, color="red",args=list(mean=mean(paid_students_maths$g1.x, na.rm=TRUE), sd=sd(paid_students_maths$g1.x, na.rm=TRUE)))
+```
+
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-64-1.png" width="672" />
+
+``` r
+#Create a qqplot
+qqnorm(paid_students_maths$g1.x)
+qqline(paid_students_maths$g1.x, col=2) #show a line on theplot
+```
+
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-64-2.png" width="672" />
+
+``` r
+pastecs::stat.desc(paid_students_maths$g1.x, basic=F)
+```
+
+    ##       median         mean      SE.mean CI.mean.0.95          var      std.dev 
+    ##   11.0000000   11.0000000    0.2246380    0.4433309    8.9318182    2.9886148 
+    ##     coef.var 
+    ##    0.2716923
+
+``` r
+tpskew<-semTools::skew(paid_students_maths$g1.x)
+tpkurt<-semTools::kurtosis(paid_students_maths$g1.x)
+tpskew[1]/tpskew[2]
+```
+
+    ## skew (g1) 
+    ##  1.382106
+
+``` r
+tpkurt[1]/tpkurt[2]
+```
+
+    ## Excess Kur (g2) 
+    ##       -2.053623
+
+``` r
+paid_students_maths %>%
+  ggplot(aes(x=g3.x)) +
+  labs(x="G3 results for Maths") +
+  geom_histogram(alpha = .05, binwidth=1, colour="black", aes(y=..density.., fill=..count..)) +
+  scale_fill_gradient("Count", low="grey", high="green") +
+  stat_function(fun=dnorm, color="red",args=list(mean=mean(paid_students_maths$g3.x, na.rm=TRUE), sd=sd(paid_students_maths$g3.x, na.rm=TRUE)))
+```
+
+    ## Warning: Removed 8 rows containing non-finite values (stat_bin).
+
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-64-3.png" width="672" />
+
+``` r
+#Create a qqplot
+qqnorm(paid_students_maths$g3.x)
+qqline(paid_students_maths$g3.x, col=2) #show a line on theplot
+```
+
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-64-4.png" width="672" />
+
+``` r
+pastecs::stat.desc(paid_students_maths$g3.x, basic=F)
+```
+
+    ##       median         mean      SE.mean CI.mean.0.95          var      std.dev 
+    ##   11.0000000   11.4082840    0.2349161    0.4637678    9.3263595    3.0539089 
+    ##     coef.var 
+    ##    0.2676922
+
+``` r
+tpskew<-semTools::skew(paid_students_maths$g3.x)
+```
+
+    ## Warning in semTools::skew(paid_students_maths$g3.x): Missing observations are
+    ## removed from a vector.
+
+``` r
+tpkurt<-semTools::kurtosis(paid_students_maths$g3.x)
+```
+
+    ## Warning in semTools::kurtosis(paid_students_maths$g3.x): Missing observations
+    ## are removed from a vector.
+
+``` r
+tpskew[1]/tpskew[2]
+```
+
+    ## skew (g1) 
+    ##  1.358554
+
+``` r
+tpkurt[1]/tpkurt[2]
+```
+
+    ## Excess Kur (g2) 
+    ##      -0.6134903
+
+``` r
+stats::t.test(paid_students_maths$g1.x,paid_students_maths$g3.x,paired=TRUE)
+```
+
+    ## 
+    ##  Paired t-test
+    ## 
+    ## data:  paid_students_maths$g1.x and paid_students_maths$g3.x
+    ## t = -2.4368, df = 168, p-value = 0.01586
+    ## alternative hypothesis: true difference in means is not equal to 0
+    ## 95 percent confidence interval:
+    ##  -0.48199751 -0.05054687
+    ## sample estimates:
+    ## mean of the differences 
+    ##              -0.2662722
+
+``` r
+res <- stats::t.test(paid_students_maths$g1.x,paid_students_maths$g3.x,paired=TRUE)
+effes=round((res$statistic*res$statistic)/((res$statistic*res$statistic)+(res$parameter)),3)
+effes
+```
+
+    ##     t 
+    ## 0.034
+
+The result is that we don’t see a significant difference.
+
+“A paired-samples t-test was conducted for the students who got paid classes for the time intervals G1(M=11, SD=2.99) and G3 (M=11.41, SD=3.1). The means increased by 0.266 with a 95% confidence interval ranging from 0.49 to 0.051. Test result was t(168) = -2.44 and p-value was 0.016. The result is not significant at p \< .05. The Eta squared statistic (0.034) indicated a small effect size”
+
+I would have expected a significant difference here since we are paying for extra classes. But perhaps we started paying for classes before the first Grade G1. Also there are other things which could have contributed to the difference or lack of difference between these grades.
+
+## Health for Rural vs Urban
+
+The question:
+
+Is there a difference in the health of the students between the students who’s address is rural vs urban?
+
+I need to compare both Maths and Portuguese. Let’s see if our health results are the same:
+
+``` r
+print("Length of health.x in Maths")
+length(studentdf$health.x)
+a <- is.na(studentdf$health.x)
+print("Number of NA values in health.x in Maths")
+length(a[a==TRUE])
+print("Length of health.y in Portuguese")
+length(studentdf$health.y)
+a <- is.na(studentdf$health.y)
+print("Number of NA values in health.y in Portuguese")
+length(a[a==TRUE])
+print("Are they equal? how many of different? ")
+a <- sort(studentdf$health.x) == sort(studentdf$health.y)
+length(a[a==FALSE])
+```
+
+    ## [1] "Length of health.x in Maths"
+    ## [1] 382
+    ## [1] "Number of NA values in health.x in Maths"
+    ## [1] 0
+    ## [1] "Length of health.y in Portuguese"
+    ## [1] 382
+    ## [1] "Number of NA values in health.y in Portuguese"
+    ## [1] 0
+    ## [1] "Are they equal? how many of different? "
+    ## [1] 3
+
+So 3 in 382 are different. Which isn’t even 1%. I will take Maths.
+
+``` r
+studentdf %>%
+  ggplot(aes(x = as.numeric(row.names(studentdf)), y = health.x, color=address)) +
+  geom_point(size=2) + 
+  labs(y="Health (1 bad - 5 good)", x="student number")
+```
+
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-68-1.png" width="672" />
+
+``` r
+studentdf %>%
+  ggplot(aes(x=address, y=health.x, fill=address)) +
+    geom_boxplot() +
+    scale_fill_viridis(discrete = TRUE, alpha=0.6) +
+    geom_jitter(color="black", size=0.4, alpha=0.9) +
+    ggtitle("A boxplot with Address and Health") +
+    ylab("Grade 3 results")
+```
+
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-68-2.png" width="672" />
+
+``` r
+studentdf %>%
+  ggplot(aes(x=health.x)) +
+  labs(x="Health on scale from 1-5") +
+  geom_histogram(alpha = .05, binwidth=1, colour="black", aes(y=..density.., fill=..count..)) +
+  scale_fill_gradient("Count", low="grey", high="blue") +
+  stat_function(fun=dnorm, color="red",args=list(mean=mean(studentdf$health.x, na.rm=TRUE), sd=sd(studentdf$health.x, na.rm=TRUE)))
+```
+
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-69-1.png" width="672" />
+
+``` r
+pastecs::stat.desc(studentdf$health.x, basic=F)
+```
+
+    ##       median         mean      SE.mean CI.mean.0.95          var      std.dev 
+    ##   4.00000000   3.57853403   0.07164864   0.14087628   1.96100782   1.40035989 
+    ##     coef.var 
+    ##   0.39132222
+
+``` r
+tpskew<-semTools::skew(studentdf$health.x)
+tpkurt<-semTools::kurtosis(studentdf$health.x)
+tpskew[1]/tpskew[2]
+```
+
+    ## skew (g1) 
+    ## -4.214329
+
+``` r
+tpkurt[1]/tpkurt[2]
+```
+
+    ## Excess Kur (g2) 
+    ##       -4.019741
+
+``` r
+zstabsences<- abs(scale(studentdf$health.x))
+FSA::perc(as.numeric(zstabsences), 1.96, "gt")
+```
+
+    ## [1] 0
+
+``` r
+FSA::perc(as.numeric(zstabsences), 3.29, "gt")
+```
+
+    ## [1] 0
+
+This health variable is highly skewed. We cannot consider it normal, therefore we must use non-parametric tests.
+Looking again at the [Test Table](#testtable). We have two independent groups, which are students who live Urban and those who live in Rural. So we choose the Mann Whitney.
+
+``` r
+wilcox.test(health.x~address, data = studentdf)
+```
+
+    ## 
+    ##  Wilcoxon rank sum test with continuity correction
+    ## 
+    ## data:  health.x by address
+    ## W = 12473, p-value = 0.7397
+    ## alternative hypothesis: true location shift is not equal to 0
+
+Wilcoxon rank sum test tells us th difference is not significant. We now need to calculate Rosenthal’s r:
+`$$r = {Z\over \sqrt N }$$`
+We need a z-score for this. We can use qnorm() to get it from the p-value. The z-value is -0.3322507 and N is 382.
+Rosenthal’s r is then -0.0169994
 
 ## More
 

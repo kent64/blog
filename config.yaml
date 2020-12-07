@@ -25,7 +25,7 @@ markup:
       unsafe: true
   tableOfContents:
     startLevel: 1
-    endLevel: 6
+    endLevel: 3
     ordered: true
   highlight:
     anchorLineNos: false
