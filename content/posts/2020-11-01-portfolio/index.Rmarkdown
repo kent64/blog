@@ -885,7 +885,7 @@ stats::t.test(g3.x~famsize, var.equal=FALSE, data=studentdf)
 The t-test yielded a p-value of 0.41 meaning that no statistically significant difference was found. 
 
 To quantify the effect we look for the Effect size. We have saw one of these already with Pearsons Coefficient, Another is Cohen’s d, Cohen's d can be used as an effect size statistic for a two-sample t-test.
-```{r, echo=FALSE, fig.align = "center",  out.width='100%'}
+```{r, echo=FALSE, fig.align = "center",  out.width='20%'}
 knitr::include_graphics("cohen.png")
 ```
 
@@ -899,7 +899,7 @@ effectsize::t_to_d(t = res$statistic, res$parameter)
 ```
 
 Eta squared 
-```{r, echo=FALSE, fig.align = "center", out.width='100%'}
+```{r, echo=FALSE, fig.align = "center", out.width='20%'}
 knitr::include_graphics("eta.png")
 ```
 ```{r}
@@ -1089,7 +1089,7 @@ wilcox.test(health.x~address, data = studentdf)
 ```
 
 Wilcoxon rank sum test tells us the difference is not significant. We now need to calculate Rosenthal's r:
-```{r, echo=FALSE, fig.align = "center", out.width='100%'}
+```{r, echo=FALSE, fig.align = "center", out.width='20%'}
 knitr::include_graphics("rose.png")
 ```
 
