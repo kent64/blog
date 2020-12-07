@@ -119,20 +119,18 @@ studentdf %>%
   sample_n(1) 
 ```
 
-    ##   school sex age address famsize pstatus medu fedu   mjob  fjob     reason
-    ## 1     GP   F  17       U     LE3       T    4    3 health other reputation
-    ##   nursery internet guardian.x traveltime.x studytime.x failures.x schoolsup.x
-    ## 1     yes      yes     father            1           2          0          no
-    ##   famsup.x paid.x activities.x higher.x romantic.x famrel.x freetime.x goout.x
-    ## 1       no     no          yes      yes        yes        3          2       3
-    ##   dalc.x walc.x health.x absences.x g1.x g2.x g3.x guardian.y traveltime.y
-    ## 1      1      2        3         14   13   13   14     father            1
-    ##   studytime.y failures.y schoolsup.y famsup.y paid.y activities.y higher.y
-    ## 1           2          0          no       no     no          yes      yes
-    ##   romantic.y famrel.y freetime.y goout.y dalc.y walc.y health.y absences.y g1.y
-    ## 1        yes        3          2       3      1      2        3          0   14
-    ##   g2.y g3.y
-    ## 1   12   12
+    ##   school sex age address famsize pstatus medu fedu  mjob  fjob reason nursery
+    ## 1     GP   M  17       R     GT3       T    1    3 other other course     yes
+    ##   internet guardian.x traveltime.x studytime.x failures.x schoolsup.x famsup.x
+    ## 1      yes     father            3           2          1          no      yes
+    ##   paid.x activities.x higher.x romantic.x famrel.x freetime.x goout.x dalc.x
+    ## 1     no          yes      yes         no        5          2       4      1
+    ##   walc.x health.x absences.x g1.x g2.x g3.x guardian.y traveltime.y studytime.y
+    ## 1      4        5         20    9    7    8     father            3           2
+    ##   failures.y schoolsup.y famsup.y paid.y activities.y higher.y romantic.y
+    ## 1          1          no      yes     no          yes      yes         no
+    ##   famrel.y freetime.y goout.y dalc.y walc.y health.y absences.y g1.y g2.y g3.y
+    ## 1        5          2       4      1      4        5         14   12   11   11
 
 ## Population vs Sample
 
@@ -1578,7 +1576,7 @@ stats::t.test(g3.x~famsize, var.equal=FALSE, data=studentdf)
 The t-test yielded a p-value of 0.41 meaning that no statistically significant difference was found.
 
 To quantify the effect we look for the Effect size. We have saw one of these already with Pearsons Coefficient, Another is Cohen’s d, Cohen’s d can be used as an effect size statistic for a two-sample t-test.
-<img src="cohen.png" width="150%" style="display: block; margin: auto;" />
+<img src="cohen.png" width="100%" style="display: block; margin: auto;" />
 
 ``` r
 res <- stats::t.test(g3.x~famsize, var.equal=TRUE, data=studentdf)
@@ -1594,7 +1592,7 @@ effectsize::t_to_d(t = res$statistic, res$parameter)
     ## -0.09 | [-0.30, 0.12]
 
 Eta squared
-<img src="eta.png" width="150%" style="display: block; margin: auto;" />
+<img src="eta.png" width="100%" style="display: block; margin: auto;" />
 
 ``` r
 effes=round((res$statistic*res$statistic)/((res$statistic*res$statistic)+(res$parameter)),3)
@@ -2000,7 +1998,7 @@ wilcox.test(health.x~address, data = studentdf)
     ## alternative hypothesis: true location shift is not equal to 0
 
 Wilcoxon rank sum test tells us the difference is not significant. We now need to calculate Rosenthal’s r:
-<img src="rose.png" width="150%" style="display: block; margin: auto;" />
+<img src="rose.png" width="100%" style="display: block; margin: auto;" />
 
 We need a z-score for this. We can use qnorm() to get it from the p-value. The z-value is -0.3322507 and N is 382.
 Rosenthal’s r is then -0.0169994
