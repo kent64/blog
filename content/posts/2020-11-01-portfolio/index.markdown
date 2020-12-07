@@ -120,17 +120,17 @@ studentdf %>%
 ```
 
     ##   school sex age address famsize pstatus medu fedu  mjob  fjob reason nursery
-    ## 1     MS   F  18       U     GT3       T    1    1 other other course     yes
+    ## 1     GP   F  15       U     GT3       T    2    3 other other  other     yes
     ##   internet guardian.x traveltime.x studytime.x failures.x schoolsup.x famsup.x
-    ## 1       no     mother            2           2          1          no       no
+    ## 1       no     father            2           1          0          no      yes
     ##   paid.x activities.x higher.x romantic.x famrel.x freetime.x goout.x dalc.x
-    ## 1     no          yes      yes         no        1          1       1      1
+    ## 1     no          yes      yes         no        3          5       1      1
     ##   walc.x health.x absences.x g1.x g2.x g3.x guardian.y traveltime.y studytime.y
-    ## 1      1        5          0    6    5    0     mother            2           2
+    ## 1      1        5          0    8    7    6     father            2           1
     ##   failures.y schoolsup.y famsup.y paid.y activities.y higher.y romantic.y
-    ## 1          0          no       no     no          yes      yes         no
+    ## 1          0          no      yes     no          yes      yes         no
     ##   famrel.y freetime.y goout.y dalc.y walc.y health.y absences.y g1.y g2.y g3.y
-    ## 1        1          1       1      1      1        5          6   11   12    9
+    ## 1        3          5       1      1      1        5          4   11   11   11
 
 ## Population vs Sample
 
@@ -1576,7 +1576,7 @@ stats::t.test(g3.x~famsize, var.equal=FALSE, data=studentdf)
 The t-test yielded a p-value of 0.41 meaning that no statistically significant difference was found.
 
 To quantify the effect we look for the Effect size. We have saw one of these already with Pearsons Coefficient, Another is Cohen’s d, Cohen’s d can be used as an effect size statistic for a two-sample t-test.
-`$$Cohen\ d\ (effect\ size) = {2 t \over \sqrt{df}}$$`
+<img src="cohen.png" width="154" style="display: block; margin: auto;" />
 
 ``` r
 res <- stats::t.test(g3.x~famsize, var.equal=TRUE, data=studentdf)
@@ -1592,7 +1592,7 @@ effectsize::t_to_d(t = res$statistic, res$parameter)
     ## -0.09 | [-0.30, 0.12]
 
 Eta squared
-`$$Eta = {t^2 \over t^2 + df}$$`
+<img src="eta.png" width="66" style="display: block; margin: auto;" />
 
 ``` r
 effes=round((res$statistic*res$statistic)/((res$statistic*res$statistic)+(res$parameter)),3)
@@ -1604,7 +1604,7 @@ effes
 
 <div class="figure" style="text-align: center">
 
-<img src="effect_sizes.png" alt="Cohen's d annd Eta" width="40%" id="effect" />
+<img src="effect_sizes.png" alt="Cohen's d annd Eta" width="60%" id="effect" />
 
 <p class="caption">
 
@@ -1635,7 +1635,7 @@ studentdf %>%
   stat_function(fun=dnorm, color="red",args=list(mean=mean(studentdf$g1.x, na.rm=TRUE), sd=sd(studentdf$g1.x, na.rm=TRUE)))
 ```
 
-<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-60-1.png" width="672" />
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-62-1.png" width="672" />
 
 ``` r
 #Create a qqplot
@@ -1643,7 +1643,7 @@ qqnorm(studentdf$g1.x)
 qqline(studentdf$g1.x, col=2) #show a line on theplot
 ```
 
-<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-60-2.png" width="672" />
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-62-2.png" width="672" />
 
 ``` r
 pastecs::stat.desc(studentdf$g1.x, basic=F)
@@ -1734,7 +1734,7 @@ paid_students_maths %>%
   stat_function(fun=dnorm, color="red",args=list(mean=mean(paid_students_maths$g1.x, na.rm=TRUE), sd=sd(paid_students_maths$g1.x, na.rm=TRUE)))
 ```
 
-<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-64-1.png" width="672" />
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-66-1.png" width="672" />
 
 ``` r
 #Create a qqplot
@@ -1742,7 +1742,7 @@ qqnorm(paid_students_maths$g1.x)
 qqline(paid_students_maths$g1.x, col=2) #show a line on theplot
 ```
 
-<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-64-2.png" width="672" />
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-66-2.png" width="672" />
 
 ``` r
 pastecs::stat.desc(paid_students_maths$g1.x, basic=F)
@@ -1780,7 +1780,7 @@ paid_students_maths %>%
 
     ## Warning: Removed 8 rows containing non-finite values (stat_bin).
 
-<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-64-3.png" width="672" />
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-66-3.png" width="672" />
 
 ``` r
 #Create a qqplot
@@ -1788,7 +1788,7 @@ qqnorm(paid_students_maths$g3.x)
 qqline(paid_students_maths$g3.x, col=2) #show a line on theplot
 ```
 
-<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-64-4.png" width="672" />
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-66-4.png" width="672" />
 
 ``` r
 pastecs::stat.desc(paid_students_maths$g3.x, basic=F)
@@ -1902,7 +1902,7 @@ studentdf %>%
   labs(y="Health (1 bad - 5 good)", x="student number")
 ```
 
-<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-68-1.png" width="672" />
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-70-1.png" width="672" />
 
 ``` r
 studentdf %>%
@@ -1914,7 +1914,7 @@ studentdf %>%
     ylab("Grade 3 results")
 ```
 
-<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-68-2.png" width="672" />
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-70-2.png" width="672" />
 
 ``` r
 studentdf %>%
@@ -1925,7 +1925,7 @@ studentdf %>%
   stat_function(fun=dnorm, color="red",args=list(mean=mean(studentdf$health.x, na.rm=TRUE), sd=sd(studentdf$health.x, na.rm=TRUE)))
 ```
 
-<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-69-1.png" width="672" />
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-71-1.png" width="672" />
 
 ``` r
 pastecs::stat.desc(studentdf$health.x, basic=F)
@@ -1998,7 +1998,8 @@ wilcox.test(health.x~address, data = studentdf)
     ## alternative hypothesis: true location shift is not equal to 0
 
 Wilcoxon rank sum test tells us the difference is not significant. We now need to calculate Rosenthal’s r:
-`$$r = {Z\over \sqrt N }$$`
+<img src="rose.png" width="48" style="display: block; margin: auto;" />
+
 We need a z-score for this. We can use qnorm() to get it from the p-value. The z-value is -0.3322507 and N is 382.
 Rosenthal’s r is then -0.0169994
 
