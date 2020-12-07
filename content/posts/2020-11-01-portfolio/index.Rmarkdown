@@ -653,7 +653,7 @@ studentdf %>%
 
 I can treat this as normal and I have no outliers to remove. From earlier analysis we know that g3.x can also be treated as nornal.
 
-### G2 Grades Summary 
+G2 Grades Summary:
 
 Heuristic| value
 --|--
@@ -663,7 +663,7 @@ Standarised score of variables | 4.33 % outside +/- 1.96
 Standarised score of variables | 0% outside +/- 3.29 (no outliers)
 Currently ignoring missing data. | 12 NAs
 
-### Correlation Scatter plot (G2 and G3)
+Correlation Scatter plot (G2 and G3):
 
 ```{r}
 studentdf %>%
@@ -1069,7 +1069,14 @@ tpkurt[1]/tpkurt[2]
 zstabsences<- abs(scale(studentdf$health.x))
 FSA::perc(as.numeric(zstabsences), 1.96, "gt")
 FSA::perc(as.numeric(zstabsences), 3.29, "gt")
+studentdf %>%
+  group_by(address) %>%
+  mutate(mdn = median(health.x),
+         iqr = IQR(health.x)) %>%
+  group_by(address, mdn, iqr) %>%  
+  summarise()
 ```
+
 This health variable is highly skewed. We cannot consider it normal, therefore we must use non-parametric tests.
 Looking again at the [Test Table](#testtable). We have two independent groups, which are students who live Urban and those who live in Rural. So we choose the Mann Whitney. 
 
@@ -1077,10 +1084,16 @@ Looking again at the [Test Table](#testtable). We have two independent groups, w
 wilcox.test(health.x~address, data = studentdf)
 ```
 
-Wilcoxon rank sum test tells us th difference is not significant. We now need to calculate Rosenthal's r:
+Wilcoxon rank sum test tells us the difference is not significant. We now need to calculate Rosenthal's r:
 $$r = {Z\over \sqrt N }$$
 We need a z-score for this. We can use qnorm() to get it from the p-value. The z-value is `r qnorm(0.7397/2)` and N is 382. 
 Rosenthal's r is then `r (qnorm(0.7397/2))/sqrt(382)`
+
+
+Reporting:
+"Health levels for students who had an Urban address(Mdn=4 IQR=2) did not differ significantly from those who had an Rural address(Mdn=4 IQR=2).(U=12473, z=0.33, p=0.74, r=0.17)
+
+My Analysis is that this should have been quite clear from the box plot and was only worth going this far to demonstrate a Mann-Whitney test. 
 
 
 ## More

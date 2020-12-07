@@ -120,17 +120,17 @@ studentdf %>%
 ```
 
     ##   school sex age address famsize pstatus medu fedu  mjob  fjob reason nursery
-    ## 1     GP   M  16       U     GT3       T    3    4 other other course      no
+    ## 1     MS   F  18       U     GT3       T    1    1 other other course     yes
     ##   internet guardian.x traveltime.x studytime.x failures.x schoolsup.x famsup.x
-    ## 1      yes     father            3           1          2          no      yes
+    ## 1       no     mother            2           2          1          no       no
     ##   paid.x activities.x higher.x romantic.x famrel.x freetime.x goout.x dalc.x
-    ## 1     no          yes      yes         no        3          4       5      2
+    ## 1     no          yes      yes         no        1          1       1      1
     ##   walc.x health.x absences.x g1.x g2.x g3.x guardian.y traveltime.y studytime.y
-    ## 1      4        2          0    6    5    0     father            3           1
+    ## 1      1        5          0    6    5    0     mother            2           2
     ##   failures.y schoolsup.y famsup.y paid.y activities.y higher.y romantic.y
-    ## 1          1          no      yes     no          yes      yes         no
+    ## 1          0          no       no     no          yes      yes         no
     ##   famrel.y freetime.y goout.y dalc.y walc.y health.y absences.y g1.y g2.y g3.y
-    ## 1        3          4       5      2      4        2          4    9    9   10
+    ## 1        1          1       1      1      1        5          6   11   12    9
 
 ## Population vs Sample
 
@@ -1148,7 +1148,7 @@ studentdf %>%
 
 I can treat this as normal and I have no outliers to remove. From earlier analysis we know that g3.x can also be treated as nornal.
 
-### G2 Grades Summary
+G2 Grades Summary:
 
 | Heuristic                        | value                             |
 | -------------------------------- | --------------------------------- |
@@ -1158,7 +1158,7 @@ I can treat this as normal and I have no outliers to remove. From earlier analys
 | Standarised score of variables   | 0% outside +/- 3.29 (no outliers) |
 | Currently ignoring missing data. | 12 NAs                            |
 
-### Correlation Scatter plot (G2 and G3)
+Correlation Scatter plot (G2 and G3):
 
 ``` r
 studentdf %>%
@@ -1965,6 +1965,24 @@ FSA::perc(as.numeric(zstabsences), 3.29, "gt")
 
     ## [1] 0
 
+``` r
+studentdf %>%
+  group_by(address) %>%
+  mutate(mdn = median(health.x),
+         iqr = IQR(health.x)) %>%
+  group_by(address, mdn, iqr) %>%  
+  summarise()
+```
+
+    ## `summarise()` regrouping output by 'address', 'mdn' (override with `.groups` argument)
+
+    ## # A tibble: 2 x 3
+    ## # Groups:   address, mdn [2]
+    ##   address   mdn   iqr
+    ##   <fct>   <int> <dbl>
+    ## 1 R           4     2
+    ## 2 U           4     2
+
 This health variable is highly skewed. We cannot consider it normal, therefore we must use non-parametric tests.
 Looking again at the [Test Table](#testtable). We have two independent groups, which are students who live Urban and those who live in Rural. So we choose the Mann Whitney.
 
@@ -1979,10 +1997,15 @@ wilcox.test(health.x~address, data = studentdf)
     ## W = 12473, p-value = 0.7397
     ## alternative hypothesis: true location shift is not equal to 0
 
-Wilcoxon rank sum test tells us th difference is not significant. We now need to calculate Rosenthal’s r:
+Wilcoxon rank sum test tells us the difference is not significant. We now need to calculate Rosenthal’s r:
 `$$r = {Z\over \sqrt N }$$`
 We need a z-score for this. We can use qnorm() to get it from the p-value. The z-value is -0.3322507 and N is 382.
 Rosenthal’s r is then -0.0169994
+
+Reporting:
+"Health levels for students who had an Urban address(Mdn=4 IQR=2) did not differ significantly from those who had an Rural address(Mdn=4 IQR=2).(U=12473, z=0.33, p=0.74, r=0.17)
+
+My Analysis is that this should have been quite clear from the box plot and was only worth going this far to demonstrate a Mann-Whitney test.
 
 ## More
 
