@@ -119,20 +119,20 @@ studentdf %>%
   sample_n(1) 
 ```
 
-    ##   school sex age address famsize pstatus medu fedu  mjob  fjob     reason
-    ## 1     GP   M  15       U     GT3       T    3    4 other other reputation
+    ##   school sex age address famsize pstatus medu fedu    mjob     fjob reason
+    ## 1     GP   F  17       R     GT3       T    3    4 at_home services course
     ##   nursery internet guardian.x traveltime.x studytime.x failures.x schoolsup.x
-    ## 1     yes      yes     father            1           1          0          no
+    ## 1      no      yes     father            1           3          0          no
     ##   famsup.x paid.x activities.x higher.x romantic.x famrel.x freetime.x goout.x
-    ## 1       no     no           no      yes         no        3          4       3
+    ## 1      yes    yes          yes      yes         no        4          3       4
     ##   dalc.x walc.x health.x absences.x g1.x g2.x g3.x guardian.y traveltime.y
-    ## 1      1      2        4          6   14   13   13     father            1
+    ## 1      2      5        5          0   11   11   10     father            1
     ##   studytime.y failures.y schoolsup.y famsup.y paid.y activities.y higher.y
-    ## 1           1          0          no       no     no           no      yes
+    ## 1           3          0          no      yes     no          yes      yes
     ##   romantic.y famrel.y freetime.y goout.y dalc.y walc.y health.y absences.y g1.y
-    ## 1         no        3          4       3      1      2        4          2   14
+    ## 1         no        4          3       4      2      5        5          2   15
     ##   g2.y g3.y
-    ## 1   13   14
+    ## 1   15   17
 
 ## Population vs Sample
 
@@ -195,6 +195,14 @@ Percentages
     ## 51.83 48.17
 
 It is very important that when choosing a sample that any missing data is also random, that there is not pattern between the variables which are missing.
+
+The most common types of Bias in data are:
+
+1.  Selection Bias - When analyzing the data, I need to make sure I am not using only certain groups of students.
+2.  Sampling Bias - caused if there is not random sampling, I assume some students did not give details or choose not to join, we miss these.
+3.  Time interval Bias - our data was taken in 2014. It’s hard to say it still applies to now(2020), a lot has changed in student behaviour.
+4.  Confirmation Bias - I didn’t choose this data, so I hope to avoid any confirmation bias.
+5.  Omitted Variable Bias - there are many other variables which are not included which could be affecting grade results, such as stress, poverty etc.
 
 To make good decisions to the questions outlined above, we will calculate some simple statistics for our sample. These statistics we will start to examine in the next section.
 
@@ -333,8 +341,6 @@ There are two main ways in which a distribution can deviate from normal:
 
 Like plot the histogram again and add a normal distribution curve using the grade scores:
 
-    ## Warning: Removed 39 rows containing non-finite values (stat_bin).
-
 <div class="figure">
 
 <img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-13-1.png" alt="G3 - final grade histogram with normal curve" width="672" />
@@ -462,7 +468,7 @@ In statistics we use confidence intervals to show how sure we are that a value w
 
 The common confidence intervals used are 90%, 95% and 99%. The idea is based on the Normal distribution. To say we are 95% confidence a value will fall into a range of values is the same as saying it will fall inside -1.96 standard deviations and +1.96 standard deviations of the mean. A 90% chance would correspond to 1.645 and a 99% chance would correspond to 2.576 deviations.
 
-Which confidence interval we decide to use depends on the population variance and also the size of the sample. A wide variance in a population would mean a large confidence interval. Certain industries use different confidence intervals to report their results when they are doing tests to answers questions. These tests usually involves fitting a statistical model to data and testing a prediction. To decide if the model works, they need to know if the result is statistically significant. To do this the confidence intervals are used, if the test result is outside these intervals, or above a certain alpha value (usually 0.05), it unlikely the model is getting the right answer by chance. We will discuss this more later in hypothesis testing.
+Which confidence interval we decide to use depends on the population variance and also the size of the sample. A wide variance in a population would mean a large confidence interval. Certain industries use different confidence intervals to report their results when they are doing tests to answers questions. For example pharmaceutical science or manufacturing companies may have a tighter cut off value. These tests usually involves fitting a statistical model to data and testing a prediction. To decide if the model works, they need to know if the result is statistically significant. To do this the confidence intervals are used, if the test result is outside these intervals, or above a certain alpha value (usually 0.05), it unlikely the model is getting the right answer by chance. We will discuss this more later in hypothesis testing.
 
 ### Z-score
 
@@ -625,7 +631,7 @@ So 4% of our data lies outside 1.96 standard deviations of the mean or outside t
 
 95% of our data is within the acceptable range, so we can treat the data as normal. :relieved:
 
-Since our sample size is larger than 80, a case is an outlier if it’s standard score is +/- 3.29. So we have no outliers. HOwever at the moment we are ignoring missing data, that’s eh values we made NA earlier.
+Since our sample size is larger than 80, a case is an outlier if it’s standard score is +/- 3.29. So we have no outliers. HOwever at the moment we are ignoring missing data, that’s thr values we made NA earlier.
 
 ### G3 Grades Summary
 
@@ -646,7 +652,18 @@ Reason has the following description in the data set.
 As we explained earlier it is nominal because there is no ordering or direction in this variable. In the R language we call this column a factor.
 
 The best way to visualize this variable is to use a pie chart, bar chart or a frequency table.
-<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-27-1.png" width="672" />
+
+<div class="figure">
+
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-27-1.png" alt="Count Pie chart for 11 reason" width="672" />
+
+<p class="caption">
+
+Figure 11: Count Pie chart for 11 reason
+
+</p>
+
+</div>
 
     ##       reason   n
     ## 1     course 140
@@ -654,7 +671,17 @@ The best way to visualize this variable is to use a pie chart, bar chart or a fr
     ## 3      other  34
     ## 4 reputation  98
 
-<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-27-2.png" width="672" />
+<div class="figure">
+
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-27-2.png" alt="Count Pie chart for 11 reason" width="672" />
+
+<p class="caption">
+
+Figure 12: Count Pie chart for 11 reason
+
+</p>
+
+</div>
 
 ## Studytime (Ordinal)
 
@@ -721,8 +748,8 @@ t <- sapply(studentdf, function(x) sum(is.na(x)))
 t[t>0]
 ```
 
-    ## g2.x g3.x 
-    ##   13   39
+    ## g2.x g3.x g1.y g3.y 
+    ##   13   39    1    5
 
 It is no surprise here at there is not many NAs. Looking back to \[Get started\] we merged the Maths and Portuguese results together using the variables “school”,“sex”,“age”,“address”,“famsize”,“Pstatus”,“Medu”,“Fedu”,“Mjob”,“Fjob”,“reason”,“nursery”,“internet”
 
@@ -739,7 +766,6 @@ There are three possible patterns to missing data:
 Let us check if any of these patterns are seen in the data. The only variables with missing data are the grade results: g2 and g3 for Maths.
 
 ``` r
-library("dplyr")
 studentdf %>% filter(is.na(g3.x)) %>% summary()
 ```
 
@@ -832,17 +858,17 @@ studentdf %>% filter(is.na(g3.x)) %>% summary()
     ##  Max.   :5.000   Max.   :5.000   Max.   :22.000   Max.   :16.00  
     ##                                                                  
     ##       g2.y            g3.y      
-    ##  Min.   : 7.00   Min.   : 0.00  
+    ##  Min.   : 7.00   Min.   : 6.00  
     ##  1st Qu.: 9.00   1st Qu.:10.00  
-    ##  Median :11.00   Median :11.00  
-    ##  Mean   :10.67   Mean   :10.85  
+    ##  Median :11.00   Median :12.00  
+    ##  Mean   :10.67   Mean   :11.43  
     ##  3rd Qu.:12.00   3rd Qu.:13.00  
     ##  Max.   :14.00   Max.   :15.00  
-    ## 
+    ##                  NA's   :2
 
 Because our data set is relatively large, we don’t expect missing data to have a serious impact. It all goes back to being representative of the population.
 
-In R we have a library called finalfit which has the function ff\_glimpse, whihc we can use to identify missing data.
+In R we have a library called finalfit which has the function ff\_glimpse, which we can use to identify missing data.
 
     ## $Continuous
     ##                 label var_type   n missing_n missing_percent mean  sd  min
@@ -866,9 +892,9 @@ In R we have a library called finalfit which has the function ff\_glimpse, whihc
     ## walc.y         walc.y    <int> 382         0             0.0  2.3 1.3  1.0
     ## health.y     health.y    <int> 382         0             0.0  3.6 1.4  1.0
     ## absences.y absences.y    <int> 382         0             0.0  3.7 4.9  0.0
-    ## g1.y             g1.y    <int> 382         0             0.0 12.1 2.6  0.0
+    ## g1.y             g1.y    <int> 381         1             0.3 12.1 2.5  5.0
     ## g2.y             g2.y    <int> 382         0             0.0 12.2 2.5  5.0
-    ## g3.y             g3.y    <int> 382         0             0.0 12.5 2.9  0.0
+    ## g3.y             g3.y    <int> 377         5             1.3 12.7 2.6  1.0
     ##            quartile_25 median quartile_75  max
     ## age               16.0   17.0        17.0 22.0
     ## failures.x         0.0    0.0         0.0  3.0
@@ -989,14 +1015,21 @@ In R we have a library called finalfit which has the function ff\_glimpse, whihc
     ## higher.y                  18, 364                         4.7, 95.3
     ## romantic.y               259, 123                            68, 32
 
-I am going to ignore missing data, which is one of the thing we can do with missing data.
+Missing data can also include outliers, I will discuss these if when at any time in my analysis I have a distribution which is close to normal. We can look for outliers and remove them. Missing data and outliers are similar. Missing data if it is significant in our data set could reduce the the probability of rejecting the null hypothesis and so we could end up with a Type II error also known as a false negative.
+
+I am going to ignore missing data, which is one of the things we can do with missing data.
 
 # Relationships
 
 Before we continue to examine relationships in our data set. We need to discuss the type of tests we can conduct. Depending on the variables types we have a choice of either parametric or non-parametric
 
-  - Parametric tests need to pass some assumptions, that the variable is normally distributed, that the sample variance is homogeneous. These are usually more powerful than non-parametric because we use all the data.
-  - Non-parametric tests don’t need to pass the same assumptions, variables do not need to be normally distributed. Most of these test work on the principle of ranking.
+  - Parametric tests are usually more powerful than non-parametric because we use all the data, they need to pass some assumptions:
+    \*\* Must be Normally distributed (skew and kurtosis… outliers)
+    \*\* Homogeneity of variance (Levenes test or Barletts test, Barletts test has better performance if we sure our data is strongly normal)
+    \*\* Interval data or Ratio
+    \*\* Independent
+
+  - Non-parametric tests don’t need to pass the same assumptions, variables do not need to be normally distributed. Most of these tests work on the principle of ranking.
 
 Below I have organized a list of the statistical tests which apply to each search question. I will explain these in the following sections where I will show an example of each.
 
@@ -1006,7 +1039,7 @@ Below I have organized a list of the statistical tests which apply to each searc
 
 <p class="caption">
 
-Figure 11: Types of test data and types of Analysis
+Figure 13: Types of test data and types of Analysis
 
 </p>
 
@@ -1023,8 +1056,8 @@ The questions I have for this section are:
 3.  Grade results in students with a family size greater than 3 differed from those with a smaller family size. (t-test)
 4.  Is there a difference between grade 1 and grade 3 in Maths for students who paid for extra classes? (paired t-test)
 5.  Is there a difference in the health of the students between the students who’s address is rural vs urban?
-
-## Correlation (G2 and G3)
+6.  Does the reason for choosing the school impact the the final grade in Portugese?
+    \#\# Correlation (G2 and G3)
 
 Looking at the two variables for Maths. Please refer to \[skew-and-kurtosis-analysis\] for the g3 analysis of Maths.
 Looking at g2, I know there is some missing data but a very small amount. We need to check the standardized scores for skewness and kurtotsis and plot the histogram and Q-Q plot.
@@ -1038,9 +1071,17 @@ studentdf %>%
   stat_function(fun=dnorm, color="red",args=list(mean=mean(studentdf$g2.x, na.rm=TRUE), sd=sd(studentdf$g2.x, na.rm=TRUE)))
 ```
 
-    ## Warning: Removed 13 rows containing non-finite values (stat_bin).
+<div class="figure" style="text-align: center">
 
-<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-35-1.png" width="672" />
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-35-1.png" alt="G2 results Histogram" width="672" />
+
+<p class="caption">
+
+Figure 14: G2 results Histogram
+
+</p>
+
+</div>
 
 ``` r
 #Create a qqplot
@@ -1048,24 +1089,22 @@ qqnorm(studentdf$g2.x)
 qqline(studentdf$g2.x, col=2) #show a line on theplot
 ```
 
-<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-35-2.png" width="672" />
+<div class="figure" style="text-align: center">
+
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-36-1.png" alt="G2 results Q-Q plot" width="672" />
+
+<p class="caption">
+
+Figure 15: G2 results Q-Q plot
+
+</p>
+
+</div>
 
 ``` r
 pastecs::stat.desc(studentdf$g2.x, basic=F)
 tpskew<-semTools::skew(studentdf$g2.x)
-```
-
-    ## Warning in semTools::skew(studentdf$g2.x): Missing observations are removed from
-    ## a vector.
-
-``` r
 tpkurt<-semTools::kurtosis(studentdf$g2.x)
-```
-
-    ## Warning in semTools::kurtosis(studentdf$g2.x): Missing observations are removed
-    ## from a vector.
-
-``` r
 tpskew[1]/tpskew[2]
 tpkurt[1]/tpkurt[2]
 ```
@@ -1172,11 +1211,17 @@ studentdf %>%
 
     ## `geom_smooth()` using formula 'y ~ x'
 
-    ## Warning: Removed 39 rows containing non-finite values (stat_smooth).
+<div class="figure" style="text-align: center">
 
-    ## Warning: Removed 39 rows containing missing values (geom_point).
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-41-1.png" alt="Grades at 2 time intervals" width="672" />
 
-<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-39-1.png" width="672" />
+<p class="caption">
+
+Figure 16: Grades at 2 time intervals
+
+</p>
+
+</div>
 
 There are three varieties of Correlation test I can perform on g2 and g3.
 
@@ -1209,9 +1254,6 @@ Below i will report Spearman’s rank correlation rho and Kendall’s rank corre
 ``` r
 cor.test(studentdf$g2.x, studentdf$g3.x, method = "spearman")
 ```
-
-    ## Warning in cor.test.default(studentdf$g2.x, studentdf$g3.x, method =
-    ## "spearman"): Cannot compute exact p-value with ties
 
     ## 
     ##  Spearman's rank correlation rho
@@ -1294,11 +1336,17 @@ studentdf %>%
   geom_density(binwidth=1, alpha=0.3, position="dodge")
 ```
 
-    ## Warning: Ignoring unknown parameters: binwidth
+<div class="figure" style="text-align: center">
 
-    ## Warning: Width not defined. Set with `position_dodge(width = ?)`
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-45-1.png" alt="Density histogram for School absences in Maths" width="672" />
 
-<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-43-1.png" width="672" />
+<p class="caption">
+
+Figure 17: Density histogram for School absences in Maths
+
+</p>
+
+</div>
 
 Ok, so I continue with Maths absences.
 
@@ -1311,7 +1359,17 @@ studentdf %>%
   stat_function(fun=dnorm, color="red",args=list(mean=mean(studentdf$absences.x, na.rm=TRUE), sd=sd(studentdf$absences.x, na.rm=TRUE)))
 ```
 
-<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-44-1.png" width="672" />
+<div class="figure" style="text-align: center">
+
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-46-1.png" alt="School absences for Maths" width="672" />
+
+<p class="caption">
+
+Figure 18: School absences for Maths
+
+</p>
+
+</div>
 
 ``` r
 pastecs::stat.desc(studentdf$absences.x, basic=F)
@@ -1348,11 +1406,7 @@ studentdf %>%
 
     ## `geom_smooth()` using formula 'y ~ x'
 
-    ## Warning: Removed 39 rows containing non-finite values (stat_smooth).
-
-    ## Warning: Removed 39 rows containing missing values (geom_point).
-
-<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-45-1.png" width="672" />
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-48-1.png" width="672" />
 
 Looking at this plot I can see that I have a high degree of homoscedasticity.
 
@@ -1361,9 +1415,6 @@ Using Spearman:
 ``` r
 cor.test(studentdf$absences.x, studentdf$g3.x, method = "spearman")
 ```
-
-    ## Warning in cor.test.default(studentdf$absences.x, studentdf$g3.x, method =
-    ## "spearman"): Cannot compute exact p-value with ties
 
     ## 
     ##  Spearman's rank correlation rho
@@ -1440,11 +1491,11 @@ studentdf %>%
 
 <div class="figure" style="text-align: center">
 
-<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-49-1.png" alt="G3 Results vs family size" width="60%" />
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-52-1.png" alt="G3 Results vs family size" width="60%" />
 
 <p class="caption">
 
-Figure 12: G3 Results vs family size
+Figure 19: G3 Results vs family size
 
 </p>
 
@@ -1460,9 +1511,17 @@ studentdf %>%
   scale_fill_gradient("Count", low="#DCDCDC", high="#7C7C7C")
 ```
 
-    ## Warning: Removed 39 rows containing non-finite values (stat_bin).
+<div class="figure" style="text-align: center">
 
-<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-50-1.png" width="672" />
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-53-1.png" alt="Family Size vs Maths Grade 3 results" width="672" />
+
+<p class="caption">
+
+Figure 20: Family Size vs Maths Grade 3 results
+
+</p>
+
+</div>
 
 ``` r
 psych::describeBy(studentdf$g3.x, studentdf$famsize, mat=TRUE)
@@ -1507,9 +1566,17 @@ studentdf %>%
   labs(y="G3 - final grade")
 ```
 
-    ## Warning: Removed 39 rows containing missing values (geom_point).
+<div class="figure" style="text-align: center">
 
-<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-53-1.png" width="672" />
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-56-1.png" alt="G3 - final grade and Family Size scatter plot" width="672" />
+
+<p class="caption">
+
+Figure 21: G3 - final grade and Family Size scatter plot
+
+</p>
+
+</div>
 
 ``` r
 p1 <- studentdf %>%
@@ -1529,15 +1596,17 @@ p2 <- studentdf %>%
 grid.arrange(p1, p2, ncol=2)
 ```
 
-    ## Warning: Removed 39 rows containing non-finite values (stat_boxplot).
+<div class="figure" style="text-align: center">
 
-    ## Warning: Removed 39 rows containing missing values (geom_point).
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-57-1.png" alt="Violin and Box plots for family size" width="672" />
 
-    ## Warning: Removed 39 rows containing non-finite values (stat_ydensity).
+<p class="caption">
 
-    ## Warning: Removed 39 rows containing missing values (geom_point).
+Figure 22: Violin and Box plots for family size
 
-<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-54-1.png" width="672" />
+</p>
+
+</div>
 
 Now we conduct the t-test using the stats package. Because our variance in g3.x passed the Levee’s test, we can set var.equal = TRUE and then the stats::t.test function will not use the welsh modification.
 
@@ -1578,7 +1647,7 @@ stats::t.test(g3.x~famsize, var.equal=FALSE, data=studentdf)
 The t-test yielded a p-value of 0.41 meaning that no statistically significant difference was found.
 
 To quantify the effect we look for the Effect size. We have saw one of these already with Pearsons Coefficient, Another is Cohen’s d, Cohen’s d can be used as an effect size statistic for a two-sample t-test.
-<img src="cohen.png" width="20%" style="display: block; margin: auto;" />
+<img src="cohen.png" width="30%" style="display: block; margin: auto;" />
 
 ``` r
 res <- stats::t.test(g3.x~famsize, var.equal=TRUE, data=studentdf)
@@ -1594,7 +1663,7 @@ effectsize::t_to_d(t = res$statistic, res$parameter)
     ## -0.09 | [-0.30, 0.12]
 
 Eta squared
-<img src="eta.png" width="20%" style="display: block; margin: auto;" />
+<img src="eta.png" width="15%" style="display: block; margin: auto;" />
 
 ``` r
 effes=round((res$statistic*res$statistic)/((res$statistic*res$statistic)+(res$parameter)),3)
@@ -1610,7 +1679,7 @@ effes
 
 <p class="caption">
 
-Figure 13: Cohen’s d annd Eta
+Figure 23: Cohen’s d annd Eta
 
 </p>
 
@@ -1637,7 +1706,7 @@ studentdf %>%
   stat_function(fun=dnorm, color="red",args=list(mean=mean(studentdf$g1.x, na.rm=TRUE), sd=sd(studentdf$g1.x, na.rm=TRUE)))
 ```
 
-<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-62-1.png" width="672" />
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-65-1.png" width="672" />
 
 ``` r
 #Create a qqplot
@@ -1645,7 +1714,7 @@ qqnorm(studentdf$g1.x)
 qqline(studentdf$g1.x, col=2) #show a line on theplot
 ```
 
-<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-62-2.png" width="672" />
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-65-2.png" width="672" />
 
 ``` r
 pastecs::stat.desc(studentdf$g1.x, basic=F)
@@ -1667,14 +1736,14 @@ tpkurt[1]/tpkurt[2]
 Skew and kurtosis are both significant, because they are above 1.96 standard deviations on the z-scale. Need to investigate how big a problem we have.
 
 ``` r
-zstabsences<- abs(scale(studentdf$g1.x))
-FSA::perc(as.numeric(zstabsences), 1.96, "gt")
+zg1<- abs(scale(studentdf$g1.x))
+FSA::perc(as.numeric(zg1), 1.96, "gt")
 ```
 
     ## [1] 3.403141
 
 ``` r
-FSA::perc(as.numeric(zstabsences), 3.29, "gt")
+FSA::perc(as.numeric(zg1), 3.29, "gt")
 ```
 
     ## [1] 0
@@ -1723,6 +1792,12 @@ studentdf %>%
 So what we have in total is one categorical independent variable and one continuous variable measured at two times(G1 adn G3).
 Looking again at the [Test Table](#testtable). Because our continuous variable is normal, we can use the parametric Paired T-test.
 
+We start as always with stating the Null and alternative hypothesis:
+
+**H**<sub>**0**</sub>: There is NOT a significant difference between grade 1 and grade 3 in Maths for students who paid for classes.
+
+**H**<sub>**a**</sub>: There IS a significant difference between grade 1 and grade 3 in Maths for students who paid for classes.
+
 So lets look at the subset of these Grades where students had paid classes and a quick check to make sure they’re still normal data.
 
 ``` r
@@ -1736,7 +1811,7 @@ paid_students_maths %>%
   stat_function(fun=dnorm, color="red",args=list(mean=mean(paid_students_maths$g1.x, na.rm=TRUE), sd=sd(paid_students_maths$g1.x, na.rm=TRUE)))
 ```
 
-<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-66-1.png" width="672" />
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-69-1.png" width="672" />
 
 ``` r
 #Create a qqplot
@@ -1744,34 +1819,15 @@ qqnorm(paid_students_maths$g1.x)
 qqline(paid_students_maths$g1.x, col=2) #show a line on theplot
 ```
 
-<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-66-2.png" width="672" />
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-69-2.png" width="672" />
 
 ``` r
 pastecs::stat.desc(paid_students_maths$g1.x, basic=F)
-```
-
-    ##       median         mean      SE.mean CI.mean.0.95          var      std.dev 
-    ##   11.0000000   11.0000000    0.2246380    0.4433309    8.9318182    2.9886148 
-    ##     coef.var 
-    ##    0.2716923
-
-``` r
 tpskew<-semTools::skew(paid_students_maths$g1.x)
 tpkurt<-semTools::kurtosis(paid_students_maths$g1.x)
 tpskew[1]/tpskew[2]
-```
-
-    ## skew (g1) 
-    ##  1.382106
-
-``` r
 tpkurt[1]/tpkurt[2]
-```
 
-    ## Excess Kur (g2) 
-    ##       -2.053623
-
-``` r
 paid_students_maths %>%
   ggplot(aes(x=g3.x)) +
   labs(x="G3 results for Maths") +
@@ -1780,9 +1836,7 @@ paid_students_maths %>%
   stat_function(fun=dnorm, color="red",args=list(mean=mean(paid_students_maths$g3.x, na.rm=TRUE), sd=sd(paid_students_maths$g3.x, na.rm=TRUE)))
 ```
 
-    ## Warning: Removed 8 rows containing non-finite values (stat_bin).
-
-<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-66-3.png" width="672" />
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-69-3.png" width="672" />
 
 ``` r
 #Create a qqplot
@@ -1790,42 +1844,30 @@ qqnorm(paid_students_maths$g3.x)
 qqline(paid_students_maths$g3.x, col=2) #show a line on theplot
 ```
 
-<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-66-4.png" width="672" />
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-69-4.png" width="672" />
 
 ``` r
 pastecs::stat.desc(paid_students_maths$g3.x, basic=F)
-```
-
-    ##       median         mean      SE.mean CI.mean.0.95          var      std.dev 
-    ##   11.0000000   11.4082840    0.2349161    0.4637678    9.3263595    3.0539089 
-    ##     coef.var 
-    ##    0.2676922
-
-``` r
 tpskew<-semTools::skew(paid_students_maths$g3.x)
-```
-
-    ## Warning in semTools::skew(paid_students_maths$g3.x): Missing observations are
-    ## removed from a vector.
-
-``` r
 tpkurt<-semTools::kurtosis(paid_students_maths$g3.x)
-```
-
-    ## Warning in semTools::kurtosis(paid_students_maths$g3.x): Missing observations
-    ## are removed from a vector.
-
-``` r
 tpskew[1]/tpskew[2]
-```
-
-    ## skew (g1) 
-    ##  1.358554
-
-``` r
 tpkurt[1]/tpkurt[2]
 ```
 
+    ##       median         mean      SE.mean CI.mean.0.95          var      std.dev 
+    ##   11.0000000   11.0000000    0.2246380    0.4433309    8.9318182    2.9886148 
+    ##     coef.var 
+    ##    0.2716923 
+    ## skew (g1) 
+    ##  1.382106 
+    ## Excess Kur (g2) 
+    ##       -2.053623 
+    ##       median         mean      SE.mean CI.mean.0.95          var      std.dev 
+    ##   11.0000000   11.4082840    0.2349161    0.4637678    9.3263595    3.0539089 
+    ##     coef.var 
+    ##    0.2676922 
+    ## skew (g1) 
+    ##  1.358554 
     ## Excess Kur (g2) 
     ##      -0.6134903
 
@@ -1854,7 +1896,7 @@ effes
     ##     t 
     ## 0.034
 
-The result is that we don’t see a significant difference.
+The result is that we don’t see a significant difference. We cannot reject the Null hypothesis because the p-value is greater than our alpha (0.05).
 
 “A paired-samples t-test was conducted for the students who got paid classes for the time intervals G1(M=11, SD=2.99) and G3 (M=11.41, SD=3.1). The means increased by 0.266 with a 95% confidence interval ranging from 0.49 to 0.051. Test result was t(168) = -2.44 and p-value was 0.016. The result is not significant at p \< .05. The Eta squared statistic (0.034) indicated a small effect size”
 
@@ -1904,7 +1946,7 @@ studentdf %>%
   labs(y="Health (1 bad - 5 good)", x="student number")
 ```
 
-<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-70-1.png" width="672" />
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-73-1.png" width="672" />
 
 ``` r
 studentdf %>%
@@ -1916,7 +1958,7 @@ studentdf %>%
     ylab("Grade 3 results")
 ```
 
-<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-70-2.png" width="672" />
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-73-2.png" width="672" />
 
 ``` r
 studentdf %>%
@@ -1927,47 +1969,17 @@ studentdf %>%
   stat_function(fun=dnorm, color="red",args=list(mean=mean(studentdf$health.x, na.rm=TRUE), sd=sd(studentdf$health.x, na.rm=TRUE)))
 ```
 
-<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-71-1.png" width="672" />
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-74-1.png" width="672" />
 
 ``` r
 pastecs::stat.desc(studentdf$health.x, basic=F)
-```
-
-    ##       median         mean      SE.mean CI.mean.0.95          var      std.dev 
-    ##   4.00000000   3.57853403   0.07164864   0.14087628   1.96100782   1.40035989 
-    ##     coef.var 
-    ##   0.39132222
-
-``` r
 tpskew<-semTools::skew(studentdf$health.x)
 tpkurt<-semTools::kurtosis(studentdf$health.x)
 tpskew[1]/tpskew[2]
-```
-
-    ## skew (g1) 
-    ## -4.214329
-
-``` r
 tpkurt[1]/tpkurt[2]
-```
-
-    ## Excess Kur (g2) 
-    ##       -4.019741
-
-``` r
 zstabsences<- abs(scale(studentdf$health.x))
 FSA::perc(as.numeric(zstabsences), 1.96, "gt")
-```
-
-    ## [1] 0
-
-``` r
 FSA::perc(as.numeric(zstabsences), 3.29, "gt")
-```
-
-    ## [1] 0
-
-``` r
 studentdf %>%
   group_by(address) %>%
   mutate(mdn = median(health.x),
@@ -1978,6 +1990,16 @@ studentdf %>%
 
     ## `summarise()` regrouping output by 'address', 'mdn' (override with `.groups` argument)
 
+    ##       median         mean      SE.mean CI.mean.0.95          var      std.dev 
+    ##   4.00000000   3.57853403   0.07164864   0.14087628   1.96100782   1.40035989 
+    ##     coef.var 
+    ##   0.39132222 
+    ## skew (g1) 
+    ## -4.214329 
+    ## Excess Kur (g2) 
+    ##       -4.019741 
+    ## [1] 0
+    ## [1] 0
     ## # A tibble: 2 x 3
     ## # Groups:   address, mdn [2]
     ##   address   mdn   iqr
@@ -1987,6 +2009,12 @@ studentdf %>%
 
 This health variable is highly skewed. We cannot consider it normal, therefore we must use non-parametric tests.
 Looking again at the [Test Table](#testtable). We have two independent groups, which are students who live Urban and those who live in Rural. So we choose the Mann Whitney.
+
+We start as always with stating the Null and alternative hypothesis:
+
+**H**<sub>**0**</sub>: There is NO difference in the health of the students in the rural group and the Urban group
+
+**H**<sub>**a**</sub>: There is a difference in the health of the students in the rural group and the Urban group
 
 ``` r
 wilcox.test(health.x~address, data = studentdf)
@@ -1999,8 +2027,8 @@ wilcox.test(health.x~address, data = studentdf)
     ## W = 12473, p-value = 0.7397
     ## alternative hypothesis: true location shift is not equal to 0
 
-Wilcoxon rank sum test tells us the difference is not significant. We now need to calculate Rosenthal’s r:
-<img src="rose.png" width="20%" style="display: block; margin: auto;" />
+Wilcoxon rank sum test tells us the difference is not significant and with a p-value of 0.74, we cannot reject the Null hypothesis. We now need to calculate Rosenthal’s r:
+<img src="rose.png" width="10%" style="display: block; margin: auto;" />
 
 We need a z-score for this. We can use qnorm() to get it from the p-value. The z-value is -0.3322507 and N is 382.
 Rosenthal’s r is then -0.0169994
@@ -2009,6 +2037,626 @@ Reporting:
 "Health levels for students who had an Urban address(Mdn=4 IQR=2) did not differ significantly from those who had an Rural address(Mdn=4 IQR=2).(U=12473, z=0.33, p=0.74, r=0.17)
 
 My Analysis is that this should have been quite clear from the box plot and was only worth going this far to demonstrate a Mann-Whitney test.
+
+``` r
+studentdf %>%
+  select(age,g3.x)
+```
+
+    ##     age g3.x
+    ## 1    15   10
+    ## 2    15    5
+    ## 3    15   13
+    ## 4    15    8
+    ## 5    15   10
+    ## 6    15   11
+    ## 7    15   NA
+    ## 8    15    8
+    ## 9    15   16
+    ## 10   15   11
+    ## 11   15   15
+    ## 12   15   NA
+    ## 13   15   10
+    ## 14   15   11
+    ## 15   15   11
+    ## 16   15   15
+    ## 17   15   12
+    ## 18   15    8
+    ## 19   15    6
+    ## 20   15   NA
+    ## 21   15    6
+    ## 22   15   15
+    ## 23   15   14
+    ## 24   15   18
+    ## 25   15   NA
+    ## 26   15   11
+    ## 27   15    8
+    ## 28   15    7
+    ## 29   15    9
+    ## 30   15   11
+    ## 31   15   15
+    ## 32   15   13
+    ## 33   15   11
+    ## 34   15    6
+    ## 35   15   10
+    ## 36   15    6
+    ## 37   15   13
+    ## 38   15   10
+    ## 39   16   11
+    ## 40   16   10
+    ## 41   16   11
+    ## 42   16   10
+    ## 43   16   14
+    ## 44   16    7
+    ## 45   16   NA
+    ## 46   16   11
+    ## 47   16   10
+    ## 48   16   11
+    ## 49   16   NA
+    ## 50   16   10
+    ## 51   16   12
+    ## 52   16   13
+    ## 53   16   NA
+    ## 54   16    8
+    ## 55   16   11
+    ## 56   16   11
+    ## 57   16    8
+    ## 58   16   10
+    ## 59   16   13
+    ## 60   16   17
+    ## 61   16    6
+    ## 62   16   12
+    ## 63   16   10
+    ## 64   16    8
+    ## 65   16   10
+    ## 66   16   11
+    ## 67   16    5
+    ## 68   16   16
+    ## 69   16   16
+    ## 70   16   10
+    ## 71   16   16
+    ## 72   16    8
+    ## 73   16    9
+    ## 74   16   13
+    ## 75   16   14
+    ## 76   16   14
+    ## 77   16   14
+    ## 78   16   14
+    ## 79   16   14
+    ## 80   16   11
+    ## 81   16   13
+    ## 82   16    9
+    ## 83   16    6
+    ## 84   16    9
+    ## 85   16   11
+    ## 86   16   13
+    ## 87   16   13
+    ## 88   16    6
+    ## 89   16    9
+    ## 90   16   15
+    ## 91   16   16
+    ## 92   16   10
+    ## 93   17   10
+    ## 94   17   11
+    ## 95   17    6
+    ## 96   17    6
+    ## 97   17   14
+    ## 98   17   10
+    ## 99   17    7
+    ## 100  17   11
+    ## 101  17   18
+    ## 102  17   10
+    ## 103  17   12
+    ## 104  17   NA
+    ## 105  17    9
+    ## 106  17   13
+    ## 107  17    6
+    ## 108  17    6
+    ## 109  17   NA
+    ## 110  17    9
+    ## 111  17   10
+    ## 112  17   12
+    ## 113  17   10
+    ## 114  17   11
+    ## 115  17    9
+    ## 116  17    8
+    ## 117  17   10
+    ## 118  17   17
+    ## 119  17   15
+    ## 120  17   18
+    ## 121  17   15
+    ## 122  17   NA
+    ## 123  17    9
+    ## 124  17    9
+    ## 125  17   15
+    ## 126  17   14
+    ## 127  17   15
+    ## 128  17   15
+    ## 129  17    4
+    ## 130  17   12
+    ## 131  17   18
+    ## 132  17    9
+    ## 133  17    9
+    ## 134  17   14
+    ## 135  17   15
+    ## 136  17   12
+    ## 137  17   12
+    ## 138  17   NA
+    ## 139  17   15
+    ## 140  17   15
+    ## 141  17    8
+    ## 142  17   13
+    ## 143  17   14
+    ## 144  18    9
+    ## 145  18   10
+    ## 146  18   NA
+    ## 147  18   NA
+    ## 148  18    7
+    ## 149  18   11
+    ## 150  18   12
+    ## 151  18    6
+    ## 152  18   10
+    ## 153  18   10
+    ## 154  18   NA
+    ## 155  18   NA
+    ## 156  18   19
+    ## 157  18   NA
+    ## 158  18   10
+    ## 159  18   14
+    ## 160  18   14
+    ## 161  18   NA
+    ## 162  18    9
+    ## 163  18   14
+    ## 164  18   18
+    ## 165  18    8
+    ## 166  18   11
+    ## 167  18   11
+    ## 168  18   11
+    ## 169  18   NA
+    ## 170  18   17
+    ## 171  18    8
+    ## 172  19    9
+    ## 173  19    8
+    ## 174  19    9
+    ## 175  19   NA
+    ## 176  15    9
+    ## 177  15    8
+    ## 178  15   NA
+    ## 179  15   16
+    ## 180  15   13
+    ## 181  15   16
+    ## 182  15   18
+    ## 183  15   12
+    ## 184  15   11
+    ## 185  15   11
+    ## 186  15   15
+    ## 187  15   11
+    ## 188  15   12
+    ## 189  15   15
+    ## 190  15   13
+    ## 191  15   12
+    ## 192  15   10
+    ## 193  15   15
+    ## 194  15   10
+    ## 195  15   14
+    ## 196  15   11
+    ## 197  15   10
+    ## 198  15   15
+    ## 199  15   NA
+    ## 200  15   15
+    ## 201  15   12
+    ## 202  15   14
+    ## 203  15   14
+    ## 204  15   17
+    ## 205  15   18
+    ## 206  15   15
+    ## 207  15   10
+    ## 208  15   19
+    ## 209  15   10
+    ## 210  15   19
+    ## 211  15    9
+    ## 212  15   14
+    ## 213  15   15
+    ## 214  15   12
+    ## 215  15   19
+    ## 216  15   18
+    ## 217  15   14
+    ## 218  15   12
+    ## 219  16   15
+    ## 220  16    8
+    ## 221  16   15
+    ## 222  16   10
+    ## 223  16    9
+    ## 224  16   15
+    ## 225  16   18
+    ## 226  16   10
+    ## 227  16   15
+    ## 228  16   16
+    ## 229  16   11
+    ## 230  16   18
+    ## 231  16   10
+    ## 232  16   10
+    ## 233  16   14
+    ## 234  16   14
+    ## 235  16   15
+    ## 236  16   10
+    ## 237  16   15
+    ## 238  16   10
+    ## 239  16   12
+    ## 240  16   13
+    ## 241  16   18
+    ## 242  16   18
+    ## 243  16   12
+    ## 244  16   12
+    ## 245  16   NA
+    ## 246  16   20
+    ## 247  16    8
+    ## 248  16   13
+    ## 249  16   13
+    ## 250  16   12
+    ## 251  16   12
+    ## 252  16    5
+    ## 253  16   17
+    ## 254  16   NA
+    ## 255  16   NA
+    ## 256  16   16
+    ## 257  16   16
+    ## 258  16   11
+    ## 259  16   11
+    ## 260  16    7
+    ## 261  16    6
+    ## 262  16   12
+    ## 263  16   14
+    ## 264  16   15
+    ## 265  16   11
+    ## 266  16   12
+    ## 267  16    9
+    ## 268  16   16
+    ## 269  16   10
+    ## 270  16   15
+    ## 271  16   NA
+    ## 272  17   14
+    ## 273  17   10
+    ## 274  17    8
+    ## 275  17   12
+    ## 276  17   11
+    ## 277  17   10
+    ## 278  17   NA
+    ## 279  17   12
+    ## 280  17    7
+    ## 281  17   13
+    ## 282  17   NA
+    ## 283  17   11
+    ## 284  17    8
+    ## 285  17   NA
+    ## 286  17   NA
+    ## 287  17   10
+    ## 288  17   10
+    ## 289  17   13
+    ## 290  17   10
+    ## 291  17    5
+    ## 292  17   11
+    ## 293  17    6
+    ## 294  17   16
+    ## 295  17   11
+    ## 296  17   11
+    ## 297  17   16
+    ## 298  17    9
+    ## 299  17   10
+    ## 300  17    8
+    ## 301  17    8
+    ## 302  17   13
+    ## 303  17   12
+    ## 304  17   12
+    ## 305  17    9
+    ## 306  17   10
+    ## 307  17   13
+    ## 308  17   10
+    ## 309  18   12
+    ## 310  18   16
+    ## 311  18   17
+    ## 312  18   14
+    ## 313  18    5
+    ## 314  18   14
+    ## 315  18    8
+    ## 316  18   14
+    ## 317  18   13
+    ## 318  18   NA
+    ## 319  18    8
+    ## 320  18    8
+    ## 321  18   10
+    ## 322  18   11
+    ## 323  18    8
+    ## 324  18    9
+    ## 325  18   11
+    ## 326  18    9
+    ## 327  18    9
+    ## 328  18   NA
+    ## 329  18   NA
+    ## 330  18   15
+    ## 331  18   NA
+    ## 332  18    9
+    ## 333  18    8
+    ## 334  18    8
+    ## 335  18   15
+    ## 336  18   10
+    ## 337  18   16
+    ## 338  19   12
+    ## 339  19   NA
+    ## 340  19   11
+    ## 341  20   18
+    ## 342  22    8
+    ## 343  17   NA
+    ## 344  17    5
+    ## 345  17   12
+    ## 346  17   10
+    ## 347  17   13
+    ## 348  17   11
+    ## 349  17   11
+    ## 350  17   15
+    ## 351  18   10
+    ## 352  18   10
+    ## 353  18   11
+    ## 354  18    6
+    ## 355  18   19
+    ## 356  18   10
+    ## 357  18   NA
+    ## 358  18   NA
+    ## 359  18   10
+    ## 360  18   15
+    ## 361  18    9
+    ## 362  18   10
+    ## 363  18   16
+    ## 364  18    8
+    ## 365  19   NA
+    ## 366  17   11
+    ## 367  17   10
+    ## 368  17   13
+    ## 369  17   16
+    ## 370  18   10
+    ## 371  18    7
+    ## 372  18   13
+    ## 373  18    5
+    ## 374  18   12
+    ## 375  18   10
+    ## 376  18   14
+    ## 377  18   10
+    ## 378  18    8
+    ## 379  18   13
+    ## 380  19    8
+    ## 381  19    8
+    ## 382  19   NA
+
+## Reason vs Final Grade in Portuguese
+
+The question:
+Does the reason for choosing the school impact the the final grade in Portugese?
+
+The variables:
+
+    11 reason - reason to choose this school (nominal: close to 'home', school 'reputation', 'course' preference or 'other')
+    32 G3 - final grade (numeric: from 0 to 20, output target)
+
+For this question, we are dealing with multiple groups. It is a comparison of more than 2 samples. Our G3 needs ot be tested to see that it’s parametric, if it does we can see in the [Test Table](#testtable) that we can use ANOVA. ANOVA is another analysis technique which compares again the mean, but it also uses the variance of the data to decide if the means are different.
+
+ANOVA requires on independent categorical variables, which is “reason” and one continuous ratio variable which will be “Grade 3”.
+ANOVA produces a F-statisti, which is similiar to t-statistic from the t-test.
+Quick check to make sure g3.y is normal.
+
+``` r
+studentdf %>%
+  ggplot(aes(x=g3.y)) +
+  labs(x="G3 results for Portuguese") +
+  geom_histogram(alpha = .05, binwidth=1, colour="black", aes(y=..density.., fill=..count..)) +
+  scale_fill_gradient("Count", low="grey", high="blue") +
+  stat_function(fun=dnorm, color="red",args=list(mean=mean(studentdf$g3.y, na.rm=TRUE), sd=sd(studentdf$g3.y, na.rm=TRUE)))
+```
+
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-78-1.png" width="672" />
+
+``` r
+#Create a qqplot
+qqnorm(studentdf$g3.y)
+qqline(studentdf$g3.y, col=2) #show a line on theplot
+```
+
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-78-2.png" width="672" />
+
+``` r
+pastecs::stat.desc(studentdf$g3.y, basic=F)
+tpskew<-semTools::skew(studentdf$g3.y)
+tpkurt<-semTools::kurtosis(studentdf$g3.y)
+tpskew[1]/tpskew[2]
+tpkurt[1]/tpkurt[2]
+zg3<- abs(scale(studentdf$g3.y))
+print("% greater than 1.96 SDs")
+FSA::perc(as.numeric(zg3), 1.96, "gt")
+print("% greater than 3.29 SDs")
+FSA::perc(as.numeric(zg3), 3.29, "gt")
+```
+
+    ##       median         mean      SE.mean CI.mean.0.95          var      std.dev 
+    ##   13.0000000   12.6816976    0.1331154    0.2617439    6.6803290    2.5846332 
+    ##     coef.var 
+    ##    0.2038081 
+    ## skew (g1) 
+    ## -1.356756 
+    ## Excess Kur (g2) 
+    ##        2.741779 
+    ## [1] "% greater than 1.96 SDs"
+    ## [1] 5.039788
+    ## [1] "% greater than 3.29 SDs"
+    ## [1] 0.265252
+
+Skew is good, Kurtosis is high. Will check outliers. 0.26% are outliers outside a 3.29 z-score.
+Removing these outliers:
+
+``` r
+studentdf %>%
+  mutate(zscale = scale(g3.y)) %>%
+  filter(zscale > 3.29 | zscale < -3.29) %>%
+  select(zscale, g3.y)
+reasondf <- studentdf %>%
+  mutate(zscale = scale(g3.y)) %>%
+  filter(zscale < 3.29 | zscale > -3.29)
+```
+
+    ##      zscale g3.y
+    ## 1 -4.519673    1
+
+Turns out it is only one outlier. A Portuguese grade 3 result of 1.
+
+<div class="figure" style="text-align: center">
+
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-80-1.png" alt="A boxplot withReason for attending the school and the Grade 3 results for Portuguese" width="60%" />
+
+<p class="caption">
+
+Figure 24: A boxplot withReason for attending the school and the Grade 3 results for Portuguese
+
+</p>
+
+</div>
+
+<div class="figure" style="text-align: center">
+
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-81-1.png" alt="A Density histogram with Reason for attending the school and the Grade 3 results for Portuguese" width="60%" />
+
+<p class="caption">
+
+Figure 25: A Density histogram with Reason for attending the school and the Grade 3 results for Portuguese
+
+</p>
+
+</div>
+
+Grade 3 results for Portuguese was assessed for normality. Visual inspection of the histogram and QQ-Plot (see Figures above) identified some issues with skewness and kurtosis. The standardised score for skewness (-1.4) can be considered acceptable using the criteria proposed by West, Finch and Curran (1996), however the standardised score for kurtosis (2.74) was outside the acceptable range. After removing one outlier, 100% of standardised scores for Grade 3 results fall within the bounds of +/- 3.29, using the guidance of Field, Miles and Field (2013) the data can be considered to approximate a normal distribution (m=12.68, sd=2.58, n=377).
+
+We start as always with stating the Null and alternative hypothesis:
+
+**H**<sub>**0**</sub>: There is NO difference in the Grade 3 result between each student’s reason for choosing the school.
+
+**H**<sub>**a**</sub>: There is a difference in the Grade 3 result between each student’s reason for choosing the school.
+
+``` r
+psych::describeBy(reasondf$g3.y, reasondf$reason, mat=TRUE)
+```
+
+    ##     item     group1 vars   n     mean       sd median  trimmed    mad min max
+    ## X11    1     course    1 139 12.33094 2.622059     12 12.36283 2.9652   1  18
+    ## X12    2       home    1 109 12.75229 2.384968     13 12.71910 2.9652   6  19
+    ## X13    3      other    1  31 12.48387 3.020717     12 12.68000 2.9652   5  18
+    ## X14    4 reputation    1  98 13.16327 2.555342     13 13.08750 2.9652   8  19
+    ##     range        skew    kurtosis        se
+    ## X11    17 -0.39548179  1.39899482 0.2224002
+    ## X12    13  0.01566512  0.28286829 0.2284385
+    ## X13    13 -0.44458398 -0.06402159 0.5425368
+    ## X14    11  0.21608432 -0.78488847 0.2581285
+
+There are two methods to use to check for homogeneity of the variance, Levene’s test and Bartlett’s test.
+Now I need to test for homogeneity of variance. Using Levene’s test, our Null hypothesis is that there is no difference in variance.
+
+``` r
+car::leveneTest(g3.y ~ reason, data=reasondf)
+```
+
+    ## Levene's Test for Homogeneity of Variance (center = median)
+    ##        Df F value Pr(>F)
+    ## group   3  0.9607 0.4113
+    ##       373
+
+The null is not rejected and so we can consider the data to have homogeneity of variance.
+For Bartlett’s test, the null hypothesis is that variances in groups are equal so to assume homogeneity we would expect probability to not be statistically significant, just like Levenes.
+
+``` r
+stats::bartlett.test(g3.y~ reason, data=reasondf)
+```
+
+    ## 
+    ##  Bartlett test of homogeneity of variances
+    ## 
+    ## data:  g3.y by reason
+    ## Bartlett's K-squared = 2.9964, df = 3, p-value = 0.3922
+
+p-value is \> 0.05 so the result is not statistically significant so we can assume homogeneity from this test also.
+
+Now we conduct ANOVA using the package userfriendlyscience and the method oneway and also with stats::aov
+In this case we can use Tukey as the post-hoc test option since variances in the groups are equal.
+If the variances in the groups were not equal we would use Games-Howell
+
+``` r
+userfriendlyscience::oneway(reasondf$reason,y=reasondf$g3.y,posthoc='Tukey')
+```
+
+    ## Registered S3 method overwritten by 'GGally':
+    ##   method from   
+    ##   +.gg   ggplot2
+
+    ## Registered S3 methods overwritten by 'lme4':
+    ##   method                          from
+    ##   cooks.distance.influence.merMod car 
+    ##   influence.merMod                car 
+    ##   dfbeta.influence.merMod         car 
+    ##   dfbetas.influence.merMod        car
+
+    ## Registered S3 methods overwritten by 'ufs':
+    ##   method                     from               
+    ##   grid.draw.ggProportionPlot userfriendlyscience
+    ##   pander.associationMatrix   userfriendlyscience
+    ##   pander.dataShape           userfriendlyscience
+    ##   pander.descr               userfriendlyscience
+    ##   pander.normalityAssessment userfriendlyscience
+    ##   print.CramersV             userfriendlyscience
+    ##   print.associationMatrix    userfriendlyscience
+    ##   print.confIntOmegaSq       userfriendlyscience
+    ##   print.confIntV             userfriendlyscience
+    ##   print.dataShape            userfriendlyscience
+    ##   print.descr                userfriendlyscience
+    ##   print.ggProportionPlot     userfriendlyscience
+    ##   print.meanConfInt          userfriendlyscience
+    ##   print.multiVarFreq         userfriendlyscience
+    ##   print.normalityAssessment  userfriendlyscience
+    ##   print.regrInfluential      userfriendlyscience
+    ##   print.scaleDiagnosis       userfriendlyscience
+    ##   print.scaleStructure       userfriendlyscience
+    ##   print.scatterMatrix        userfriendlyscience
+
+``` r
+stats::aov(g3.y~ reason, data = reasondf)
+```
+
+    ## ### Oneway Anova for y=g3.y and x=reason (groups: course, home, other, reputation)
+    ## 
+    ## Omega squared: 95% CI = [NA; .04], point estimate = .01
+    ## Eta Squared: 95% CI = [0; .04], point estimate = .02
+    ## 
+    ##                                      SS  Df    MS    F    p
+    ## Between groups (error + effect)   41.59   3 13.86 2.09 .101
+    ## Within groups (error only)      2470.22 373  6.62          
+    ## 
+    ## 
+    ## ### Post hoc test: Tukey
+    ## 
+    ##                   diff  lwr   upr  p adj
+    ## home-course       0.42  -0.43 1.27 .576 
+    ## other-course      0.15  -1.17 1.47 .991 
+    ## reputation-course 0.83  -0.04 1.71 .069 
+    ## other-home        -0.27 -1.62 1.08 .956 
+    ## reputation-home   0.41  -0.51 1.34 .660 
+    ## reputation-other  0.68  -0.69 2.05 .576 
+    ## Call:
+    ##    stats::aov(formula = g3.y ~ reason, data = reasondf)
+    ## 
+    ## Terms:
+    ##                    reason Residuals
+    ## Sum of Squares    41.5851 2470.2186
+    ## Deg. of Freedom         3       373
+    ## 
+    ## Residual standard error: 2.573435
+    ## Estimated effects may be unbalanced
+
+Reporting the results with eta squared effect
+An one-way between-groups analysis of variance (ANOVA) was conducted to to explore the impact of the reason for attending a school the Final Grades in Portuguese. Students were divided into four groups based on their reason for attending the school (close to ‘home’, school ‘reputation’, ‘course’ preference or ‘other’). No statistically significant difference in the final grades and associated reason was found (M=12.33, SD=2.6 for reason course, M=12.75, SD=2.4 for reason home, M=12.48, SD=3.0 for reason other and M=13.16, SD=2.6 for reason reputation) , (F(3, 373)= 2.09, p=0.101). A small effect size was also indicated by the eta squared value (0.01).
 
 ## More
 
