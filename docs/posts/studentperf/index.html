@@ -211,20 +211,20 @@ studentdf<span style="color:#f92672">=</span><span style="color:#a6e22e">merge</
 <p>let’s us pick a random student:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">studentdf <span style="color:#f92672">%&gt;%</span> 
   <span style="color:#a6e22e">sample_n</span>(<span style="color:#ae81ff">1</span>) 
-</code></pre></div><pre><code>##   school sex age address famsize pstatus medu fedu    mjob     fjob reason
-## 1     GP   F  17       R     GT3       T    3    4 at_home services course
+</code></pre></div><pre><code>##   school sex age address famsize pstatus medu fedu   mjob     fjob reason
+## 1     GP   F  16       U     GT3       T    4    2 health services   home
 ##   nursery internet guardian.x traveltime.x studytime.x failures.x schoolsup.x
-## 1      no      yes     father            1           3          0          no
+## 1     yes      yes     father            1           2          0          no
 ##   famsup.x paid.x activities.x higher.x romantic.x famrel.x freetime.x goout.x
-## 1      yes    yes          yes      yes         no        4          3       4
+## 1       no    yes           no      yes        yes        4          2       3
 ##   dalc.x walc.x health.x absences.x g1.x g2.x g3.x guardian.y traveltime.y
-## 1      2      5        5          0   11   11   10     father            1
+## 1      1      1        3          0   14   15   16     father            1
 ##   studytime.y failures.y schoolsup.y famsup.y paid.y activities.y higher.y
-## 1           3          0          no      yes     no          yes      yes
+## 1           2          0          no       no     no           no      yes
 ##   romantic.y famrel.y freetime.y goout.y dalc.y walc.y health.y absences.y g1.y
-## 1         no        4          3       4      2      5        5          2   15
+## 1        yes        4          2       3      1      1        3          0   17
 ##   g2.y g3.y
-## 1   15   17
+## 1   17   18
 </code></pre>
 <h2 id="population-vs-sample">Population vs Sample</h2>
 <p>We are interested in finding results for the entire population of students that have completed exams in maths and Portuguese in Portugal, but we know that is not possible, so what we have is a sample. We will use this sample to infer things about the population as a whole.</p>
@@ -1567,11 +1567,21 @@ An independent-samples t-test was conducted to compare Maths grade 2 results for
   <span style="color:#a6e22e">geom_histogram</span>(alpha <span style="color:#f92672">=</span> <span style="color:#ae81ff">.05</span>, binwidth<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>, colour<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;black&#34;</span>, <span style="color:#a6e22e">aes</span>(y<span style="color:#f92672">=</span>..density.., fill<span style="color:#f92672">=</span>..count..)) <span style="color:#f92672">+</span>
   <span style="color:#a6e22e">scale_fill_gradient</span>(<span style="color:#e6db74">&#34;Count&#34;</span>, low<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;grey&#34;</span>, high<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;green&#34;</span>) <span style="color:#f92672">+</span>
   <span style="color:#a6e22e">stat_function</span>(fun<span style="color:#f92672">=</span>dnorm, color<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;red&#34;</span>,args<span style="color:#f92672">=</span><span style="color:#a6e22e">list</span>(mean<span style="color:#f92672">=</span><span style="color:#a6e22e">mean</span>(studentdf<span style="color:#f92672">$</span>g1.x, na.rm<span style="color:#f92672">=</span><span style="color:#66d9ef">TRUE</span>), sd<span style="color:#f92672">=</span><span style="color:#a6e22e">sd</span>(studentdf<span style="color:#f92672">$</span>g1.x, na.rm<span style="color:#f92672">=</span><span style="color:#66d9ef">TRUE</span>)))
-</code></pre></div><p><img src="/blog/posts/studentperf/index_files/figure-html/unnamed-chunk-65-1.png" width="672" /></p>
+</code></pre></div><div class="figure" style="text-align: center">
+<p><img src="/blog/posts/studentperf/index_files/figure-html/unnamed-chunk-65-1.png" alt="G1 results for Maths" width="672" /></p>
+<p class="caption">
+<p>Figure 24: G1 results for Maths</p>
+</p>
+</div>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#75715e">#Create a qqplot</span>
 <span style="color:#a6e22e">qqnorm</span>(studentdf<span style="color:#f92672">$</span>g1.x)
 <span style="color:#a6e22e">qqline</span>(studentdf<span style="color:#f92672">$</span>g1.x, col<span style="color:#f92672">=</span><span style="color:#ae81ff">2</span>) <span style="color:#75715e">#show a line on theplot</span>
-</code></pre></div><p><img src="/blog/posts/studentperf/index_files/figure-html/unnamed-chunk-65-2.png" width="672" /></p>
+</code></pre></div><div class="figure" style="text-align: center">
+<p><img src="/blog/posts/studentperf/index_files/figure-html/unnamed-chunk-65-2.png" alt="G1 results for Maths" width="672" /></p>
+<p class="caption">
+<p>Figure 25: G1 results for Maths</p>
+</p>
+</div>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">pastecs<span style="color:#f92672">::</span><span style="color:#a6e22e">stat.desc</span>(studentdf<span style="color:#f92672">$</span>g1.x, basic<span style="color:#f92672">=</span>F)
 tpskew<span style="color:#f92672">&lt;-</span>semTools<span style="color:#f92672">::</span><span style="color:#a6e22e">skew</span>(studentdf<span style="color:#f92672">$</span>g1.x)
 tpkurt<span style="color:#f92672">&lt;-</span>semTools<span style="color:#f92672">::</span><span style="color:#a6e22e">kurtosis</span>(studentdf<span style="color:#f92672">$</span>g1.x)
@@ -1639,31 +1649,24 @@ paid_students_maths <span style="color:#f92672">%&gt;%</span>
   <span style="color:#a6e22e">geom_histogram</span>(alpha <span style="color:#f92672">=</span> <span style="color:#ae81ff">.05</span>, binwidth<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>, colour<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;black&#34;</span>, <span style="color:#a6e22e">aes</span>(y<span style="color:#f92672">=</span>..density.., fill<span style="color:#f92672">=</span>..count..)) <span style="color:#f92672">+</span>
   <span style="color:#a6e22e">scale_fill_gradient</span>(<span style="color:#e6db74">&#34;Count&#34;</span>, low<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;grey&#34;</span>, high<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;green&#34;</span>) <span style="color:#f92672">+</span>
   <span style="color:#a6e22e">stat_function</span>(fun<span style="color:#f92672">=</span>dnorm, color<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;red&#34;</span>,args<span style="color:#f92672">=</span><span style="color:#a6e22e">list</span>(mean<span style="color:#f92672">=</span><span style="color:#a6e22e">mean</span>(paid_students_maths<span style="color:#f92672">$</span>g1.x, na.rm<span style="color:#f92672">=</span><span style="color:#66d9ef">TRUE</span>), sd<span style="color:#f92672">=</span><span style="color:#a6e22e">sd</span>(paid_students_maths<span style="color:#f92672">$</span>g1.x, na.rm<span style="color:#f92672">=</span><span style="color:#66d9ef">TRUE</span>)))
-</code></pre></div><p><img src="/blog/posts/studentperf/index_files/figure-html/unnamed-chunk-69-1.png" width="672" /></p>
+</code></pre></div><div class="figure" style="text-align: center">
+<p><img src="/blog/posts/studentperf/index_files/figure-html/unnamed-chunk-69-1.png" alt="G1 results for Maths for Paid extra classes" width="672" /></p>
+<p class="caption">
+<p>Figure 26: G1 results for Maths for Paid extra classes</p>
+</p>
+</div>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#75715e">#Create a qqplot</span>
 <span style="color:#a6e22e">qqnorm</span>(paid_students_maths<span style="color:#f92672">$</span>g1.x)
 <span style="color:#a6e22e">qqline</span>(paid_students_maths<span style="color:#f92672">$</span>g1.x, col<span style="color:#f92672">=</span><span style="color:#ae81ff">2</span>) <span style="color:#75715e">#show a line on theplot</span>
-</code></pre></div><p><img src="/blog/posts/studentperf/index_files/figure-html/unnamed-chunk-69-2.png" width="672" /></p>
+</code></pre></div><div class="figure" style="text-align: center">
+<p><img src="/blog/posts/studentperf/index_files/figure-html/unnamed-chunk-70-1.png" alt="Q-Q plot G1 results for Maths for Paid extra classes" width="672" /></p>
+<p class="caption">
+<p>Figure 27: Q-Q plot G1 results for Maths for Paid extra classes</p>
+</p>
+</div>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">pastecs<span style="color:#f92672">::</span><span style="color:#a6e22e">stat.desc</span>(paid_students_maths<span style="color:#f92672">$</span>g1.x, basic<span style="color:#f92672">=</span>F)
 tpskew<span style="color:#f92672">&lt;-</span>semTools<span style="color:#f92672">::</span><span style="color:#a6e22e">skew</span>(paid_students_maths<span style="color:#f92672">$</span>g1.x)
 tpkurt<span style="color:#f92672">&lt;-</span>semTools<span style="color:#f92672">::</span><span style="color:#a6e22e">kurtosis</span>(paid_students_maths<span style="color:#f92672">$</span>g1.x)
-tpskew[1]<span style="color:#f92672">/</span>tpskew[2]
-tpkurt[1]<span style="color:#f92672">/</span>tpkurt[2]
-
-paid_students_maths <span style="color:#f92672">%&gt;%</span>
-  <span style="color:#a6e22e">ggplot</span>(<span style="color:#a6e22e">aes</span>(x<span style="color:#f92672">=</span>g3.x)) <span style="color:#f92672">+</span>
-  <span style="color:#a6e22e">labs</span>(x<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;G3 results for Maths&#34;</span>) <span style="color:#f92672">+</span>
-  <span style="color:#a6e22e">geom_histogram</span>(alpha <span style="color:#f92672">=</span> <span style="color:#ae81ff">.05</span>, binwidth<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>, colour<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;black&#34;</span>, <span style="color:#a6e22e">aes</span>(y<span style="color:#f92672">=</span>..density.., fill<span style="color:#f92672">=</span>..count..)) <span style="color:#f92672">+</span>
-  <span style="color:#a6e22e">scale_fill_gradient</span>(<span style="color:#e6db74">&#34;Count&#34;</span>, low<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;grey&#34;</span>, high<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;green&#34;</span>) <span style="color:#f92672">+</span>
-  <span style="color:#a6e22e">stat_function</span>(fun<span style="color:#f92672">=</span>dnorm, color<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;red&#34;</span>,args<span style="color:#f92672">=</span><span style="color:#a6e22e">list</span>(mean<span style="color:#f92672">=</span><span style="color:#a6e22e">mean</span>(paid_students_maths<span style="color:#f92672">$</span>g3.x, na.rm<span style="color:#f92672">=</span><span style="color:#66d9ef">TRUE</span>), sd<span style="color:#f92672">=</span><span style="color:#a6e22e">sd</span>(paid_students_maths<span style="color:#f92672">$</span>g3.x, na.rm<span style="color:#f92672">=</span><span style="color:#66d9ef">TRUE</span>)))
-</code></pre></div><p><img src="/blog/posts/studentperf/index_files/figure-html/unnamed-chunk-69-3.png" width="672" /></p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#75715e">#Create a qqplot</span>
-<span style="color:#a6e22e">qqnorm</span>(paid_students_maths<span style="color:#f92672">$</span>g3.x)
-<span style="color:#a6e22e">qqline</span>(paid_students_maths<span style="color:#f92672">$</span>g3.x, col<span style="color:#f92672">=</span><span style="color:#ae81ff">2</span>) <span style="color:#75715e">#show a line on theplot</span>
-</code></pre></div><p><img src="/blog/posts/studentperf/index_files/figure-html/unnamed-chunk-69-4.png" width="672" /></p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">pastecs<span style="color:#f92672">::</span><span style="color:#a6e22e">stat.desc</span>(paid_students_maths<span style="color:#f92672">$</span>g3.x, basic<span style="color:#f92672">=</span>F)
-tpskew<span style="color:#f92672">&lt;-</span>semTools<span style="color:#f92672">::</span><span style="color:#a6e22e">skew</span>(paid_students_maths<span style="color:#f92672">$</span>g3.x)
-tpkurt<span style="color:#f92672">&lt;-</span>semTools<span style="color:#f92672">::</span><span style="color:#a6e22e">kurtosis</span>(paid_students_maths<span style="color:#f92672">$</span>g3.x)
 tpskew[1]<span style="color:#f92672">/</span>tpskew[2]
 tpkurt[1]<span style="color:#f92672">/</span>tpkurt[2]
 </code></pre></div><pre><code>##       median         mean      SE.mean CI.mean.0.95          var      std.dev 
@@ -1673,8 +1676,35 @@ tpkurt[1]<span style="color:#f92672">/</span>tpkurt[2]
 ## skew (g1) 
 ##  1.382106 
 ## Excess Kur (g2) 
-##       -2.053623 
-##       median         mean      SE.mean CI.mean.0.95          var      std.dev 
+##       -2.053623
+</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">paid_students_maths <span style="color:#f92672">%&gt;%</span>
+  <span style="color:#a6e22e">ggplot</span>(<span style="color:#a6e22e">aes</span>(x<span style="color:#f92672">=</span>g3.x)) <span style="color:#f92672">+</span>
+  <span style="color:#a6e22e">labs</span>(x<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;G3 results for Maths&#34;</span>) <span style="color:#f92672">+</span>
+  <span style="color:#a6e22e">geom_histogram</span>(alpha <span style="color:#f92672">=</span> <span style="color:#ae81ff">.05</span>, binwidth<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>, colour<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;black&#34;</span>, <span style="color:#a6e22e">aes</span>(y<span style="color:#f92672">=</span>..density.., fill<span style="color:#f92672">=</span>..count..)) <span style="color:#f92672">+</span>
+  <span style="color:#a6e22e">scale_fill_gradient</span>(<span style="color:#e6db74">&#34;Count&#34;</span>, low<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;grey&#34;</span>, high<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;green&#34;</span>) <span style="color:#f92672">+</span>
+  <span style="color:#a6e22e">stat_function</span>(fun<span style="color:#f92672">=</span>dnorm, color<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;red&#34;</span>,args<span style="color:#f92672">=</span><span style="color:#a6e22e">list</span>(mean<span style="color:#f92672">=</span><span style="color:#a6e22e">mean</span>(paid_students_maths<span style="color:#f92672">$</span>g3.x, na.rm<span style="color:#f92672">=</span><span style="color:#66d9ef">TRUE</span>), sd<span style="color:#f92672">=</span><span style="color:#a6e22e">sd</span>(paid_students_maths<span style="color:#f92672">$</span>g3.x, na.rm<span style="color:#f92672">=</span><span style="color:#66d9ef">TRUE</span>)))
+</code></pre></div><div class="figure" style="text-align: center">
+<p><img src="/blog/posts/studentperf/index_files/figure-html/unnamed-chunk-71-1.png" alt="G3 results for Maths for Paid extra classes" width="672" /></p>
+<p class="caption">
+<p>Figure 28: G3 results for Maths for Paid extra classes</p>
+</p>
+</div>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#75715e">#Create a qqplot</span>
+<span style="color:#a6e22e">qqnorm</span>(paid_students_maths<span style="color:#f92672">$</span>g3.x)
+<span style="color:#a6e22e">qqline</span>(paid_students_maths<span style="color:#f92672">$</span>g3.x, col<span style="color:#f92672">=</span><span style="color:#ae81ff">2</span>) <span style="color:#75715e">#show a line on theplot</span>
+</code></pre></div><div class="figure" style="text-align: center">
+<p><img src="/blog/posts/studentperf/index_files/figure-html/unnamed-chunk-72-1.png" alt="Q-Q plot G3 results for Maths for Paid extra classes" width="672" /></p>
+<p class="caption">
+<p>Figure 29: Q-Q plot G3 results for Maths for Paid extra classes</p>
+</p>
+</div>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">pastecs<span style="color:#f92672">::</span><span style="color:#a6e22e">stat.desc</span>(paid_students_maths<span style="color:#f92672">$</span>g3.x, basic<span style="color:#f92672">=</span>F)
+tpskew<span style="color:#f92672">&lt;-</span>semTools<span style="color:#f92672">::</span><span style="color:#a6e22e">skew</span>(paid_students_maths<span style="color:#f92672">$</span>g3.x)
+tpkurt<span style="color:#f92672">&lt;-</span>semTools<span style="color:#f92672">::</span><span style="color:#a6e22e">kurtosis</span>(paid_students_maths<span style="color:#f92672">$</span>g3.x)
+tpskew[1]<span style="color:#f92672">/</span>tpskew[2]
+tpkurt[1]<span style="color:#f92672">/</span>tpkurt[2]
+</code></pre></div><pre><code>##       median         mean      SE.mean CI.mean.0.95          var      std.dev 
 ##   11.0000000   11.4082840    0.2349161    0.4637678    9.3263595    3.0539089 
 ##     coef.var 
 ##    0.2676922 
@@ -1738,7 +1768,12 @@ a <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">sort</spa
   <span style="color:#a6e22e">ggplot</span>(<span style="color:#a6e22e">aes</span>(x <span style="color:#f92672">=</span> <span style="color:#a6e22e">as.numeric</span>(<span style="color:#a6e22e">row.names</span>(studentdf)), y <span style="color:#f92672">=</span> health.x, color<span style="color:#f92672">=</span>address)) <span style="color:#f92672">+</span>
   <span style="color:#a6e22e">geom_point</span>(size<span style="color:#f92672">=</span><span style="color:#ae81ff">2</span>) <span style="color:#f92672">+</span> 
   <span style="color:#a6e22e">labs</span>(y<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Health (1 bad - 5 good)&#34;</span>, x<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;student number&#34;</span>)
-</code></pre></div><p><img src="/blog/posts/studentperf/index_files/figure-html/unnamed-chunk-73-1.png" width="672" /></p>
+</code></pre></div><div class="figure" style="text-align: center">
+<p><img src="/blog/posts/studentperf/index_files/figure-html/unnamed-chunk-76-1.png" alt="Health for Urban and Rural students" width="672" /></p>
+<p class="caption">
+<p>Figure 30: Health for Urban and Rural students</p>
+</p>
+</div>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">studentdf <span style="color:#f92672">%&gt;%</span>
   <span style="color:#a6e22e">ggplot</span>(<span style="color:#a6e22e">aes</span>(x<span style="color:#f92672">=</span>address, y<span style="color:#f92672">=</span>health.x, fill<span style="color:#f92672">=</span>address)) <span style="color:#f92672">+</span>
     <span style="color:#a6e22e">geom_boxplot</span>() <span style="color:#f92672">+</span>
@@ -1746,14 +1781,24 @@ a <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">sort</spa
     <span style="color:#a6e22e">geom_jitter</span>(color<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;black&#34;</span>, size<span style="color:#f92672">=</span><span style="color:#ae81ff">0.4</span>, alpha<span style="color:#f92672">=</span><span style="color:#ae81ff">0.9</span>) <span style="color:#f92672">+</span>
     <span style="color:#a6e22e">ggtitle</span>(<span style="color:#e6db74">&#34;A boxplot with Address and Health&#34;</span>) <span style="color:#f92672">+</span>
     <span style="color:#a6e22e">ylab</span>(<span style="color:#e6db74">&#34;Grade 3 results&#34;</span>)
-</code></pre></div><p><img src="/blog/posts/studentperf/index_files/figure-html/unnamed-chunk-73-2.png" width="672" /></p>
+</code></pre></div><div class="figure" style="text-align: center">
+<p><img src="/blog/posts/studentperf/index_files/figure-html/unnamed-chunk-76-2.png" alt="Health for Urban and Rural students" width="672" /></p>
+<p class="caption">
+<p>Figure 31: Health for Urban and Rural students</p>
+</p>
+</div>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">studentdf <span style="color:#f92672">%&gt;%</span>
   <span style="color:#a6e22e">ggplot</span>(<span style="color:#a6e22e">aes</span>(x<span style="color:#f92672">=</span>health.x)) <span style="color:#f92672">+</span>
   <span style="color:#a6e22e">labs</span>(x<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Health on scale from 1-5&#34;</span>) <span style="color:#f92672">+</span>
   <span style="color:#a6e22e">geom_histogram</span>(alpha <span style="color:#f92672">=</span> <span style="color:#ae81ff">.05</span>, binwidth<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>, colour<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;black&#34;</span>, <span style="color:#a6e22e">aes</span>(y<span style="color:#f92672">=</span>..density.., fill<span style="color:#f92672">=</span>..count..)) <span style="color:#f92672">+</span>
   <span style="color:#a6e22e">scale_fill_gradient</span>(<span style="color:#e6db74">&#34;Count&#34;</span>, low<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;grey&#34;</span>, high<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;blue&#34;</span>) <span style="color:#f92672">+</span>
   <span style="color:#a6e22e">stat_function</span>(fun<span style="color:#f92672">=</span>dnorm, color<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;red&#34;</span>,args<span style="color:#f92672">=</span><span style="color:#a6e22e">list</span>(mean<span style="color:#f92672">=</span><span style="color:#a6e22e">mean</span>(studentdf<span style="color:#f92672">$</span>health.x, na.rm<span style="color:#f92672">=</span><span style="color:#66d9ef">TRUE</span>), sd<span style="color:#f92672">=</span><span style="color:#a6e22e">sd</span>(studentdf<span style="color:#f92672">$</span>health.x, na.rm<span style="color:#f92672">=</span><span style="color:#66d9ef">TRUE</span>)))
-</code></pre></div><p><img src="/blog/posts/studentperf/index_files/figure-html/unnamed-chunk-74-1.png" width="672" /></p>
+</code></pre></div><div class="figure" style="text-align: center">
+<p><img src="/blog/posts/studentperf/index_files/figure-html/unnamed-chunk-77-1.png" alt="Health histogram for Urban and Rural students" width="672" /></p>
+<p class="caption">
+<p>Figure 32: Health histogram for Urban and Rural students</p>
+</p>
+</div>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">pastecs<span style="color:#f92672">::</span><span style="color:#a6e22e">stat.desc</span>(studentdf<span style="color:#f92672">$</span>health.x, basic<span style="color:#f92672">=</span>F)
 tpskew<span style="color:#f92672">&lt;-</span>semTools<span style="color:#f92672">::</span><span style="color:#a6e22e">skew</span>(studentdf<span style="color:#f92672">$</span>health.x)
 tpkurt<span style="color:#f92672">&lt;-</span>semTools<span style="color:#f92672">::</span><span style="color:#a6e22e">kurtosis</span>(studentdf<span style="color:#f92672">$</span>health.x)
@@ -2210,11 +2255,21 @@ Quick check to make sure g3.y is normal.</p>
   <span style="color:#a6e22e">geom_histogram</span>(alpha <span style="color:#f92672">=</span> <span style="color:#ae81ff">.05</span>, binwidth<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>, colour<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;black&#34;</span>, <span style="color:#a6e22e">aes</span>(y<span style="color:#f92672">=</span>..density.., fill<span style="color:#f92672">=</span>..count..)) <span style="color:#f92672">+</span>
   <span style="color:#a6e22e">scale_fill_gradient</span>(<span style="color:#e6db74">&#34;Count&#34;</span>, low<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;grey&#34;</span>, high<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;blue&#34;</span>) <span style="color:#f92672">+</span>
   <span style="color:#a6e22e">stat_function</span>(fun<span style="color:#f92672">=</span>dnorm, color<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;red&#34;</span>,args<span style="color:#f92672">=</span><span style="color:#a6e22e">list</span>(mean<span style="color:#f92672">=</span><span style="color:#a6e22e">mean</span>(studentdf<span style="color:#f92672">$</span>g3.y, na.rm<span style="color:#f92672">=</span><span style="color:#66d9ef">TRUE</span>), sd<span style="color:#f92672">=</span><span style="color:#a6e22e">sd</span>(studentdf<span style="color:#f92672">$</span>g3.y, na.rm<span style="color:#f92672">=</span><span style="color:#66d9ef">TRUE</span>)))
-</code></pre></div><p><img src="/blog/posts/studentperf/index_files/figure-html/unnamed-chunk-78-1.png" width="672" /></p>
+</code></pre></div><div class="figure" style="text-align: center">
+<p><img src="/blog/posts/studentperf/index_files/figure-html/unnamed-chunk-82-1.png" alt="G3 results for Portuguese" width="672" /></p>
+<p class="caption">
+<p>Figure 33: G3 results for Portuguese</p>
+</p>
+</div>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#75715e">#Create a qqplot</span>
 <span style="color:#a6e22e">qqnorm</span>(studentdf<span style="color:#f92672">$</span>g3.y)
 <span style="color:#a6e22e">qqline</span>(studentdf<span style="color:#f92672">$</span>g3.y, col<span style="color:#f92672">=</span><span style="color:#ae81ff">2</span>) <span style="color:#75715e">#show a line on theplot</span>
-</code></pre></div><p><img src="/blog/posts/studentperf/index_files/figure-html/unnamed-chunk-78-2.png" width="672" /></p>
+</code></pre></div><div class="figure" style="text-align: center">
+<p><img src="/blog/posts/studentperf/index_files/figure-html/unnamed-chunk-82-2.png" alt="G3 results for Portuguese" width="672" /></p>
+<p class="caption">
+<p>Figure 34: G3 results for Portuguese</p>
+</p>
+</div>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">pastecs<span style="color:#f92672">::</span><span style="color:#a6e22e">stat.desc</span>(studentdf<span style="color:#f92672">$</span>g3.y, basic<span style="color:#f92672">=</span>F)
 tpskew<span style="color:#f92672">&lt;-</span>semTools<span style="color:#f92672">::</span><span style="color:#a6e22e">skew</span>(studentdf<span style="color:#f92672">$</span>g3.y)
 tpkurt<span style="color:#f92672">&lt;-</span>semTools<span style="color:#f92672">::</span><span style="color:#a6e22e">kurtosis</span>(studentdf<span style="color:#f92672">$</span>g3.y)
@@ -2252,15 +2307,15 @@ reasondf <span style="color:#f92672">&lt;-</span> studentdf <span style="color:#
 </code></pre>
 <p>Turns out it is only one outlier. A Portuguese grade 3 result of 1.</p>
 <div class="figure" style="text-align: center">
-<p><img src="/blog/posts/studentperf/index_files/figure-html/unnamed-chunk-80-1.png" alt="A boxplot withReason for attending the school and the Grade 3 results for Portuguese" width="60%" /></p>
+<p><img src="/blog/posts/studentperf/index_files/figure-html/unnamed-chunk-84-1.png" alt="A boxplot withReason for attending the school and the Grade 3 results for Portuguese" width="60%" /></p>
 <p class="caption">
-<p>Figure 24: A boxplot withReason for attending the school and the Grade 3 results for Portuguese</p>
+<p>Figure 35: A boxplot withReason for attending the school and the Grade 3 results for Portuguese</p>
 </p>
 </div>
 <div class="figure" style="text-align: center">
-<p><img src="/blog/posts/studentperf/index_files/figure-html/unnamed-chunk-81-1.png" alt="A Density histogram with Reason for attending the school and the Grade 3 results for Portuguese" width="60%" /></p>
+<p><img src="/blog/posts/studentperf/index_files/figure-html/unnamed-chunk-85-1.png" alt="A Density histogram with Reason for attending the school and the Grade 3 results for Portuguese" width="60%" /></p>
 <p class="caption">
-<p>Figure 25: A Density histogram with Reason for attending the school and the Grade 3 results for Portuguese</p>
+<p>Figure 36: A Density histogram with Reason for attending the school and the Grade 3 results for Portuguese</p>
 </p>
 </div>
 <p>Grade 3 results for Portuguese was assessed for normality. Visual inspection of the histogram and QQ-Plot (see Figures above) identified some issues with skewness and kurtosis. The standardised score for skewness (-1.4) can be considered acceptable using the criteria proposed by West, Finch and Curran (1996), however the standardised score for kurtosis (2.74) was outside the acceptable range. After removing one outlier, 100% of standardised scores for Grade 3 results fall within the bounds of +/- 3.29, using the guidance of Field, Miles and Field (2013) the data can be considered to approximate a normal distribution (m=12.68, sd=2.58, n=377).</p>
@@ -2299,6 +2354,7 @@ For Bartlett’s test, the null hypothesis is that variances in groups are equal
 <p>p-value is &gt; 0.05 so the result is not statistically significant so we can assume homogeneity from this test also.</p>
 <p>Now we conduct ANOVA using the package userfriendlyscience and the method oneway and also with stats::aov
 In this case we can use Tukey as the post-hoc test option since variances in the groups are equal.
+This is similar to the welsh modification(var.equal) in the t-test, where we needed to know if there was homogeneity of the variance also.
 If the variances in the groups were not equal we would use Games-Howell</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">userfriendlyscience<span style="color:#f92672">::</span><span style="color:#a6e22e">oneway</span>(reasondf<span style="color:#f92672">$</span>reason,y<span style="color:#f92672">=</span>reasondf<span style="color:#f92672">$</span>g3.y,posthoc<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;Tukey&#39;</span>)
 </code></pre></div><pre><code>## Registered S3 method overwritten by 'GGally':

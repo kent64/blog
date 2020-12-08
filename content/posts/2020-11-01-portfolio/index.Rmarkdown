@@ -941,7 +941,7 @@ An independent-samples t-test was conducted to compare Maths grade 2 results for
 Question: Is there a difference between grade 1 and grade 3 in Maths for students who paid for extra classes? 
 
 We have already inspected G3 in Maths for normality, I will quickly show that G1 is also normal.  
-```{r,  results="hold",warning=FALSE}
+```{r,  results="hold",warning=FALSE, fig.cap="G1 results for Maths", fig.align = "center"}
 studentdf %>%
   ggplot(aes(x=g1.x)) +
   labs(x="G1 results for Maths") +
@@ -996,7 +996,7 @@ We start as always with stating the Null and alternative hypothesis:
 
 So lets look at the subset of these Grades where students had paid classes and a quick check to make sure they're still normal data. 
 
-```{r, results="hold",warning=FALSE}
+```{r, results="hold",warning=FALSE, fig.cap="G1 results for Maths for Paid extra classes", fig.align = "center"}
 paid_students_maths <- studentdf %>%
   filter(paid.x == "yes")
 paid_students_maths %>%
@@ -1005,7 +1005,8 @@ paid_students_maths %>%
   geom_histogram(alpha = .05, binwidth=1, colour="black", aes(y=..density.., fill=..count..)) +
   scale_fill_gradient("Count", low="grey", high="green") +
   stat_function(fun=dnorm, color="red",args=list(mean=mean(paid_students_maths$g1.x, na.rm=TRUE), sd=sd(paid_students_maths$g1.x, na.rm=TRUE)))
-
+```
+```{r, results="hold",warning=FALSE, fig.cap="Q-Q plot G1 results for Maths for Paid extra classes", fig.align = "center"}
 #Create a qqplot
 qqnorm(paid_students_maths$g1.x)
 qqline(paid_students_maths$g1.x, col=2) #show a line on theplot
@@ -1014,14 +1015,16 @@ tpskew<-semTools::skew(paid_students_maths$g1.x)
 tpkurt<-semTools::kurtosis(paid_students_maths$g1.x)
 tpskew[1]/tpskew[2]
 tpkurt[1]/tpkurt[2]
-
+```
+```{r, results="hold",warning=FALSE, fig.cap="G3 results for Maths for Paid extra classes", fig.align = "center"}
 paid_students_maths %>%
   ggplot(aes(x=g3.x)) +
   labs(x="G3 results for Maths") +
   geom_histogram(alpha = .05, binwidth=1, colour="black", aes(y=..density.., fill=..count..)) +
   scale_fill_gradient("Count", low="grey", high="green") +
   stat_function(fun=dnorm, color="red",args=list(mean=mean(paid_students_maths$g3.x, na.rm=TRUE), sd=sd(paid_students_maths$g3.x, na.rm=TRUE)))
-
+```
+```{r, results="hold",warning=FALSE, fig.cap="Q-Q plot G3 results for Maths for Paid extra classes", fig.align = "center"}
 #Create a qqplot
 qqnorm(paid_students_maths$g3.x)
 qqline(paid_students_maths$g3.x, col=2) #show a line on theplot
@@ -1070,7 +1073,7 @@ length(a[a==FALSE])
 ```
 So 3 in 382 are different. Which isn't even 1%. I will take Maths. 
 
-```{r, results="hold",warning=FALSE}
+```{r, results="hold",warning=FALSE, fig.cap="Health for Urban and Rural students", fig.align = "center"}
 studentdf %>%
   ggplot(aes(x = as.numeric(row.names(studentdf)), y = health.x, color=address)) +
   geom_point(size=2) + 
@@ -1083,13 +1086,15 @@ studentdf %>%
     ggtitle("A boxplot with Address and Health") +
     ylab("Grade 3 results")
 ```
-```{r, results="hold",warning=FALSE}
+```{r, results="hold",warning=FALSE, fig.cap="Health histogram for Urban and Rural students", fig.align = "center"}
 studentdf %>%
   ggplot(aes(x=health.x)) +
   labs(x="Health on scale from 1-5") +
   geom_histogram(alpha = .05, binwidth=1, colour="black", aes(y=..density.., fill=..count..)) +
   scale_fill_gradient("Count", low="grey", high="blue") +
   stat_function(fun=dnorm, color="red",args=list(mean=mean(studentdf$health.x, na.rm=TRUE), sd=sd(studentdf$health.x, na.rm=TRUE)))
+```
+```{r, results="hold",warning=FALSE}
 pastecs::stat.desc(studentdf$health.x, basic=F)
 tpskew<-semTools::skew(studentdf$health.x)
 tpkurt<-semTools::kurtosis(studentdf$health.x)
@@ -1155,7 +1160,7 @@ For this question, we are dealing with multiple groups. It is a comparison of mo
 ANOVA requires on independent categorical variables, which is "reason" and one continuous ratio variable which will be "Grade 3".
 ANOVA produces a F-statisti, which is similiar to t-statistic from the t-test. 
 Quick check to make sure g3.y is normal. 
-```{r, results="hold",warning=FALSE}
+```{r, results="hold",warning=FALSE, fig.cap="G3 results for Portuguese", fig.align = "center"}
 studentdf %>%
   ggplot(aes(x=g3.y)) +
   labs(x="G3 results for Portuguese") +
@@ -1229,6 +1234,7 @@ p-value is > 0.05 so the result is not statistically significant so we can assum
 
 Now we conduct ANOVA using the package userfriendlyscience and the method oneway and also with stats::aov
 In this case we can use Tukey as the post-hoc test option since variances in the groups are equal.
+This is similar to the welsh modification(var.equal) in the t-test, where we needed to know if there was homogeneity of the variance also.
 If the variances in the groups were not equal we would use Games-Howell
 ```{r, results="hold", warning=FALSE}
 userfriendlyscience::oneway(reasondf$reason,y=reasondf$g3.y,posthoc='Tukey')

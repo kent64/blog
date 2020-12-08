@@ -119,20 +119,20 @@ studentdf %>%
   sample_n(1) 
 ```
 
-    ##   school sex age address famsize pstatus medu fedu    mjob     fjob reason
-    ## 1     GP   F  17       R     GT3       T    3    4 at_home services course
+    ##   school sex age address famsize pstatus medu fedu   mjob     fjob reason
+    ## 1     GP   F  16       U     GT3       T    4    2 health services   home
     ##   nursery internet guardian.x traveltime.x studytime.x failures.x schoolsup.x
-    ## 1      no      yes     father            1           3          0          no
+    ## 1     yes      yes     father            1           2          0          no
     ##   famsup.x paid.x activities.x higher.x romantic.x famrel.x freetime.x goout.x
-    ## 1      yes    yes          yes      yes         no        4          3       4
+    ## 1       no    yes           no      yes        yes        4          2       3
     ##   dalc.x walc.x health.x absences.x g1.x g2.x g3.x guardian.y traveltime.y
-    ## 1      2      5        5          0   11   11   10     father            1
+    ## 1      1      1        3          0   14   15   16     father            1
     ##   studytime.y failures.y schoolsup.y famsup.y paid.y activities.y higher.y
-    ## 1           3          0          no      yes     no          yes      yes
+    ## 1           2          0          no       no     no           no      yes
     ##   romantic.y famrel.y freetime.y goout.y dalc.y walc.y health.y absences.y g1.y
-    ## 1         no        4          3       4      2      5        5          2   15
+    ## 1        yes        4          2       3      1      1        3          0   17
     ##   g2.y g3.y
-    ## 1   15   17
+    ## 1   17   18
 
 ## Population vs Sample
 
@@ -1706,7 +1706,17 @@ studentdf %>%
   stat_function(fun=dnorm, color="red",args=list(mean=mean(studentdf$g1.x, na.rm=TRUE), sd=sd(studentdf$g1.x, na.rm=TRUE)))
 ```
 
-<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-65-1.png" width="672" />
+<div class="figure" style="text-align: center">
+
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-65-1.png" alt="G1 results for Maths" width="672" />
+
+<p class="caption">
+
+Figure 24: G1 results for Maths
+
+</p>
+
+</div>
 
 ``` r
 #Create a qqplot
@@ -1714,7 +1724,17 @@ qqnorm(studentdf$g1.x)
 qqline(studentdf$g1.x, col=2) #show a line on theplot
 ```
 
-<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-65-2.png" width="672" />
+<div class="figure" style="text-align: center">
+
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-65-2.png" alt="G1 results for Maths" width="672" />
+
+<p class="caption">
+
+Figure 25: G1 results for Maths
+
+</p>
+
+</div>
 
 ``` r
 pastecs::stat.desc(studentdf$g1.x, basic=F)
@@ -1811,7 +1831,17 @@ paid_students_maths %>%
   stat_function(fun=dnorm, color="red",args=list(mean=mean(paid_students_maths$g1.x, na.rm=TRUE), sd=sd(paid_students_maths$g1.x, na.rm=TRUE)))
 ```
 
-<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-69-1.png" width="672" />
+<div class="figure" style="text-align: center">
+
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-69-1.png" alt="G1 results for Maths for Paid extra classes" width="672" />
+
+<p class="caption">
+
+Figure 26: G1 results for Maths for Paid extra classes
+
+</p>
+
+</div>
 
 ``` r
 #Create a qqplot
@@ -1819,37 +1849,22 @@ qqnorm(paid_students_maths$g1.x)
 qqline(paid_students_maths$g1.x, col=2) #show a line on theplot
 ```
 
-<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-69-2.png" width="672" />
+<div class="figure" style="text-align: center">
+
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-70-1.png" alt="Q-Q plot G1 results for Maths for Paid extra classes" width="672" />
+
+<p class="caption">
+
+Figure 27: Q-Q plot G1 results for Maths for Paid extra classes
+
+</p>
+
+</div>
 
 ``` r
 pastecs::stat.desc(paid_students_maths$g1.x, basic=F)
 tpskew<-semTools::skew(paid_students_maths$g1.x)
 tpkurt<-semTools::kurtosis(paid_students_maths$g1.x)
-tpskew[1]/tpskew[2]
-tpkurt[1]/tpkurt[2]
-
-paid_students_maths %>%
-  ggplot(aes(x=g3.x)) +
-  labs(x="G3 results for Maths") +
-  geom_histogram(alpha = .05, binwidth=1, colour="black", aes(y=..density.., fill=..count..)) +
-  scale_fill_gradient("Count", low="grey", high="green") +
-  stat_function(fun=dnorm, color="red",args=list(mean=mean(paid_students_maths$g3.x, na.rm=TRUE), sd=sd(paid_students_maths$g3.x, na.rm=TRUE)))
-```
-
-<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-69-3.png" width="672" />
-
-``` r
-#Create a qqplot
-qqnorm(paid_students_maths$g3.x)
-qqline(paid_students_maths$g3.x, col=2) #show a line on theplot
-```
-
-<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-69-4.png" width="672" />
-
-``` r
-pastecs::stat.desc(paid_students_maths$g3.x, basic=F)
-tpskew<-semTools::skew(paid_students_maths$g3.x)
-tpkurt<-semTools::kurtosis(paid_students_maths$g3.x)
 tpskew[1]/tpskew[2]
 tpkurt[1]/tpkurt[2]
 ```
@@ -1861,7 +1876,55 @@ tpkurt[1]/tpkurt[2]
     ## skew (g1) 
     ##  1.382106 
     ## Excess Kur (g2) 
-    ##       -2.053623 
+    ##       -2.053623
+
+``` r
+paid_students_maths %>%
+  ggplot(aes(x=g3.x)) +
+  labs(x="G3 results for Maths") +
+  geom_histogram(alpha = .05, binwidth=1, colour="black", aes(y=..density.., fill=..count..)) +
+  scale_fill_gradient("Count", low="grey", high="green") +
+  stat_function(fun=dnorm, color="red",args=list(mean=mean(paid_students_maths$g3.x, na.rm=TRUE), sd=sd(paid_students_maths$g3.x, na.rm=TRUE)))
+```
+
+<div class="figure" style="text-align: center">
+
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-71-1.png" alt="G3 results for Maths for Paid extra classes" width="672" />
+
+<p class="caption">
+
+Figure 28: G3 results for Maths for Paid extra classes
+
+</p>
+
+</div>
+
+``` r
+#Create a qqplot
+qqnorm(paid_students_maths$g3.x)
+qqline(paid_students_maths$g3.x, col=2) #show a line on theplot
+```
+
+<div class="figure" style="text-align: center">
+
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-72-1.png" alt="Q-Q plot G3 results for Maths for Paid extra classes" width="672" />
+
+<p class="caption">
+
+Figure 29: Q-Q plot G3 results for Maths for Paid extra classes
+
+</p>
+
+</div>
+
+``` r
+pastecs::stat.desc(paid_students_maths$g3.x, basic=F)
+tpskew<-semTools::skew(paid_students_maths$g3.x)
+tpkurt<-semTools::kurtosis(paid_students_maths$g3.x)
+tpskew[1]/tpskew[2]
+tpkurt[1]/tpkurt[2]
+```
+
     ##       median         mean      SE.mean CI.mean.0.95          var      std.dev 
     ##   11.0000000   11.4082840    0.2349161    0.4637678    9.3263595    3.0539089 
     ##     coef.var 
@@ -1946,7 +2009,17 @@ studentdf %>%
   labs(y="Health (1 bad - 5 good)", x="student number")
 ```
 
-<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-73-1.png" width="672" />
+<div class="figure" style="text-align: center">
+
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-76-1.png" alt="Health for Urban and Rural students" width="672" />
+
+<p class="caption">
+
+Figure 30: Health for Urban and Rural students
+
+</p>
+
+</div>
 
 ``` r
 studentdf %>%
@@ -1958,7 +2031,17 @@ studentdf %>%
     ylab("Grade 3 results")
 ```
 
-<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-73-2.png" width="672" />
+<div class="figure" style="text-align: center">
+
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-76-2.png" alt="Health for Urban and Rural students" width="672" />
+
+<p class="caption">
+
+Figure 31: Health for Urban and Rural students
+
+</p>
+
+</div>
 
 ``` r
 studentdf %>%
@@ -1969,7 +2052,17 @@ studentdf %>%
   stat_function(fun=dnorm, color="red",args=list(mean=mean(studentdf$health.x, na.rm=TRUE), sd=sd(studentdf$health.x, na.rm=TRUE)))
 ```
 
-<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-74-1.png" width="672" />
+<div class="figure" style="text-align: center">
+
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-77-1.png" alt="Health histogram for Urban and Rural students" width="672" />
+
+<p class="caption">
+
+Figure 32: Health histogram for Urban and Rural students
+
+</p>
+
+</div>
 
 ``` r
 pastecs::stat.desc(studentdf$health.x, basic=F)
@@ -2452,7 +2545,17 @@ studentdf %>%
   stat_function(fun=dnorm, color="red",args=list(mean=mean(studentdf$g3.y, na.rm=TRUE), sd=sd(studentdf$g3.y, na.rm=TRUE)))
 ```
 
-<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-78-1.png" width="672" />
+<div class="figure" style="text-align: center">
+
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-82-1.png" alt="G3 results for Portuguese" width="672" />
+
+<p class="caption">
+
+Figure 33: G3 results for Portuguese
+
+</p>
+
+</div>
 
 ``` r
 #Create a qqplot
@@ -2460,7 +2563,17 @@ qqnorm(studentdf$g3.y)
 qqline(studentdf$g3.y, col=2) #show a line on theplot
 ```
 
-<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-78-2.png" width="672" />
+<div class="figure" style="text-align: center">
+
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-82-2.png" alt="G3 results for Portuguese" width="672" />
+
+<p class="caption">
+
+Figure 34: G3 results for Portuguese
+
+</p>
+
+</div>
 
 ``` r
 pastecs::stat.desc(studentdf$g3.y, basic=F)
@@ -2508,11 +2621,11 @@ Turns out it is only one outlier. A Portuguese grade 3 result of 1.
 
 <div class="figure" style="text-align: center">
 
-<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-80-1.png" alt="A boxplot withReason for attending the school and the Grade 3 results for Portuguese" width="60%" />
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-84-1.png" alt="A boxplot withReason for attending the school and the Grade 3 results for Portuguese" width="60%" />
 
 <p class="caption">
 
-Figure 24: A boxplot withReason for attending the school and the Grade 3 results for Portuguese
+Figure 35: A boxplot withReason for attending the school and the Grade 3 results for Portuguese
 
 </p>
 
@@ -2520,11 +2633,11 @@ Figure 24: A boxplot withReason for attending the school and the Grade 3 results
 
 <div class="figure" style="text-align: center">
 
-<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-81-1.png" alt="A Density histogram with Reason for attending the school and the Grade 3 results for Portuguese" width="60%" />
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-85-1.png" alt="A Density histogram with Reason for attending the school and the Grade 3 results for Portuguese" width="60%" />
 
 <p class="caption">
 
-Figure 25: A Density histogram with Reason for attending the school and the Grade 3 results for Portuguese
+Figure 36: A Density histogram with Reason for attending the school and the Grade 3 results for Portuguese
 
 </p>
 
@@ -2582,6 +2695,7 @@ p-value is \> 0.05 so the result is not statistically significant so we can assu
 
 Now we conduct ANOVA using the package userfriendlyscience and the method oneway and also with stats::aov
 In this case we can use Tukey as the post-hoc test option since variances in the groups are equal.
+This is similar to the welsh modification(var.equal) in the t-test, where we needed to know if there was homogeneity of the variance also.
 If the variances in the groups were not equal we would use Games-Howell
 
 ``` r
