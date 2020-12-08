@@ -36,7 +36,7 @@ This data set is from a paper by P.Cortez and A. Silva entitled "Using  Data  Mi
 
 
 We need to get the data
-```{r, echo=TRUE,warning=FALSE}
+```{r, echo=TRUE,results="hold",warning=FALSE}
 library("dplyr")
 library("tidyr")
 library("viridis")
@@ -51,7 +51,7 @@ list.files("studentdf")
 data set description: [https://archive.ics.uci.edu/ml/datasets/student+performance#](https://archive.ics.uci.edu/ml/datasets/student+performance#) or [here](/blog/description/)
 
 read in the data
-```{r echo=TRUE, comment="",warning=FALSE}
+```{r echo=TRUE, comment="",warning=FALSE, results="hold"}
 matdf=read.table("studentdf/student-mat.csv",sep=";",header=TRUE, stringsAsFactors=TRUE)
 pordf=read.table("studentdf/student-por.csv",sep=";",header=TRUE, stringsAsFactors=TRUE)
 
@@ -63,7 +63,7 @@ nrow(studentdf)
 So we have 382 records in our data set. 
 
 Let's see what variables we have in each record.
-```{r,warning=FALSE}
+```{r, results="hold",warning=FALSE}
 colnames(studentdf)
 ```
 
@@ -925,7 +925,7 @@ effes=round((res$statistic*res$statistic)/((res$statistic*res$statistic)+(res$pa
 effes
 ```
 
-```{r, echo=FALSE, out.extra='id="effect"', fig.cap="Cohen's d annd Eta", fig.align = "center", out.width = '60%',warning=FALSE}
+```{r, echo=FALSE, out.extra='id="effect"', fig.cap="Cohen's d and Eta", fig.align = "center", out.width = '60%',warning=FALSE}
 knitr::include_graphics("effect_sizes.png")
 ```
 
@@ -1049,7 +1049,7 @@ The result is that we don't see a significant difference. We cannot reject the N
 
 I would have expected a significant difference here since we are paying for extra classes. But perhaps we started paying for classes before the first Grade G1. Also there are other things which could have contributed to the difference or lack of difference between these grades. 
 
-## Health for Rural vs Urban
+## Mann-Whitney (Health for Rural vs Urban) 
 
 The question:
 
@@ -1139,12 +1139,7 @@ Reporting:
 
 My Analysis is that this should have been quite clear from the box plot and was only worth going this far to demonstrate a Mann-Whitney test. 
 
-```{r,warning=FALSE}
-studentdf %>%
-  select(age,g3.x)
-```
-
-## Reason vs Final Grade in Portuguese 
+## ANOVA (Reason vs Final Grade in Portuguese )
 
 The question:
 Does the reason for choosing the school impact the the final grade in Portugese?
@@ -1238,10 +1233,21 @@ This is similar to the welsh modification(var.equal) in the t-test, where we nee
 If the variances in the groups were not equal we would use Games-Howell
 ```{r, results="hold", warning=FALSE}
 userfriendlyscience::oneway(reasondf$reason,y=reasondf$g3.y,posthoc='Tukey')
-stats::aov(g3.y~ reason, data = reasondf)
 ```
+
+```{r}
+# Compute the analysis of variance
+res.aov <- stats::aov(g3.y~ reason, data = reasondf)
+# Summary of the analysis
+summary(res.aov)
+aoveta<-sjstats::eta_sq(res.aov)
+aoveta
+```
+
+Checking Eta with the [Effect Table](#effect)
+
 Reporting the results with eta squared effect
-An one-way between-groups analysis of variance (ANOVA) was conducted to to explore the impact of the reason for attending a school the Final Grades in Portuguese. Students were divided into four groups based on their reason for attending the school (close to 'home', school 'reputation', 'course' preference or 'other'). No statistically significant difference in the final grades and associated reason was found (M=12.33, SD=2.6 for reason course, M=12.75, SD=2.4 for reason home, M=12.48, SD=3.0 for reason other and M=13.16, SD=2.6 for reason reputation) , (F(3, 373)= 2.09, p=0.101). A small effect size was also indicated by the eta squared value (0.01).
+An one-way between-groups analysis of variance (ANOVA) was conducted to to explore the impact of the reason for attending a school the Final Grades in Portuguese. Students were divided into four groups based on their reason for attending the school (close to 'home', school 'reputation', 'course' preference or 'other'). No statistically significant difference in the final grades and associated reason was found (M=12.33, SD=2.6 for reason course, M=12.75, SD=2.4 for reason home, M=12.48, SD=3.0 for reason other and M=13.16, SD=2.6 for reason reputation) , (F(3, 373)= 2.09, p=0.101). A small effect size was also indicated by the eta squared value (0.017).
 
 
 ## More

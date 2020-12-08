@@ -119,20 +119,18 @@ studentdf %>%
   sample_n(1) 
 ```
 
-    ##   school sex age address famsize pstatus medu fedu   mjob     fjob reason
-    ## 1     GP   F  16       U     GT3       T    4    2 health services   home
-    ##   nursery internet guardian.x traveltime.x studytime.x failures.x schoolsup.x
-    ## 1     yes      yes     father            1           2          0          no
-    ##   famsup.x paid.x activities.x higher.x romantic.x famrel.x freetime.x goout.x
-    ## 1       no    yes           no      yes        yes        4          2       3
-    ##   dalc.x walc.x health.x absences.x g1.x g2.x g3.x guardian.y traveltime.y
-    ## 1      1      1        3          0   14   15   16     father            1
-    ##   studytime.y failures.y schoolsup.y famsup.y paid.y activities.y higher.y
-    ## 1           2          0          no       no     no           no      yes
-    ##   romantic.y famrel.y freetime.y goout.y dalc.y walc.y health.y absences.y g1.y
-    ## 1        yes        4          2       3      1      1        3          0   17
-    ##   g2.y g3.y
-    ## 1   17   18
+    ##   school sex age address famsize pstatus medu fedu  mjob  fjob reason nursery
+    ## 1     GP   F  16       U     LE3       T    3    1 other other   home     yes
+    ##   internet guardian.x traveltime.x studytime.x failures.x schoolsup.x famsup.x
+    ## 1       no     father            1           2          0         yes      yes
+    ##   paid.x activities.x higher.x romantic.x famrel.x freetime.x goout.x dalc.x
+    ## 1     no           no      yes         no        3          3       3      2
+    ##   walc.x health.x absences.x g1.x g2.x g3.x guardian.y traveltime.y studytime.y
+    ## 1      3        2          4    7    6    6     father            1           2
+    ##   failures.y schoolsup.y famsup.y paid.y activities.y higher.y romantic.y
+    ## 1          0         yes      yes     no           no      yes         no
+    ##   famrel.y freetime.y goout.y dalc.y walc.y health.y absences.y g1.y g2.y g3.y
+    ## 1        3          3       3      2      3        2          0   12   13   12
 
 ## Population vs Sample
 
@@ -1675,11 +1673,11 @@ effes
 
 <div class="figure" style="text-align: center">
 
-<img src="effect_sizes.png" alt="Cohen's d annd Eta" width="60%" id="effect" />
+<img src="effect_sizes.png" alt="Cohen's d and Eta" width="60%" id="effect" />
 
 <p class="caption">
 
-Figure 23: Cohen’s d annd Eta
+Figure 23: Cohen’s d and Eta
 
 </p>
 
@@ -1965,7 +1963,7 @@ The result is that we don’t see a significant difference. We cannot reject the
 
 I would have expected a significant difference here since we are paying for extra classes. But perhaps we started paying for classes before the first Grade G1. Also there are other things which could have contributed to the difference or lack of difference between these grades.
 
-## Health for Rural vs Urban
+## Mann-Whitney (Health for Rural vs Urban)
 
 The question:
 
@@ -2131,396 +2129,7 @@ Reporting:
 
 My Analysis is that this should have been quite clear from the box plot and was only worth going this far to demonstrate a Mann-Whitney test.
 
-``` r
-studentdf %>%
-  select(age,g3.x)
-```
-
-    ##     age g3.x
-    ## 1    15   10
-    ## 2    15    5
-    ## 3    15   13
-    ## 4    15    8
-    ## 5    15   10
-    ## 6    15   11
-    ## 7    15   NA
-    ## 8    15    8
-    ## 9    15   16
-    ## 10   15   11
-    ## 11   15   15
-    ## 12   15   NA
-    ## 13   15   10
-    ## 14   15   11
-    ## 15   15   11
-    ## 16   15   15
-    ## 17   15   12
-    ## 18   15    8
-    ## 19   15    6
-    ## 20   15   NA
-    ## 21   15    6
-    ## 22   15   15
-    ## 23   15   14
-    ## 24   15   18
-    ## 25   15   NA
-    ## 26   15   11
-    ## 27   15    8
-    ## 28   15    7
-    ## 29   15    9
-    ## 30   15   11
-    ## 31   15   15
-    ## 32   15   13
-    ## 33   15   11
-    ## 34   15    6
-    ## 35   15   10
-    ## 36   15    6
-    ## 37   15   13
-    ## 38   15   10
-    ## 39   16   11
-    ## 40   16   10
-    ## 41   16   11
-    ## 42   16   10
-    ## 43   16   14
-    ## 44   16    7
-    ## 45   16   NA
-    ## 46   16   11
-    ## 47   16   10
-    ## 48   16   11
-    ## 49   16   NA
-    ## 50   16   10
-    ## 51   16   12
-    ## 52   16   13
-    ## 53   16   NA
-    ## 54   16    8
-    ## 55   16   11
-    ## 56   16   11
-    ## 57   16    8
-    ## 58   16   10
-    ## 59   16   13
-    ## 60   16   17
-    ## 61   16    6
-    ## 62   16   12
-    ## 63   16   10
-    ## 64   16    8
-    ## 65   16   10
-    ## 66   16   11
-    ## 67   16    5
-    ## 68   16   16
-    ## 69   16   16
-    ## 70   16   10
-    ## 71   16   16
-    ## 72   16    8
-    ## 73   16    9
-    ## 74   16   13
-    ## 75   16   14
-    ## 76   16   14
-    ## 77   16   14
-    ## 78   16   14
-    ## 79   16   14
-    ## 80   16   11
-    ## 81   16   13
-    ## 82   16    9
-    ## 83   16    6
-    ## 84   16    9
-    ## 85   16   11
-    ## 86   16   13
-    ## 87   16   13
-    ## 88   16    6
-    ## 89   16    9
-    ## 90   16   15
-    ## 91   16   16
-    ## 92   16   10
-    ## 93   17   10
-    ## 94   17   11
-    ## 95   17    6
-    ## 96   17    6
-    ## 97   17   14
-    ## 98   17   10
-    ## 99   17    7
-    ## 100  17   11
-    ## 101  17   18
-    ## 102  17   10
-    ## 103  17   12
-    ## 104  17   NA
-    ## 105  17    9
-    ## 106  17   13
-    ## 107  17    6
-    ## 108  17    6
-    ## 109  17   NA
-    ## 110  17    9
-    ## 111  17   10
-    ## 112  17   12
-    ## 113  17   10
-    ## 114  17   11
-    ## 115  17    9
-    ## 116  17    8
-    ## 117  17   10
-    ## 118  17   17
-    ## 119  17   15
-    ## 120  17   18
-    ## 121  17   15
-    ## 122  17   NA
-    ## 123  17    9
-    ## 124  17    9
-    ## 125  17   15
-    ## 126  17   14
-    ## 127  17   15
-    ## 128  17   15
-    ## 129  17    4
-    ## 130  17   12
-    ## 131  17   18
-    ## 132  17    9
-    ## 133  17    9
-    ## 134  17   14
-    ## 135  17   15
-    ## 136  17   12
-    ## 137  17   12
-    ## 138  17   NA
-    ## 139  17   15
-    ## 140  17   15
-    ## 141  17    8
-    ## 142  17   13
-    ## 143  17   14
-    ## 144  18    9
-    ## 145  18   10
-    ## 146  18   NA
-    ## 147  18   NA
-    ## 148  18    7
-    ## 149  18   11
-    ## 150  18   12
-    ## 151  18    6
-    ## 152  18   10
-    ## 153  18   10
-    ## 154  18   NA
-    ## 155  18   NA
-    ## 156  18   19
-    ## 157  18   NA
-    ## 158  18   10
-    ## 159  18   14
-    ## 160  18   14
-    ## 161  18   NA
-    ## 162  18    9
-    ## 163  18   14
-    ## 164  18   18
-    ## 165  18    8
-    ## 166  18   11
-    ## 167  18   11
-    ## 168  18   11
-    ## 169  18   NA
-    ## 170  18   17
-    ## 171  18    8
-    ## 172  19    9
-    ## 173  19    8
-    ## 174  19    9
-    ## 175  19   NA
-    ## 176  15    9
-    ## 177  15    8
-    ## 178  15   NA
-    ## 179  15   16
-    ## 180  15   13
-    ## 181  15   16
-    ## 182  15   18
-    ## 183  15   12
-    ## 184  15   11
-    ## 185  15   11
-    ## 186  15   15
-    ## 187  15   11
-    ## 188  15   12
-    ## 189  15   15
-    ## 190  15   13
-    ## 191  15   12
-    ## 192  15   10
-    ## 193  15   15
-    ## 194  15   10
-    ## 195  15   14
-    ## 196  15   11
-    ## 197  15   10
-    ## 198  15   15
-    ## 199  15   NA
-    ## 200  15   15
-    ## 201  15   12
-    ## 202  15   14
-    ## 203  15   14
-    ## 204  15   17
-    ## 205  15   18
-    ## 206  15   15
-    ## 207  15   10
-    ## 208  15   19
-    ## 209  15   10
-    ## 210  15   19
-    ## 211  15    9
-    ## 212  15   14
-    ## 213  15   15
-    ## 214  15   12
-    ## 215  15   19
-    ## 216  15   18
-    ## 217  15   14
-    ## 218  15   12
-    ## 219  16   15
-    ## 220  16    8
-    ## 221  16   15
-    ## 222  16   10
-    ## 223  16    9
-    ## 224  16   15
-    ## 225  16   18
-    ## 226  16   10
-    ## 227  16   15
-    ## 228  16   16
-    ## 229  16   11
-    ## 230  16   18
-    ## 231  16   10
-    ## 232  16   10
-    ## 233  16   14
-    ## 234  16   14
-    ## 235  16   15
-    ## 236  16   10
-    ## 237  16   15
-    ## 238  16   10
-    ## 239  16   12
-    ## 240  16   13
-    ## 241  16   18
-    ## 242  16   18
-    ## 243  16   12
-    ## 244  16   12
-    ## 245  16   NA
-    ## 246  16   20
-    ## 247  16    8
-    ## 248  16   13
-    ## 249  16   13
-    ## 250  16   12
-    ## 251  16   12
-    ## 252  16    5
-    ## 253  16   17
-    ## 254  16   NA
-    ## 255  16   NA
-    ## 256  16   16
-    ## 257  16   16
-    ## 258  16   11
-    ## 259  16   11
-    ## 260  16    7
-    ## 261  16    6
-    ## 262  16   12
-    ## 263  16   14
-    ## 264  16   15
-    ## 265  16   11
-    ## 266  16   12
-    ## 267  16    9
-    ## 268  16   16
-    ## 269  16   10
-    ## 270  16   15
-    ## 271  16   NA
-    ## 272  17   14
-    ## 273  17   10
-    ## 274  17    8
-    ## 275  17   12
-    ## 276  17   11
-    ## 277  17   10
-    ## 278  17   NA
-    ## 279  17   12
-    ## 280  17    7
-    ## 281  17   13
-    ## 282  17   NA
-    ## 283  17   11
-    ## 284  17    8
-    ## 285  17   NA
-    ## 286  17   NA
-    ## 287  17   10
-    ## 288  17   10
-    ## 289  17   13
-    ## 290  17   10
-    ## 291  17    5
-    ## 292  17   11
-    ## 293  17    6
-    ## 294  17   16
-    ## 295  17   11
-    ## 296  17   11
-    ## 297  17   16
-    ## 298  17    9
-    ## 299  17   10
-    ## 300  17    8
-    ## 301  17    8
-    ## 302  17   13
-    ## 303  17   12
-    ## 304  17   12
-    ## 305  17    9
-    ## 306  17   10
-    ## 307  17   13
-    ## 308  17   10
-    ## 309  18   12
-    ## 310  18   16
-    ## 311  18   17
-    ## 312  18   14
-    ## 313  18    5
-    ## 314  18   14
-    ## 315  18    8
-    ## 316  18   14
-    ## 317  18   13
-    ## 318  18   NA
-    ## 319  18    8
-    ## 320  18    8
-    ## 321  18   10
-    ## 322  18   11
-    ## 323  18    8
-    ## 324  18    9
-    ## 325  18   11
-    ## 326  18    9
-    ## 327  18    9
-    ## 328  18   NA
-    ## 329  18   NA
-    ## 330  18   15
-    ## 331  18   NA
-    ## 332  18    9
-    ## 333  18    8
-    ## 334  18    8
-    ## 335  18   15
-    ## 336  18   10
-    ## 337  18   16
-    ## 338  19   12
-    ## 339  19   NA
-    ## 340  19   11
-    ## 341  20   18
-    ## 342  22    8
-    ## 343  17   NA
-    ## 344  17    5
-    ## 345  17   12
-    ## 346  17   10
-    ## 347  17   13
-    ## 348  17   11
-    ## 349  17   11
-    ## 350  17   15
-    ## 351  18   10
-    ## 352  18   10
-    ## 353  18   11
-    ## 354  18    6
-    ## 355  18   19
-    ## 356  18   10
-    ## 357  18   NA
-    ## 358  18   NA
-    ## 359  18   10
-    ## 360  18   15
-    ## 361  18    9
-    ## 362  18   10
-    ## 363  18   16
-    ## 364  18    8
-    ## 365  19   NA
-    ## 366  17   11
-    ## 367  17   10
-    ## 368  17   13
-    ## 369  17   16
-    ## 370  18   10
-    ## 371  18    7
-    ## 372  18   13
-    ## 373  18    5
-    ## 374  18   12
-    ## 375  18   10
-    ## 376  18   14
-    ## 377  18   10
-    ## 378  18    8
-    ## 379  18   13
-    ## 380  19    8
-    ## 381  19    8
-    ## 382  19   NA
-
-## Reason vs Final Grade in Portuguese
+## ANOVA (Reason vs Final Grade in Portuguese )
 
 The question:
 Does the reason for choosing the school impact the the final grade in Portugese?
@@ -2547,7 +2156,7 @@ studentdf %>%
 
 <div class="figure" style="text-align: center">
 
-<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-82-1.png" alt="G3 results for Portuguese" width="672" />
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-81-1.png" alt="G3 results for Portuguese" width="672" />
 
 <p class="caption">
 
@@ -2565,7 +2174,7 @@ qqline(studentdf$g3.y, col=2) #show a line on theplot
 
 <div class="figure" style="text-align: center">
 
-<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-82-2.png" alt="G3 results for Portuguese" width="672" />
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-81-2.png" alt="G3 results for Portuguese" width="672" />
 
 <p class="caption">
 
@@ -2621,7 +2230,7 @@ Turns out it is only one outlier. A Portuguese grade 3 result of 1.
 
 <div class="figure" style="text-align: center">
 
-<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-84-1.png" alt="A boxplot withReason for attending the school and the Grade 3 results for Portuguese" width="60%" />
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-83-1.png" alt="A boxplot withReason for attending the school and the Grade 3 results for Portuguese" width="60%" />
 
 <p class="caption">
 
@@ -2633,7 +2242,7 @@ Figure 35: A boxplot withReason for attending the school and the Grade 3 results
 
 <div class="figure" style="text-align: center">
 
-<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-85-1.png" alt="A Density histogram with Reason for attending the school and the Grade 3 results for Portuguese" width="60%" />
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-84-1.png" alt="A Density histogram with Reason for attending the school and the Grade 3 results for Portuguese" width="60%" />
 
 <p class="caption">
 
@@ -2735,10 +2344,6 @@ userfriendlyscience::oneway(reasondf$reason,y=reasondf$g3.y,posthoc='Tukey')
     ##   print.scaleStructure       userfriendlyscience
     ##   print.scatterMatrix        userfriendlyscience
 
-``` r
-stats::aov(g3.y~ reason, data = reasondf)
-```
-
     ## ### Oneway Anova for y=g3.y and x=reason (groups: course, home, other, reputation)
     ## 
     ## Omega squared: 95% CI = [NA; .04], point estimate = .01
@@ -2757,20 +2362,31 @@ stats::aov(g3.y~ reason, data = reasondf)
     ## reputation-course 0.83  -0.04 1.71 .069 
     ## other-home        -0.27 -1.62 1.08 .956 
     ## reputation-home   0.41  -0.51 1.34 .660 
-    ## reputation-other  0.68  -0.69 2.05 .576 
-    ## Call:
-    ##    stats::aov(formula = g3.y ~ reason, data = reasondf)
-    ## 
-    ## Terms:
-    ##                    reason Residuals
-    ## Sum of Squares    41.5851 2470.2186
-    ## Deg. of Freedom         3       373
-    ## 
-    ## Residual standard error: 2.573435
-    ## Estimated effects may be unbalanced
+    ## reputation-other  0.68  -0.69 2.05 .576
+
+``` r
+# Compute the analysis of variance
+res.aov <- stats::aov(g3.y~ reason, data = reasondf)
+# Summary of the analysis
+summary(res.aov)
+```
+
+    ##              Df Sum Sq Mean Sq F value Pr(>F)
+    ## reason        3   41.6  13.862   2.093  0.101
+    ## Residuals   373 2470.2   6.623
+
+``` r
+aoveta<-sjstats::eta_sq(res.aov)
+aoveta
+```
+
+    ##     term etasq
+    ## 1 reason 0.017
+
+Checking Eta with the [Effect Table](#effect)
 
 Reporting the results with eta squared effect
-An one-way between-groups analysis of variance (ANOVA) was conducted to to explore the impact of the reason for attending a school the Final Grades in Portuguese. Students were divided into four groups based on their reason for attending the school (close to ‘home’, school ‘reputation’, ‘course’ preference or ‘other’). No statistically significant difference in the final grades and associated reason was found (M=12.33, SD=2.6 for reason course, M=12.75, SD=2.4 for reason home, M=12.48, SD=3.0 for reason other and M=13.16, SD=2.6 for reason reputation) , (F(3, 373)= 2.09, p=0.101). A small effect size was also indicated by the eta squared value (0.01).
+An one-way between-groups analysis of variance (ANOVA) was conducted to to explore the impact of the reason for attending a school the Final Grades in Portuguese. Students were divided into four groups based on their reason for attending the school (close to ‘home’, school ‘reputation’, ‘course’ preference or ‘other’). No statistically significant difference in the final grades and associated reason was found (M=12.33, SD=2.6 for reason course, M=12.75, SD=2.4 for reason home, M=12.48, SD=3.0 for reason other and M=13.16, SD=2.6 for reason reputation) , (F(3, 373)= 2.09, p=0.101). A small effect size was also indicated by the eta squared value (0.017).
 
 ## More
 
