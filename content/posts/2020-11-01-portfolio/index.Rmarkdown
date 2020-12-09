@@ -607,6 +607,8 @@ We will first look at correlations that describes the association between two va
 
 I have read many times that in order to look at relationships in a data set probably we must first ask the questions, it is very bad practice to look and the data and try to work backwards to determine relationships. We must set our alpha level also before beginning. 
 
+## Questions
+
 The questions I have for this section are:
 
 1. Is there a linear correlation between the G2 result and the G3 result for Maths? (Pearson) (paramteric)
@@ -615,6 +617,8 @@ The questions I have for this section are:
 4. Is there a difference between grade 1 and grade 3 in Maths for students who paid for extra classes? (paired t-test)
 5. Is there a difference in the health of the students between the students who's address is rural vs urban? 
 6. Does the reason for choosing the school impact the the final grade in Portugese?
+7. Are there any differences between each student's mother's Education and their Final Grade result in Maths including the zero results.
+
 ## Correlation (G2 and G3)
 
 Looking at the two variables for Maths. Please refer to [skew-and-kurtosis-analysis] for the g3 analysis of Maths.
@@ -938,7 +942,9 @@ An independent-samples t-test was conducted to compare Maths grade 2 results for
 
 ## Paired t-test
 
-Question: Is there a difference between grade 1 and grade 3 in Maths for students who paid for extra classes? 
+Question: 
+
+Is there a difference between grade 1 and grade 3 in Maths for students who paid for extra classes? 
 
 We have already inspected G3 in Maths for normality, I will quickly show that G1 is also normal.  
 ```{r,  results="hold",warning=FALSE, fig.cap="G1 results for Maths", fig.align = "center"}
@@ -1142,6 +1148,7 @@ My Analysis is that this should have been quite clear from the box plot and was 
 ## ANOVA (Reason vs Final Grade in Portuguese )
 
 The question:
+
 Does the reason for choosing the school impact the the final grade in Portugese?
 
 The variables:
@@ -1227,6 +1234,8 @@ stats::bartlett.test(g3.y~ reason, data=reasondf)
 ```
 p-value is > 0.05 so the result is not statistically significant so we can assume homogeneity from this test also.
 
+Levene’s test is usually more robust to data which departs from normality. For Barlett's test the data must be normally distributed. 
+
 Now we conduct ANOVA using the package userfriendlyscience and the method oneway and also with stats::aov
 In this case we can use Tukey as the post-hoc test option since variances in the groups are equal.
 This is similar to the welsh modification(var.equal) in the t-test, where we needed to know if there was homogeneity of the variance also.
@@ -1234,6 +1243,8 @@ If the variances in the groups were not equal we would use Games-Howell
 ```{r, results="hold", warning=FALSE}
 userfriendlyscience::oneway(reasondf$reason,y=reasondf$g3.y,posthoc='Tukey')
 ```
+
+The outcome is not significant so there is no need ot look at the post hoc test results. 
 
 ```{r}
 # Compute the analysis of variance
@@ -1248,6 +1259,107 @@ Checking Eta with the [Effect Table](#effect)
 
 Reporting the results with eta squared effect
 An one-way between-groups analysis of variance (ANOVA) was conducted to to explore the impact of the reason for attending a school the Final Grades in Portuguese. Students were divided into four groups based on their reason for attending the school (close to 'home', school 'reputation', 'course' preference or 'other'). No statistically significant difference in the final grades and associated reason was found (M=12.33, SD=2.6 for reason course, M=12.75, SD=2.4 for reason home, M=12.48, SD=3.0 for reason other and M=13.16, SD=2.6 for reason reputation) , (F(3, 373)= 2.09, p=0.101). A small effect size was also indicated by the eta squared value (0.017).
+
+## Kruskal-Wallis (Mother's Education and Maths G3)
+
+The question:
+
+Are there any differences between each student's mother's Education and their Final Grade result in Maths including the zero results.
+
+```
+9 Mjob - mother's job (nominal: "teacher", "health" care related, civil "services" (e.g. administrative or police), "at_home" or "other")
+32 G3 - final grade (numeric: from 0 to 20, output target)
+```
+
+I know from previous analysis that Final Grade results for Maths is only normal when we remove the zero results. For this test I will leave them in. 
+```{r, echo=FALSE}
+studentdf <- studentdf %>%
+  mutate(g3.x.all = ifelse(is.na(g3.x), 0, g3.x))
+```
+```{r,  results="hold", warning=FALSE, fig.cap="G3 results Histogram", fig.align = "center"}
+studentdf %>%
+  ggplot(aes(x=g3.x.all)) +
+  labs(x="G3 results for Maths") +
+  geom_histogram(alpha = .05, binwidth=1, colour="black", aes(y=..density.., fill=..count..)) +
+  scale_fill_gradient("Count", low="grey", high="green") +
+  stat_function(fun=dnorm, color="red",args=list(mean=mean(studentdf$g3.x.all, na.rm=TRUE), sd=sd(studentdf$g3.x.all, na.rm=TRUE)))
+pastecs::stat.desc(studentdf$g3.x.all, basic=F)
+tpskew<-semTools::skew(studentdf$g3.x.all)
+tpkurt<-semTools::kurtosis(studentdf$g3.x.all)
+tpskew[1]/tpskew[2]
+tpkurt[1]/tpkurt[2]
+```
+So with skewed data we must use a non-parametric test. We also want to compare more than 2 groups, so our choice of test is the Kruskal Wallis Test. The test determines whether the medians of two or more groups are different.
+
+We now check for homogeneity of variance
+
+We will use levene's test since our variable has a high skew. Using Levene's test, our Null hypothesis is that there is no difference in variance.
+```{r,warning=FALSE}
+car::leveneTest(g3.x.all ~ mjob, data=studentdf)
+```
+p-value is > 0.05 so the result is not statistically significant so we can assume homogeneity from this test also.
+
+```{r, results="hold", warning=FALSE, out.extra='id="g3mjobboxplot"', fig.cap="G3 vs Mother's Job Box Plot", fig.align = "center"}
+studentdf %>%
+  ggplot(aes(x=mjob, y=g3.x.all, fill=mjob)) +
+    geom_boxplot() +
+    scale_fill_viridis(discrete = TRUE, alpha=0.6) +
+    geom_jitter(color="black", size=0.4, alpha=0.9) +
+    ggtitle("A boxplot with Grade 3 Maths and Mother's job") +
+    ylab("Grade 3 results")
+```
+
+We start as always with stating the Null and alternative hypothesis:
+
+**H**<sub>**0**</sub>: There is NO difference in the Grade 3 results achieved based on the student's Mother's education. 
+
+**H**<sub>**a**</sub>: There is a difference in the Grade 3 results achieved based on the student's Mother's education. 
+
+```{r, paged.print=FALSE}
+psych::describeBy(as.numeric(studentdf$g3.x.all),factor(studentdf$mjob))
+```
+
+Now we will run the Kruskal-Wallis test
+```{r, paged.print=FALSE, results="hold"}
+#run a kruskal wallis test
+stats::kruskal.test(g3.x.all~mjob,data=studentdf)
+```
+With a p-value of 0.0012, we have found a statistic significantly different, so we can reject the Null Hypothesis. They are not the same.
+But we don't know yet from the Kruskal-Wallis which groups are different, to do that we need to do a post hox test. For one-way ANOVA we used the turkey test, this time we use the dunnTest as a post hoc test in the package FSA to produce a comparison of the different groups with a bonferroni correction. We can then identify what's different.
+
+We use the bonferroni correction to adjust the p-values of the comparisons, because of the increased risk of type I error (rejecting the null when it's true), which happens when we make multiple tests. Essentially the bonferroni correction is dividing our alpha by the number of comparisons. But we can't win them all, as soon as we reduce the chances of getting a type I error we increase the chances of getting a type II error. 
+```{r, paged.print=FALSE, results="hold"}
+#Post hoc testing
+#Need library FSA to run the post-hoc tests
+tmp<-FSA::dunnTest(x=as.numeric(studentdf$g3.x.all), g=factor(studentdf$mjob), method="bonferroni") 
+
+#Print results so that in the output X=gradmath, g=ethsfr and the test statistic is Z with significance shown underneath
+print(tmp, dunn.test.results = TRUE)
+```
+The test statistic is Z and underneath is the corrected p-value. Now we can see which comparisons are significantly different. Mother's job in health and Mother's job at home are significantly different. and also Mother's job in services and Mother's job at home are significantly different. 
+
+```{r, paged.print=FALSE, results="hold"}
+by(studentdf$g3.x.all, studentdf$mjob, median)
+```
+Now we need an effect size for eta squared. 
+```{r, paged.print=FALSE, results="hold"}
+#calculate the effect size
+rstatix::kruskal_effsize(studentdf, g3.x.all~mjob, ci = FALSE, conf.level = 0.95,
+  ci.type = "perc", nboot = 1000)#uses bootstrapping
+```
+
+Reporting 
+
+https://guides.library.lincoln.ac.uk/c.php?g=110730&p=4638045
+
+
+An Kruskal-Wallis test between groups was conducted to to explore the impact of a Mother's Job title on a student's Final Maths results. Students were divided into four groups based on their mother's job title("teacher", "health" care related, civil "services" (e.g. administrative or police), "at_home" or "other"), the box plots of each can be seen in this [Figure](#g3mjobboxplot),  The groups were significantly different. H(4) = 18.04, p=0.001.
+
+Focused comparisons of the mean ranks between groups showed that the Mother's job title were only significant in two comparisons, when the mother's job was at home compared to working in the health service and when the mother's job was at home compared to the mother's working in civil services. 
+were not significantly different when one soya meal (difference = 2.2 )
+
+The test provide a small  statistically significant difference in the final grades and associated reason was found (M=12.33, SD=2.6 for reason course, M=12.75, SD=2.4 for reason home, M=12.48, SD=3.0 for reason other and M=13.16, SD=2.6 for reason reputation) , (F(3, 373)= 2.09, p=0.101). A small effect size was also indicated by the eta squared value (0.017).
+
 
 
 ## More
