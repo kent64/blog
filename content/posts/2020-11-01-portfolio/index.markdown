@@ -119,18 +119,18 @@ studentdf %>%
   sample_n(1) 
 ```
 
-    ##   school sex age address famsize pstatus medu fedu     mjob  fjob     reason
-    ## 1     GP   F  15       U     LE3       T    3    2 services other reputation
+    ##   school sex age address famsize pstatus medu fedu     mjob     fjob     reason
+    ## 1     GP   M  17       U     LE3       T    2    3 services services reputation
     ##   nursery internet guardian.x traveltime.x studytime.x failures.x schoolsup.x
-    ## 1     yes      yes     mother            1           2          0          no
+    ## 1      no      yes     father            1           2          0          no
     ##   famsup.x paid.x activities.x higher.x romantic.x famrel.x freetime.x goout.x
-    ## 1      yes    yes           no      yes         no        4          4       4
+    ## 1      yes    yes           no      yes         no        5          3       3
     ##   dalc.x walc.x health.x absences.x g1.x g2.x g3.x guardian.y traveltime.y
-    ## 1      1      1        5         10    7    6    6     mother            1
+    ## 1      1      3        3          2   12   11   12     father            1
     ##   studytime.y failures.y schoolsup.y famsup.y paid.y activities.y higher.y
     ## 1           2          0          no      yes     no           no      yes
     ##   romantic.y famrel.y freetime.y goout.y dalc.y walc.y health.y absences.y g1.y
-    ## 1         no        4          4       4      1      1        5          4   12
+    ## 1         no        5          3       3      1      3        3          0   10
     ##   g2.y g3.y
     ## 1   11   11
 
@@ -1060,6 +1060,7 @@ The questions I have for this section are:
 5.  Is there a difference in the health of the students between the students who’s address is rural vs urban?
 6.  Does the reason for choosing the school impact the the final grade in Portugese?
 7.  Are there any differences between each student’s mother’s Education and their Final Grade result in Maths including the zero results.
+8.  Is there a difference between the male and females students in terms of their weekly study time?
 
 ## Correlation (G2 and G3)
 
@@ -1070,7 +1071,7 @@ Looking at g2, I know there is some missing data but a very small amount. We nee
 studentdf %>%
   ggplot(aes(x=g2.x)) +
   labs(x="G2 results for Maths") +
-  geom_histogram(alpha = .05, binwidth=1, colour="black", aes(y=..density.., fill=..count..)) +
+  geom_histogram( binwidth=1, colour="black", aes(y=..density.., fill=..count..)) +
   scale_fill_gradient("Count", low="grey", high="green") +
   stat_function(fun=dnorm, color="red",args=list(mean=mean(studentdf$g2.x, na.rm=TRUE), sd=sd(studentdf$g2.x, na.rm=TRUE)))
 ```
@@ -1358,7 +1359,7 @@ Ok, so I continue with Maths absences.
 studentdf %>%
   ggplot(aes(x=absences.x)) +
   labs(x="number of school absences for Maths") +
-  geom_histogram(alpha = .05, binwidth=1, colour="black", aes(y=..density.., fill=..count..)) +
+  geom_histogram( binwidth=1, colour="black", aes(y=..density.., fill=..count..)) +
   scale_fill_gradient("Count", low="grey", high="green") +
   stat_function(fun=dnorm, color="red",args=list(mean=mean(studentdf$absences.x, na.rm=TRUE), sd=sd(studentdf$absences.x, na.rm=TRUE)))
 ```
@@ -1707,7 +1708,7 @@ We have already inspected G3 in Maths for normality, I will quickly show that G1
 studentdf %>%
   ggplot(aes(x=g1.x)) +
   labs(x="G1 results for Maths") +
-  geom_histogram(alpha = .05, binwidth=1, colour="black", aes(y=..density.., fill=..count..)) +
+  geom_histogram( binwidth=1, colour="black", aes(y=..density.., fill=..count..)) +
   scale_fill_gradient("Count", low="grey", high="green") +
   stat_function(fun=dnorm, color="red",args=list(mean=mean(studentdf$g1.x, na.rm=TRUE), sd=sd(studentdf$g1.x, na.rm=TRUE)))
 ```
@@ -1832,7 +1833,7 @@ paid_students_maths <- studentdf %>%
 paid_students_maths %>%
   ggplot(aes(x=g1.x)) +
   labs(x="G1 results for Maths") +
-  geom_histogram(alpha = .05, binwidth=1, colour="black", aes(y=..density.., fill=..count..)) +
+  geom_histogram( binwidth=1, colour="black", aes(y=..density.., fill=..count..)) +
   scale_fill_gradient("Count", low="grey", high="green") +
   stat_function(fun=dnorm, color="red",args=list(mean=mean(paid_students_maths$g1.x, na.rm=TRUE), sd=sd(paid_students_maths$g1.x, na.rm=TRUE)))
 ```
@@ -1888,7 +1889,7 @@ tpkurt[1]/tpkurt[2]
 paid_students_maths %>%
   ggplot(aes(x=g3.x)) +
   labs(x="G3 results for Maths") +
-  geom_histogram(alpha = .05, binwidth=1, colour="black", aes(y=..density.., fill=..count..)) +
+  geom_histogram( binwidth=1, colour="black", aes(y=..density.., fill=..count..)) +
   scale_fill_gradient("Count", low="grey", high="green") +
   stat_function(fun=dnorm, color="red",args=list(mean=mean(paid_students_maths$g3.x, na.rm=TRUE), sd=sd(paid_students_maths$g3.x, na.rm=TRUE)))
 ```
@@ -2053,7 +2054,7 @@ Figure 31: Health for Urban and Rural students
 studentdf %>%
   ggplot(aes(x=health.x)) +
   labs(x="Health on scale from 1-5") +
-  geom_histogram(alpha = .05, binwidth=1, colour="black", aes(y=..density.., fill=..count..)) +
+  geom_histogram( binwidth=1, colour="black", aes(y=..density.., fill=..count..)) +
   scale_fill_gradient("Count", low="grey", high="blue") +
   stat_function(fun=dnorm, color="red",args=list(mean=mean(studentdf$health.x, na.rm=TRUE), sd=sd(studentdf$health.x, na.rm=TRUE)))
 ```
@@ -2133,7 +2134,7 @@ We need a z-score for this. We can use qnorm() to get it from the p-value. The z
 Rosenthal’s r is then -0.0169994
 
 Reporting:
-"Health levels for students who had an Urban address(Mdn=4 IQR=2) did not differ significantly from those who had an Rural address(Mdn=4 IQR=2).(U=12473, z=0.33, p=0.74, r=0.17)
+"Health levels for students who had an Urban address(Mdn = 4 IQR = 2) did not differ significantly from those who had an Rural address(Mdn=4 IQR=2). Rosenthal’s r indicates a small effect. (U = 12473, z = 0.33, p = .74, r = 0.17)
 
 My Analysis is that this should have been quite clear from the box plot and was only worth going this far to demonstrate a Mann-Whitney test.
 
@@ -2158,7 +2159,7 @@ Quick check to make sure g3.y is normal.
 studentdf %>%
   ggplot(aes(x=g3.y)) +
   labs(x="G3 results for Portuguese") +
-  geom_histogram(alpha = .05, binwidth=1, colour="black", aes(y=..density.., fill=..count..)) +
+  geom_histogram( binwidth=1, colour="black", aes(y=..density.., fill=..count..)) +
   scale_fill_gradient("Count", low="grey", high="blue") +
   stat_function(fun=dnorm, color="red",args=list(mean=mean(studentdf$g3.y, na.rm=TRUE), sd=sd(studentdf$g3.y, na.rm=TRUE)))
 ```
@@ -2399,7 +2400,7 @@ aoveta
 Checking Eta with the [Effect Table](#effect)
 
 Reporting the results with eta squared effect
-An one-way between-groups analysis of variance (ANOVA) was conducted to to explore the impact of the reason for attending a school the Final Grades in Portuguese. Students were divided into four groups based on their reason for attending the school (close to ‘home’, school ‘reputation’, ‘course’ preference or ‘other’). No statistically significant difference in the final grades and associated reason was found (M=12.33, SD=2.6 for reason course, M=12.75, SD=2.4 for reason home, M=12.48, SD=3.0 for reason other and M=13.16, SD=2.6 for reason reputation) , (F(3, 373)= 2.09, p=0.101). A small effect size was also indicated by the eta squared value (0.017).
+An one-way between-groups analysis of variance (ANOVA) was conducted to to explore the impact of the reason for attending a school the Final Grades in Portuguese. Students were divided into four groups based on their reason for attending the school (close to ‘home’, school ‘reputation’, ‘course’ preference or ‘other’). No statistically significant difference in the final grades and associated reason was found (M=12.33, SD=2.6 for reason course, M=12.75, SD=2.4 for reason home, M=12.48, SD=3.0 for reason other and M=13.16, SD=2.6 for reason reputation) , (F(3, 373) = 2.09, p = .101). A small effect size was also indicated by the eta squared value (0.017).
 
 ## Kruskal-Wallis (Mother’s Education and Maths G3)
 
@@ -2416,7 +2417,7 @@ I know from previous analysis that Final Grade results for Maths is only normal 
 studentdf %>%
   ggplot(aes(x=g3.x.all)) +
   labs(x="G3 results for Maths") +
-  geom_histogram(alpha = .05, binwidth=1, colour="black", aes(y=..density.., fill=..count..)) +
+  geom_histogram( binwidth=1, colour="black", aes(y=..density.., fill=..count..)) +
   scale_fill_gradient("Count", low="grey", high="green") +
   stat_function(fun=dnorm, color="red",args=list(mean=mean(studentdf$g3.x.all, na.rm=TRUE), sd=sd(studentdf$g3.x.all, na.rm=TRUE)))
 ```
@@ -2534,6 +2535,8 @@ stats::kruskal.test(g3.x.all~mjob,data=studentdf)
     ## data:  g3.x.all by mjob
     ## Kruskal-Wallis chi-squared = 18.036, df = 4, p-value = 0.001214
 
+The test statistic produced is called Kruskal-Wallis chi-squared and is referred to as H.
+
 With a p-value of 0.0012, we have found a statistic significantly different, so we can reject the Null Hypothesis. They are not the same.
 But we don’t know yet from the Kruskal-Wallis which groups are different, to do that we need to do a post hox test. For one-way ANOVA we used the turkey test, this time we use the dunnTest as a post hoc test in the package FSA to produce a comparison of the different groups with a bonferroni correction. We can then identify what’s different.
 
@@ -2576,25 +2579,6 @@ print(tmp, dunn.test.results = TRUE)
 
 The test statistic is Z and underneath is the corrected p-value. Now we can see which comparisons are significantly different. Mother’s job in health and Mother’s job at home are significantly different. and also Mother’s job in services and Mother’s job at home are significantly different.
 
-``` r
-by(studentdf$g3.x.all, studentdf$mjob, median)
-```
-
-    ## studentdf$mjob: at_home
-    ## [1] 10
-    ## ------------------------------------------------------------ 
-    ## studentdf$mjob: health
-    ## [1] 13
-    ## ------------------------------------------------------------ 
-    ## studentdf$mjob: other
-    ## [1] 10.5
-    ## ------------------------------------------------------------ 
-    ## studentdf$mjob: services
-    ## [1] 11
-    ## ------------------------------------------------------------ 
-    ## studentdf$mjob: teacher
-    ## [1] 10.5
-
 Now we need an effect size for eta squared.
 
 ``` r
@@ -2612,12 +2596,53 @@ Reporting
 
 https://guides.library.lincoln.ac.uk/c.php?g=110730\&p=4638045
 
-An Kruskal-Wallis test between groups was conducted to to explore the impact of a Mother’s Job title on a student’s Final Maths results. Students were divided into four groups based on their mother’s job title(“teacher”, “health” care related, civil “services” (e.g. administrative or police), “at\_home” or “other”), the box plots of each can be seen in this [Figure](#g3mjobboxplot), The groups were significantly different. H(4) = 18.04, p=0.001.
+An Kruskal-Wallis test between groups was conducted to explore the impact of a Mother’s Job title on a student’s Final Maths results. Students were divided into four groups based on their mother’s job title(“teacher”, “health” care related, civil “services” (e.g. administrative or police), “at\_home” or “other”), the box plots of each can be seen in this [Figure](#g3mjobboxplot) (Media:10.5 for “teacher”, Median:13 for “health” , Median:11 for “services” Median:10 “at\_home”, Median:10.5 for "other). The groups were significantly different. H(4) = 18.04, p = .001. A small effect size was also indicated by the eta squared value (0.037).
 
-Focused comparisons of the mean ranks between groups showed that the Mother’s job title were only significant in two comparisons, when the mother’s job was at home compared to working in the health service and when the mother’s job was at home compared to the mother’s working in civil services.
-were not significantly different when one soya meal (difference = 2.2 )
+Focused comparisons of the mean ranks between groups showed that the Mother’s job title were only significant in two comparisons. THe first was when the mother’s job was at home, the Final grade results in Maths were lower in comparison to a mother working in the health service. The second was not as significant but still significant, when a mother’s job was at home, the final grade result was lower in comparison to a mother working in civil service. In summary, a students got better grades when their mother worked in the health or civil service sector rather than working at home.
 
-The test provide a small statistically significant difference in the final grades and associated reason was found (M=12.33, SD=2.6 for reason course, M=12.75, SD=2.4 for reason home, M=12.48, SD=3.0 for reason other and M=13.16, SD=2.6 for reason reputation) , (F(3, 373)= 2.09, p=0.101). A small effect size was also indicated by the eta squared value (0.017).
+## ( male/female Weekly study )
+
+The Question:
+
+Is there a difference between the male and females students in terms of their weekly study time?
+
+the variables:
+
+    2 sex - student's sex (binary: "F" - female or "M" - male)
+    14 studytime - weekly study time (numeric: 1 - <2 hours, 2 - 2 to 5 hours, 3 - 5 to 10 hours, or 4 - >10 hours)
+
+Choosing the right test:
+
+We are comparing ordinal variables here between two groups. I will use Portuguese studytime values. So it is obvious we won’t be able to use a parametric test here. Our outcome variable studytime is not continuous and not a normal distribution. THe Independent variable sex is categorical. This is different to previous questions, as my outcome variable was continuous. Our choice here is to use the CHi-square test / Fisher’s exact.
+
+We start as always with stating the Null and alternative hypothesis:
+
+**H**<sub>**0**</sub>: There is NO difference between the male and females students in terms of their weekly study time. The distribution across the different study periods are the same for both sexes.
+
+**H**<sub>**a**</sub>: There is a difference between the male and females students in terms of their weekly study time.
+
+``` r
+studentdf %>% 
+  ggplot( aes(x=studytime.y)) +
+    geom_histogram(stat="count", fill="#69b3a2", color="#69b3a2", position = 'identity') +
+    facet_wrap(~sex) + 
+    labs(fill="")
+```
+
+<div class="figure" style="text-align: center">
+
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-98-1.png" alt="Study times for males/females" width="1152" />
+
+<p class="caption">
+
+Figure 39: Study times for males/females
+
+</p>
+
+</div>
+
+We will use the gmodels CrossTable function to compare the frequencies, this si how we make our comparisons, by comparing the expected frequency for a population to the observed one.
+\# `{r, paged.print=FALSE, results="hold"} # library(gmodels) # #Use the Crosstable function # #CrossTable(predictor, outcome, fisher = TRUE, chisq = TRUE, expected = TRUE) # gmodels::CrossTable(studentdf$sex, studentdf$studytime.y, fisher = TRUE, chisq = TRUE, expected = TRUE, sresid = TRUE, format = "SPSS") #  # #more simplistic way of doing Chi-Square #  # #Create your contingency table # mytable<-xtabs(~ubullsch+rsex, data=bully) #  # ctest<-stats::chisq.test(mytable, correct=TRUE)#chi square test # #correct=TRUE to get Yates correction needed for 2x2 table #  # ctest#will give you the details of the test statistic and p-value # ctest$expected#expected frequencies # ctest$observed#observed frequencies # ctest$p.value # #Calculate effect size # sjstats::phi(mytable) # sjstats::cramer(mytable) #`
 
 ## More
 

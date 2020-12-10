@@ -211,18 +211,18 @@ studentdf<span style="color:#f92672">=</span><span style="color:#a6e22e">merge</
 <p>let’s us pick a random student:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">studentdf <span style="color:#f92672">%&gt;%</span> 
   <span style="color:#a6e22e">sample_n</span>(<span style="color:#ae81ff">1</span>) 
-</code></pre></div><pre><code>##   school sex age address famsize pstatus medu fedu     mjob  fjob     reason
-## 1     GP   F  15       U     LE3       T    3    2 services other reputation
+</code></pre></div><pre><code>##   school sex age address famsize pstatus medu fedu     mjob     fjob     reason
+## 1     GP   M  17       U     LE3       T    2    3 services services reputation
 ##   nursery internet guardian.x traveltime.x studytime.x failures.x schoolsup.x
-## 1     yes      yes     mother            1           2          0          no
+## 1      no      yes     father            1           2          0          no
 ##   famsup.x paid.x activities.x higher.x romantic.x famrel.x freetime.x goout.x
-## 1      yes    yes           no      yes         no        4          4       4
+## 1      yes    yes           no      yes         no        5          3       3
 ##   dalc.x walc.x health.x absences.x g1.x g2.x g3.x guardian.y traveltime.y
-## 1      1      1        5         10    7    6    6     mother            1
+## 1      1      3        3          2   12   11   12     father            1
 ##   studytime.y failures.y schoolsup.y famsup.y paid.y activities.y higher.y
 ## 1           2          0          no      yes     no           no      yes
 ##   romantic.y famrel.y freetime.y goout.y dalc.y walc.y health.y absences.y g1.y
-## 1         no        4          4       4      1      1        5          4   12
+## 1         no        5          3       3      1      3        3          0   10
 ##   g2.y g3.y
 ## 1   11   11
 </code></pre>
@@ -1100,6 +1100,7 @@ t[t<span style="color:#f92672">&gt;</span><span style="color:#ae81ff">0</span>]
 <li>Is there a difference in the health of the students between the students who’s address is rural vs urban?</li>
 <li>Does the reason for choosing the school impact the the final grade in Portugese?</li>
 <li>Are there any differences between each student’s mother’s Education and their Final Grade result in Maths including the zero results.</li>
+<li>Is there a difference between the male and females students in terms of their weekly study time?</li>
 </ol>
 <h2 id="correlation-g2-and-g3">Correlation (G2 and G3)</h2>
 <p>Looking at the two variables for Maths. Please refer to [skew-and-kurtosis-analysis] for the g3 analysis of Maths.
@@ -1107,7 +1108,7 @@ Looking at g2, I know there is some missing data but a very small amount. We nee
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">studentdf <span style="color:#f92672">%&gt;%</span>
   <span style="color:#a6e22e">ggplot</span>(<span style="color:#a6e22e">aes</span>(x<span style="color:#f92672">=</span>g2.x)) <span style="color:#f92672">+</span>
   <span style="color:#a6e22e">labs</span>(x<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;G2 results for Maths&#34;</span>) <span style="color:#f92672">+</span>
-  <span style="color:#a6e22e">geom_histogram</span>(alpha <span style="color:#f92672">=</span> <span style="color:#ae81ff">.05</span>, binwidth<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>, colour<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;black&#34;</span>, <span style="color:#a6e22e">aes</span>(y<span style="color:#f92672">=</span>..density.., fill<span style="color:#f92672">=</span>..count..)) <span style="color:#f92672">+</span>
+  <span style="color:#a6e22e">geom_histogram</span>( binwidth<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>, colour<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;black&#34;</span>, <span style="color:#a6e22e">aes</span>(y<span style="color:#f92672">=</span>..density.., fill<span style="color:#f92672">=</span>..count..)) <span style="color:#f92672">+</span>
   <span style="color:#a6e22e">scale_fill_gradient</span>(<span style="color:#e6db74">&#34;Count&#34;</span>, low<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;grey&#34;</span>, high<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;green&#34;</span>) <span style="color:#f92672">+</span>
   <span style="color:#a6e22e">stat_function</span>(fun<span style="color:#f92672">=</span>dnorm, color<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;red&#34;</span>,args<span style="color:#f92672">=</span><span style="color:#a6e22e">list</span>(mean<span style="color:#f92672">=</span><span style="color:#a6e22e">mean</span>(studentdf<span style="color:#f92672">$</span>g2.x, na.rm<span style="color:#f92672">=</span><span style="color:#66d9ef">TRUE</span>), sd<span style="color:#f92672">=</span><span style="color:#a6e22e">sd</span>(studentdf<span style="color:#f92672">$</span>g2.x, na.rm<span style="color:#f92672">=</span><span style="color:#66d9ef">TRUE</span>)))
 </code></pre></div><div class="figure" style="text-align: center">
@@ -1336,7 +1337,7 @@ a <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">sort</spa
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">studentdf <span style="color:#f92672">%&gt;%</span>
   <span style="color:#a6e22e">ggplot</span>(<span style="color:#a6e22e">aes</span>(x<span style="color:#f92672">=</span>absences.x)) <span style="color:#f92672">+</span>
   <span style="color:#a6e22e">labs</span>(x<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;number of school absences for Maths&#34;</span>) <span style="color:#f92672">+</span>
-  <span style="color:#a6e22e">geom_histogram</span>(alpha <span style="color:#f92672">=</span> <span style="color:#ae81ff">.05</span>, binwidth<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>, colour<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;black&#34;</span>, <span style="color:#a6e22e">aes</span>(y<span style="color:#f92672">=</span>..density.., fill<span style="color:#f92672">=</span>..count..)) <span style="color:#f92672">+</span>
+  <span style="color:#a6e22e">geom_histogram</span>( binwidth<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>, colour<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;black&#34;</span>, <span style="color:#a6e22e">aes</span>(y<span style="color:#f92672">=</span>..density.., fill<span style="color:#f92672">=</span>..count..)) <span style="color:#f92672">+</span>
   <span style="color:#a6e22e">scale_fill_gradient</span>(<span style="color:#e6db74">&#34;Count&#34;</span>, low<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;grey&#34;</span>, high<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;green&#34;</span>) <span style="color:#f92672">+</span>
   <span style="color:#a6e22e">stat_function</span>(fun<span style="color:#f92672">=</span>dnorm, color<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;red&#34;</span>,args<span style="color:#f92672">=</span><span style="color:#a6e22e">list</span>(mean<span style="color:#f92672">=</span><span style="color:#a6e22e">mean</span>(studentdf<span style="color:#f92672">$</span>absences.x, na.rm<span style="color:#f92672">=</span><span style="color:#66d9ef">TRUE</span>), sd<span style="color:#f92672">=</span><span style="color:#a6e22e">sd</span>(studentdf<span style="color:#f92672">$</span>absences.x, na.rm<span style="color:#f92672">=</span><span style="color:#66d9ef">TRUE</span>)))
 </code></pre></div><div class="figure" style="text-align: center">
@@ -1567,7 +1568,7 @@ An independent-samples t-test was conducted to compare Maths grade 2 results for
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">studentdf <span style="color:#f92672">%&gt;%</span>
   <span style="color:#a6e22e">ggplot</span>(<span style="color:#a6e22e">aes</span>(x<span style="color:#f92672">=</span>g1.x)) <span style="color:#f92672">+</span>
   <span style="color:#a6e22e">labs</span>(x<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;G1 results for Maths&#34;</span>) <span style="color:#f92672">+</span>
-  <span style="color:#a6e22e">geom_histogram</span>(alpha <span style="color:#f92672">=</span> <span style="color:#ae81ff">.05</span>, binwidth<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>, colour<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;black&#34;</span>, <span style="color:#a6e22e">aes</span>(y<span style="color:#f92672">=</span>..density.., fill<span style="color:#f92672">=</span>..count..)) <span style="color:#f92672">+</span>
+  <span style="color:#a6e22e">geom_histogram</span>( binwidth<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>, colour<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;black&#34;</span>, <span style="color:#a6e22e">aes</span>(y<span style="color:#f92672">=</span>..density.., fill<span style="color:#f92672">=</span>..count..)) <span style="color:#f92672">+</span>
   <span style="color:#a6e22e">scale_fill_gradient</span>(<span style="color:#e6db74">&#34;Count&#34;</span>, low<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;grey&#34;</span>, high<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;green&#34;</span>) <span style="color:#f92672">+</span>
   <span style="color:#a6e22e">stat_function</span>(fun<span style="color:#f92672">=</span>dnorm, color<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;red&#34;</span>,args<span style="color:#f92672">=</span><span style="color:#a6e22e">list</span>(mean<span style="color:#f92672">=</span><span style="color:#a6e22e">mean</span>(studentdf<span style="color:#f92672">$</span>g1.x, na.rm<span style="color:#f92672">=</span><span style="color:#66d9ef">TRUE</span>), sd<span style="color:#f92672">=</span><span style="color:#a6e22e">sd</span>(studentdf<span style="color:#f92672">$</span>g1.x, na.rm<span style="color:#f92672">=</span><span style="color:#66d9ef">TRUE</span>)))
 </code></pre></div><div class="figure" style="text-align: center">
@@ -1649,7 +1650,7 @@ Looking again at the <a href="#testtable">Test Table</a>. Because our continuous
 paid_students_maths <span style="color:#f92672">%&gt;%</span>
   <span style="color:#a6e22e">ggplot</span>(<span style="color:#a6e22e">aes</span>(x<span style="color:#f92672">=</span>g1.x)) <span style="color:#f92672">+</span>
   <span style="color:#a6e22e">labs</span>(x<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;G1 results for Maths&#34;</span>) <span style="color:#f92672">+</span>
-  <span style="color:#a6e22e">geom_histogram</span>(alpha <span style="color:#f92672">=</span> <span style="color:#ae81ff">.05</span>, binwidth<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>, colour<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;black&#34;</span>, <span style="color:#a6e22e">aes</span>(y<span style="color:#f92672">=</span>..density.., fill<span style="color:#f92672">=</span>..count..)) <span style="color:#f92672">+</span>
+  <span style="color:#a6e22e">geom_histogram</span>( binwidth<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>, colour<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;black&#34;</span>, <span style="color:#a6e22e">aes</span>(y<span style="color:#f92672">=</span>..density.., fill<span style="color:#f92672">=</span>..count..)) <span style="color:#f92672">+</span>
   <span style="color:#a6e22e">scale_fill_gradient</span>(<span style="color:#e6db74">&#34;Count&#34;</span>, low<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;grey&#34;</span>, high<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;green&#34;</span>) <span style="color:#f92672">+</span>
   <span style="color:#a6e22e">stat_function</span>(fun<span style="color:#f92672">=</span>dnorm, color<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;red&#34;</span>,args<span style="color:#f92672">=</span><span style="color:#a6e22e">list</span>(mean<span style="color:#f92672">=</span><span style="color:#a6e22e">mean</span>(paid_students_maths<span style="color:#f92672">$</span>g1.x, na.rm<span style="color:#f92672">=</span><span style="color:#66d9ef">TRUE</span>), sd<span style="color:#f92672">=</span><span style="color:#a6e22e">sd</span>(paid_students_maths<span style="color:#f92672">$</span>g1.x, na.rm<span style="color:#f92672">=</span><span style="color:#66d9ef">TRUE</span>)))
 </code></pre></div><div class="figure" style="text-align: center">
@@ -1684,7 +1685,7 @@ tpkurt[1]<span style="color:#f92672">/</span>tpkurt[2]
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">paid_students_maths <span style="color:#f92672">%&gt;%</span>
   <span style="color:#a6e22e">ggplot</span>(<span style="color:#a6e22e">aes</span>(x<span style="color:#f92672">=</span>g3.x)) <span style="color:#f92672">+</span>
   <span style="color:#a6e22e">labs</span>(x<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;G3 results for Maths&#34;</span>) <span style="color:#f92672">+</span>
-  <span style="color:#a6e22e">geom_histogram</span>(alpha <span style="color:#f92672">=</span> <span style="color:#ae81ff">.05</span>, binwidth<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>, colour<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;black&#34;</span>, <span style="color:#a6e22e">aes</span>(y<span style="color:#f92672">=</span>..density.., fill<span style="color:#f92672">=</span>..count..)) <span style="color:#f92672">+</span>
+  <span style="color:#a6e22e">geom_histogram</span>( binwidth<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>, colour<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;black&#34;</span>, <span style="color:#a6e22e">aes</span>(y<span style="color:#f92672">=</span>..density.., fill<span style="color:#f92672">=</span>..count..)) <span style="color:#f92672">+</span>
   <span style="color:#a6e22e">scale_fill_gradient</span>(<span style="color:#e6db74">&#34;Count&#34;</span>, low<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;grey&#34;</span>, high<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;green&#34;</span>) <span style="color:#f92672">+</span>
   <span style="color:#a6e22e">stat_function</span>(fun<span style="color:#f92672">=</span>dnorm, color<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;red&#34;</span>,args<span style="color:#f92672">=</span><span style="color:#a6e22e">list</span>(mean<span style="color:#f92672">=</span><span style="color:#a6e22e">mean</span>(paid_students_maths<span style="color:#f92672">$</span>g3.x, na.rm<span style="color:#f92672">=</span><span style="color:#66d9ef">TRUE</span>), sd<span style="color:#f92672">=</span><span style="color:#a6e22e">sd</span>(paid_students_maths<span style="color:#f92672">$</span>g3.x, na.rm<span style="color:#f92672">=</span><span style="color:#66d9ef">TRUE</span>)))
 </code></pre></div><div class="figure" style="text-align: center">
@@ -1793,7 +1794,7 @@ a <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">sort</spa
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">studentdf <span style="color:#f92672">%&gt;%</span>
   <span style="color:#a6e22e">ggplot</span>(<span style="color:#a6e22e">aes</span>(x<span style="color:#f92672">=</span>health.x)) <span style="color:#f92672">+</span>
   <span style="color:#a6e22e">labs</span>(x<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Health on scale from 1-5&#34;</span>) <span style="color:#f92672">+</span>
-  <span style="color:#a6e22e">geom_histogram</span>(alpha <span style="color:#f92672">=</span> <span style="color:#ae81ff">.05</span>, binwidth<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>, colour<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;black&#34;</span>, <span style="color:#a6e22e">aes</span>(y<span style="color:#f92672">=</span>..density.., fill<span style="color:#f92672">=</span>..count..)) <span style="color:#f92672">+</span>
+  <span style="color:#a6e22e">geom_histogram</span>( binwidth<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>, colour<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;black&#34;</span>, <span style="color:#a6e22e">aes</span>(y<span style="color:#f92672">=</span>..density.., fill<span style="color:#f92672">=</span>..count..)) <span style="color:#f92672">+</span>
   <span style="color:#a6e22e">scale_fill_gradient</span>(<span style="color:#e6db74">&#34;Count&#34;</span>, low<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;grey&#34;</span>, high<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;blue&#34;</span>) <span style="color:#f92672">+</span>
   <span style="color:#a6e22e">stat_function</span>(fun<span style="color:#f92672">=</span>dnorm, color<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;red&#34;</span>,args<span style="color:#f92672">=</span><span style="color:#a6e22e">list</span>(mean<span style="color:#f92672">=</span><span style="color:#a6e22e">mean</span>(studentdf<span style="color:#f92672">$</span>health.x, na.rm<span style="color:#f92672">=</span><span style="color:#66d9ef">TRUE</span>), sd<span style="color:#f92672">=</span><span style="color:#a6e22e">sd</span>(studentdf<span style="color:#f92672">$</span>health.x, na.rm<span style="color:#f92672">=</span><span style="color:#66d9ef">TRUE</span>)))
 </code></pre></div><div class="figure" style="text-align: center">
@@ -1853,7 +1854,7 @@ Looking again at the <a href="#testtable">Test Table</a>. We have two independen
 <p>We need a z-score for this. We can use qnorm() to get it from the p-value. The z-value is -0.3322507 and N is 382.
 Rosenthal’s r is then -0.0169994</p>
 <p>Reporting:
-&ldquo;Health levels for students who had an Urban address(Mdn=4 IQR=2) did not differ significantly from those who had an Rural address(Mdn=4 IQR=2).(U=12473, z=0.33, p=0.74, r=0.17)</p>
+&ldquo;Health levels for students who had an Urban address(Mdn = 4 IQR = 2) did not differ significantly from those who had an Rural address(Mdn=4 IQR=2). Rosenthal’s r indicates a small effect. (U = 12473, z = 0.33, p = .74, r = 0.17)</p>
 <p>My Analysis is that this should have been quite clear from the box plot and was only worth going this far to demonstrate a Mann-Whitney test.</p>
 <h2 id="anova-reason-vs-final-grade-in-portuguese-">ANOVA (Reason vs Final Grade in Portuguese )</h2>
 <p>The question:</p>
@@ -1869,7 +1870,7 @@ Quick check to make sure g3.y is normal.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">studentdf <span style="color:#f92672">%&gt;%</span>
   <span style="color:#a6e22e">ggplot</span>(<span style="color:#a6e22e">aes</span>(x<span style="color:#f92672">=</span>g3.y)) <span style="color:#f92672">+</span>
   <span style="color:#a6e22e">labs</span>(x<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;G3 results for Portuguese&#34;</span>) <span style="color:#f92672">+</span>
-  <span style="color:#a6e22e">geom_histogram</span>(alpha <span style="color:#f92672">=</span> <span style="color:#ae81ff">.05</span>, binwidth<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>, colour<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;black&#34;</span>, <span style="color:#a6e22e">aes</span>(y<span style="color:#f92672">=</span>..density.., fill<span style="color:#f92672">=</span>..count..)) <span style="color:#f92672">+</span>
+  <span style="color:#a6e22e">geom_histogram</span>( binwidth<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>, colour<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;black&#34;</span>, <span style="color:#a6e22e">aes</span>(y<span style="color:#f92672">=</span>..density.., fill<span style="color:#f92672">=</span>..count..)) <span style="color:#f92672">+</span>
   <span style="color:#a6e22e">scale_fill_gradient</span>(<span style="color:#e6db74">&#34;Count&#34;</span>, low<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;grey&#34;</span>, high<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;blue&#34;</span>) <span style="color:#f92672">+</span>
   <span style="color:#a6e22e">stat_function</span>(fun<span style="color:#f92672">=</span>dnorm, color<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;red&#34;</span>,args<span style="color:#f92672">=</span><span style="color:#a6e22e">list</span>(mean<span style="color:#f92672">=</span><span style="color:#a6e22e">mean</span>(studentdf<span style="color:#f92672">$</span>g3.y, na.rm<span style="color:#f92672">=</span><span style="color:#66d9ef">TRUE</span>), sd<span style="color:#f92672">=</span><span style="color:#a6e22e">sd</span>(studentdf<span style="color:#f92672">$</span>g3.y, na.rm<span style="color:#f92672">=</span><span style="color:#66d9ef">TRUE</span>)))
 </code></pre></div><div class="figure" style="text-align: center">
@@ -2044,7 +2045,7 @@ aoveta
 </code></pre>
 <p>Checking Eta with the <a href="#effect">Effect Table</a></p>
 <p>Reporting the results with eta squared effect
-An one-way between-groups analysis of variance (ANOVA) was conducted to to explore the impact of the reason for attending a school the Final Grades in Portuguese. Students were divided into four groups based on their reason for attending the school (close to ‘home’, school ‘reputation’, ‘course’ preference or ‘other’). No statistically significant difference in the final grades and associated reason was found (M=12.33, SD=2.6 for reason course, M=12.75, SD=2.4 for reason home, M=12.48, SD=3.0 for reason other and M=13.16, SD=2.6 for reason reputation) , (F(3, 373)= 2.09, p=0.101). A small effect size was also indicated by the eta squared value (0.017).</p>
+An one-way between-groups analysis of variance (ANOVA) was conducted to to explore the impact of the reason for attending a school the Final Grades in Portuguese. Students were divided into four groups based on their reason for attending the school (close to ‘home’, school ‘reputation’, ‘course’ preference or ‘other’). No statistically significant difference in the final grades and associated reason was found (M=12.33, SD=2.6 for reason course, M=12.75, SD=2.4 for reason home, M=12.48, SD=3.0 for reason other and M=13.16, SD=2.6 for reason reputation) , (F(3, 373) = 2.09, p = .101). A small effect size was also indicated by the eta squared value (0.017).</p>
 <h2 id="kruskal-wallis-mothers-education-and-maths-g3">Kruskal-Wallis (Mother’s Education and Maths G3)</h2>
 <p>The question:</p>
 <p>Are there any differences between each student’s mother’s Education and their Final Grade result in Maths including the zero results.</p>
@@ -2055,7 +2056,7 @@ An one-way between-groups analysis of variance (ANOVA) was conducted to to explo
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">studentdf <span style="color:#f92672">%&gt;%</span>
   <span style="color:#a6e22e">ggplot</span>(<span style="color:#a6e22e">aes</span>(x<span style="color:#f92672">=</span>g3.x.all)) <span style="color:#f92672">+</span>
   <span style="color:#a6e22e">labs</span>(x<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;G3 results for Maths&#34;</span>) <span style="color:#f92672">+</span>
-  <span style="color:#a6e22e">geom_histogram</span>(alpha <span style="color:#f92672">=</span> <span style="color:#ae81ff">.05</span>, binwidth<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>, colour<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;black&#34;</span>, <span style="color:#a6e22e">aes</span>(y<span style="color:#f92672">=</span>..density.., fill<span style="color:#f92672">=</span>..count..)) <span style="color:#f92672">+</span>
+  <span style="color:#a6e22e">geom_histogram</span>( binwidth<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>, colour<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;black&#34;</span>, <span style="color:#a6e22e">aes</span>(y<span style="color:#f92672">=</span>..density.., fill<span style="color:#f92672">=</span>..count..)) <span style="color:#f92672">+</span>
   <span style="color:#a6e22e">scale_fill_gradient</span>(<span style="color:#e6db74">&#34;Count&#34;</span>, low<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;grey&#34;</span>, high<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;green&#34;</span>) <span style="color:#f92672">+</span>
   <span style="color:#a6e22e">stat_function</span>(fun<span style="color:#f92672">=</span>dnorm, color<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;red&#34;</span>,args<span style="color:#f92672">=</span><span style="color:#a6e22e">list</span>(mean<span style="color:#f92672">=</span><span style="color:#a6e22e">mean</span>(studentdf<span style="color:#f92672">$</span>g3.x.all, na.rm<span style="color:#f92672">=</span><span style="color:#66d9ef">TRUE</span>), sd<span style="color:#f92672">=</span><span style="color:#a6e22e">sd</span>(studentdf<span style="color:#f92672">$</span>g3.x.all, na.rm<span style="color:#f92672">=</span><span style="color:#66d9ef">TRUE</span>)))
 </code></pre></div><div class="figure" style="text-align: center">
@@ -2136,6 +2137,7 @@ stats<span style="color:#f92672">::</span><span style="color:#a6e22e">kruskal.te
 ## data:  g3.x.all by mjob
 ## Kruskal-Wallis chi-squared = 18.036, df = 4, p-value = 0.001214
 </code></pre>
+<p>The test statistic produced is called Kruskal-Wallis chi-squared and is referred to as H.</p>
 <p>With a p-value of 0.0012, we have found a statistic significantly different, so we can reject the Null Hypothesis. They are not the same.
 But we don’t know yet from the Kruskal-Wallis which groups are different, to do that we need to do a post hox test. For one-way ANOVA we used the turkey test, this time we use the dunnTest as a post hoc test in the package FSA to produce a comparison of the different groups with a bonferroni correction. We can then identify what’s different.</p>
 <p>We use the bonferroni correction to adjust the p-values of the comparisons, because of the increased risk of type I error (rejecting the null when it’s true), which happens when we make multiple tests. Essentially the bonferroni correction is dividing our alpha by the number of comparisons. But we can’t win them all, as soon as we reduce the chances of getting a type I error we increase the chances of getting a type II error.</p>
@@ -2172,22 +2174,6 @@ tmp<span style="color:#f92672">&lt;-</span>FSA<span style="color:#f92672">::</sp
 ##  Reject Ho if p &lt;= alpha
 </code></pre>
 <p>The test statistic is Z and underneath is the corrected p-value. Now we can see which comparisons are significantly different. Mother’s job in health and Mother’s job at home are significantly different. and also Mother’s job in services and Mother’s job at home are significantly different.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#a6e22e">by</span>(studentdf<span style="color:#f92672">$</span>g3.x.all, studentdf<span style="color:#f92672">$</span>mjob, median)
-</code></pre></div><pre><code>## studentdf$mjob: at_home
-## [1] 10
-## ------------------------------------------------------------ 
-## studentdf$mjob: health
-## [1] 13
-## ------------------------------------------------------------ 
-## studentdf$mjob: other
-## [1] 10.5
-## ------------------------------------------------------------ 
-## studentdf$mjob: services
-## [1] 11
-## ------------------------------------------------------------ 
-## studentdf$mjob: teacher
-## [1] 10.5
-</code></pre>
 <p>Now we need an effect size for eta squared.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#75715e">#calculate the effect size</span>
 rstatix<span style="color:#f92672">::</span><span style="color:#a6e22e">kruskal_effsize</span>(studentdf, g3.x.all<span style="color:#f92672">~</span>mjob, ci <span style="color:#f92672">=</span> <span style="color:#66d9ef">FALSE</span>, conf.level <span style="color:#f92672">=</span> <span style="color:#ae81ff">0.95</span>,
@@ -2199,10 +2185,33 @@ rstatix<span style="color:#f92672">::</span><span style="color:#a6e22e">kruskal_
 </code></pre>
 <p>Reporting</p>
 <p><a href="https://guides.library.lincoln.ac.uk/c.php?g=110730">https://guides.library.lincoln.ac.uk/c.php?g=110730</a>&amp;p=4638045</p>
-<p>An Kruskal-Wallis test between groups was conducted to to explore the impact of a Mother’s Job title on a student’s Final Maths results. Students were divided into four groups based on their mother’s job title(“teacher”, “health” care related, civil “services” (e.g. administrative or police), “at_home” or “other”), the box plots of each can be seen in this <a href="#g3mjobboxplot">Figure</a>, The groups were significantly different. H(4) = 18.04, p=0.001.</p>
-<p>Focused comparisons of the mean ranks between groups showed that the Mother’s job title were only significant in two comparisons, when the mother’s job was at home compared to working in the health service and when the mother’s job was at home compared to the mother’s working in civil services.
-were not significantly different when one soya meal (difference = 2.2 )</p>
-<p>The test provide a small statistically significant difference in the final grades and associated reason was found (M=12.33, SD=2.6 for reason course, M=12.75, SD=2.4 for reason home, M=12.48, SD=3.0 for reason other and M=13.16, SD=2.6 for reason reputation) , (F(3, 373)= 2.09, p=0.101). A small effect size was also indicated by the eta squared value (0.017).</p>
+<p>An Kruskal-Wallis test between groups was conducted to explore the impact of a Mother’s Job title on a student’s Final Maths results. Students were divided into four groups based on their mother’s job title(“teacher”, “health” care related, civil “services” (e.g. administrative or police), “at_home” or “other”), the box plots of each can be seen in this <a href="#g3mjobboxplot">Figure</a> (Media:10.5 for “teacher”, Median:13 for “health” , Median:11 for “services” Median:10 “at_home”, Median:10.5 for &ldquo;other). The groups were significantly different. H(4) = 18.04, p = .001. A small effect size was also indicated by the eta squared value (0.037).</p>
+<p>Focused comparisons of the mean ranks between groups showed that the Mother’s job title were only significant in two comparisons. THe first was when the mother’s job was at home, the Final grade results in Maths were lower in comparison to a mother working in the health service. The second was not as significant but still significant, when a mother’s job was at home, the final grade result was lower in comparison to a mother working in civil service. In summary, a students got better grades when their mother worked in the health or civil service sector rather than working at home.</p>
+<h2 id="-malefemale-weekly-study-">( male/female Weekly study )</h2>
+<p>The Question:</p>
+<p>Is there a difference between the male and females students in terms of their weekly study time?</p>
+<p>the variables:</p>
+<pre><code>2 sex - student's sex (binary: &quot;F&quot; - female or &quot;M&quot; - male)
+14 studytime - weekly study time (numeric: 1 - &lt;2 hours, 2 - 2 to 5 hours, 3 - 5 to 10 hours, or 4 - &gt;10 hours)
+</code></pre>
+<p>Choosing the right test:</p>
+<p>We are comparing ordinal variables here between two groups. I will use Portuguese studytime values. So it is obvious we won’t be able to use a parametric test here. Our outcome variable studytime is not continuous and not a normal distribution. THe Independent variable sex is categorical. This is different to previous questions, as my outcome variable was continuous. Our choice here is to use the CHi-square test / Fisher’s exact.</p>
+<p>We start as always with stating the Null and alternative hypothesis:</p>
+<p><strong>H</strong><sub><strong>0</strong></sub>: There is NO difference between the male and females students in terms of their weekly study time. The distribution across the different study periods are the same for both sexes.</p>
+<p><strong>H</strong><sub><strong>a</strong></sub>: There is a difference between the male and females students in terms of their weekly study time.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">studentdf <span style="color:#f92672">%&gt;%</span> 
+  <span style="color:#a6e22e">ggplot</span>( <span style="color:#a6e22e">aes</span>(x<span style="color:#f92672">=</span>studytime.y)) <span style="color:#f92672">+</span>
+    <span style="color:#a6e22e">geom_histogram</span>(stat<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;count&#34;</span>, fill<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;#69b3a2&#34;</span>, color<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;#69b3a2&#34;</span>, position <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;identity&#39;</span>) <span style="color:#f92672">+</span>
+    <span style="color:#a6e22e">facet_wrap</span>(<span style="color:#f92672">~</span>sex) <span style="color:#f92672">+</span> 
+    <span style="color:#a6e22e">labs</span>(fill<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;&#34;</span>)
+</code></pre></div><div class="figure" style="text-align: center">
+<p><img src="/blog/posts/studentperf/index_files/figure-html/unnamed-chunk-98-1.png" alt="Study times for males/females" width="1152" /></p>
+<p class="caption">
+<p>Figure 39: Study times for males/females</p>
+</p>
+</div>
+<p>We will use the gmodels CrossTable function to compare the frequencies, this si how we make our comparisons, by comparing the expected frequency for a population to the observed one.
+# <code>{r, paged.print=FALSE, results=&quot;hold&quot;} # library(gmodels) # #Use the Crosstable function # #CrossTable(predictor, outcome, fisher = TRUE, chisq = TRUE, expected = TRUE) # gmodels::CrossTable(studentdf$sex, studentdf$studytime.y, fisher = TRUE, chisq = TRUE, expected = TRUE, sresid = TRUE, format = &quot;SPSS&quot;) #  # #more simplistic way of doing Chi-Square #  # #Create your contingency table # mytable&lt;-xtabs(~ubullsch+rsex, data=bully) #  # ctest&lt;-stats::chisq.test(mytable, correct=TRUE)#chi square test # #correct=TRUE to get Yates correction needed for 2x2 table #  # ctest#will give you the details of the test statistic and p-value # ctest$expected#expected frequencies # ctest$observed#observed frequencies # ctest$p.value # #Calculate effect size # sjstats::phi(mytable) # sjstats::cramer(mytable) #</code></p>
 <h2 id="more">More</h2>
 <p>Parametric are most powerful, more robuseness becuse we use every score
 Parametric or non parametric
@@ -2307,6 +2316,7 @@ kendall more reilable</p>
         <li><a href="#mann-whitney-health-for-rural-vs-urban">Mann-Whitney (Health for Rural vs Urban)</a></li>
         <li><a href="#anova-reason-vs-final-grade-in-portuguese-">ANOVA (Reason vs Final Grade in Portuguese )</a></li>
         <li><a href="#kruskal-wallis-mothers-education-and-maths-g3">Kruskal-Wallis (Mother’s Education and Maths G3)</a></li>
+        <li><a href="#-malefemale-weekly-study-">( male/female Weekly study )</a></li>
         <li><a href="#more">More</a></li>
       </ol>
     </li>
