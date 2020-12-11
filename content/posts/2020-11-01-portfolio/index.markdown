@@ -26,7 +26,7 @@ I am writing this blog as part of an assignment. My Details:
 
 # Getting started
 
-We explore a student exam performance data set. This is a data set about secondary school academical achievements in Portugal. The data contains two set of results, one set for results in Maths and one set for results in Portuguese. These are merged together to form one data set which I will endeavor to break down in order to learn about the basic properties of statistics, describing the Frequency and probabilities, hypothesis testing, Normality, Missing data, Relationships, Component Analysis and more.
+We explore a student exam performance data set. This is a data set about secondary school academical achievements in Portugal. The data contains two sets of results, one set for results in Maths and one set for results in Portuguese. These are merged together to form one data set which I will endeavor to break down in order to learn about the basic properties of statistics, describing the frequencies and probabilities, hypothesis testing, Normality, Missing data, Relationships, Component Analysis and more.
 
 This data set is from a paper by P.Cortez and A. Silva entitled “Using Data Mining to Predict Secondary School Student Performance”. (Cortez and Silva [2008](#ref-cortez2008using))
 
@@ -119,20 +119,18 @@ studentdf %>%
   sample_n(1) 
 ```
 
-    ##   school sex age address famsize pstatus medu fedu     mjob     fjob     reason
-    ## 1     GP   M  17       U     LE3       T    2    3 services services reputation
-    ##   nursery internet guardian.x traveltime.x studytime.x failures.x schoolsup.x
-    ## 1      no      yes     father            1           2          0          no
-    ##   famsup.x paid.x activities.x higher.x romantic.x famrel.x freetime.x goout.x
-    ## 1      yes    yes           no      yes         no        5          3       3
-    ##   dalc.x walc.x health.x absences.x g1.x g2.x g3.x guardian.y traveltime.y
-    ## 1      1      3        3          2   12   11   12     father            1
-    ##   studytime.y failures.y schoolsup.y famsup.y paid.y activities.y higher.y
-    ## 1           2          0          no      yes     no           no      yes
-    ##   romantic.y famrel.y freetime.y goout.y dalc.y walc.y health.y absences.y g1.y
-    ## 1         no        5          3       3      1      3        3          0   10
-    ##   g2.y g3.y
-    ## 1   11   11
+    ##   school sex age address famsize pstatus medu fedu   mjob  fjob reason nursery
+    ## 1     GP   F  15       U     LE3       T    4    2 health other  other     yes
+    ##   internet guardian.x traveltime.x studytime.x failures.x schoolsup.x famsup.x
+    ## 1      yes     mother            1           2          0          no      yes
+    ##   paid.x activities.x higher.x romantic.x famrel.x freetime.x goout.x dalc.x
+    ## 1    yes           no      yes         no        4          3       3      1
+    ##   walc.x health.x absences.x g1.x g2.x g3.x guardian.y traveltime.y studytime.y
+    ## 1      1        5          2   11   13   13     mother            1           2
+    ##   failures.y schoolsup.y famsup.y paid.y activities.y higher.y romantic.y
+    ## 1          0          no      yes     no           no      yes         no
+    ##   famrel.y freetime.y goout.y dalc.y walc.y health.y absences.y g1.y g2.y g3.y
+    ## 1        4          3       3      1      1        5          0   16   14   16
 
 ## Population vs Sample
 
@@ -468,7 +466,7 @@ In statistics we use confidence intervals to show how sure we are that a value w
 
 The common confidence intervals used are 90%, 95% and 99%. The idea is based on the Normal distribution. To say we are 95% confidence a value will fall into a range of values is the same as saying it will fall inside -1.96 standard deviations and +1.96 standard deviations of the mean. A 90% chance would correspond to 1.645 and a 99% chance would correspond to 2.576 deviations.
 
-Which confidence interval we decide to use depends on the population variance and also the size of the sample. A wide variance in a population would mean a large confidence interval. Certain industries use different confidence intervals to report their results when they are doing tests to answers questions. For example pharmaceutical science or manufacturing companies may have a tighter cut off value. These tests usually involves fitting a statistical model to data and testing a prediction. To decide if the model works, they need to know if the result is statistically significant. To do this the confidence intervals are used, if the test result is outside these intervals, or above a certain alpha value (usually 0.05), it unlikely the model is getting the right answer by chance. We will discuss this more later in hypothesis testing.
+Which confidence interval we decide to use depends on the population variance and also the size of the sample. A wide variance in a population would mean a large confidence interval. Certain industries use different confidence intervals to report their results when they are doing tests to answers questions. For example pharmaceutical science or manufacturing companies may have a tighter cut off value. These tests usually involves fitting a statistical model to data and testing a prediction. To decide if the model works, they need to know if the result is statistically significant. To do this the confidence intervals are used, if the test result is outside these intervals, or above a certain alpha value (usually 0.05), it unlikely the model is getting the right answer by chance. We will discuss this more later in hypothesis testing. For educational data sets such as the one we are currently analyzing a standard alpha value is 0.05 because we are working with human beings and because of the measurement error in recording the values.
 
 ### Z-score
 
@@ -1060,7 +1058,7 @@ The questions I have for this section are:
 5.  Is there a difference in the health of the students between the students who’s address is rural vs urban?
 6.  Does the reason for choosing the school impact the the final grade in Portugese?
 7.  Are there any differences between each student’s mother’s Education and their Final Grade result in Maths including the zero results.
-8.  Is there a difference between the male and females students in terms of their weekly study time?
+8.  Is there a difference between the male and females students in terms of their ambition to go to higher education?
 
 ## Correlation (G2 and G3)
 
@@ -2600,30 +2598,30 @@ An Kruskal-Wallis test between groups was conducted to explore the impact of a M
 
 Focused comparisons of the mean ranks between groups showed that the Mother’s job title were only significant in two comparisons. THe first was when the mother’s job was at home, the Final grade results in Maths were lower in comparison to a mother working in the health service. The second was not as significant but still significant, when a mother’s job was at home, the final grade result was lower in comparison to a mother working in civil service. In summary, a students got better grades when their mother worked in the health or civil service sector rather than working at home.
 
-## ( male/female Weekly study )
+## Chi Square ( male/female Weekly study )
 
 The Question:
 
-Is there a difference between the male and females students in terms of their weekly study time?
+8.  Is there a difference between the male and females students in terms of their ambition to go to higher education?
 
 the variables:
 
     2 sex - student's sex (binary: "F" - female or "M" - male)
-    14 studytime - weekly study time (numeric: 1 - <2 hours, 2 - 2 to 5 hours, 3 - 5 to 10 hours, or 4 - >10 hours)
+    21 higher - wants to take higher education (binary: yes or no)
 
 Choosing the right test:
 
-We are comparing ordinal variables here between two groups. I will use Portuguese studytime values. So it is obvious we won’t be able to use a parametric test here. Our outcome variable studytime is not continuous and not a normal distribution. THe Independent variable sex is categorical. This is different to previous questions, as my outcome variable was continuous. Our choice here is to use the CHi-square test / Fisher’s exact.
+We are comparing ordinal variables here between two groups. I will use Portuguese higher values. So it is obvious we won’t be able to use a parametric test here. Our outcome variable “higher” is not continuous and so not a normal distribution. The Independent variable sex is categorical. This is different to previous questions, as my outcome variable was continuous. Our choice here is to use the Chi-square test. Like all non-parametric statistics, the Chi-square is robust with respect to the distribution of the data, it doesn’t require homoscedasticity. The CHi-square test will show us if there is significant difference in our groups, it is then followed with a strength statistic.
 
 We start as always with stating the Null and alternative hypothesis:
 
-**H**<sub>**0**</sub>: There is NO difference between the male and females students in terms of their weekly study time. The distribution across the different study periods are the same for both sexes.
+**H**<sub>**0**</sub>: There is NO difference between the male and females students in terms of their ambition to go to higher education.
 
-**H**<sub>**a**</sub>: There is a difference between the male and females students in terms of their weekly study time.
+**H**<sub>**a**</sub>: There is a difference between the male and females students in terms of their ambition to go to higher education.
 
 ``` r
 studentdf %>% 
-  ggplot( aes(x=studytime.y)) +
+  ggplot( aes(x=higher.y)) +
     geom_histogram(stat="count", fill="#69b3a2", color="#69b3a2", position = 'identity') +
     facet_wrap(~sex) + 
     labs(fill="")
@@ -2641,8 +2639,135 @@ Figure 39: Study times for males/females
 
 </div>
 
-We will use the gmodels CrossTable function to compare the frequencies, this si how we make our comparisons, by comparing the expected frequency for a population to the observed one.
-\# `{r, paged.print=FALSE, results="hold"} # library(gmodels) # #Use the Crosstable function # #CrossTable(predictor, outcome, fisher = TRUE, chisq = TRUE, expected = TRUE) # gmodels::CrossTable(studentdf$sex, studentdf$studytime.y, fisher = TRUE, chisq = TRUE, expected = TRUE, sresid = TRUE, format = "SPSS") #  # #more simplistic way of doing Chi-Square #  # #Create your contingency table # mytable<-xtabs(~ubullsch+rsex, data=bully) #  # ctest<-stats::chisq.test(mytable, correct=TRUE)#chi square test # #correct=TRUE to get Yates correction needed for 2x2 table #  # ctest#will give you the details of the test statistic and p-value # ctest$expected#expected frequencies # ctest$observed#observed frequencies # ctest$p.value # #Calculate effect size # sjstats::phi(mytable) # sjstats::cramer(mytable) #`
+We will use the gmodels CrossTable function to compare the frequencies, this is how we make our comparisons, by comparing the expected frequency for a population to the observed one.
+This function will execute two types of tests, the fisher and the chi-square tests.
+
+``` r
+library(gmodels)
+#Use the Crosstable function
+#CrossTable(predictor, outcome, fisher = TRUE, chisq = TRUE, expected = TRUE)
+gmodels::CrossTable(studentdf$sex, studentdf$higher.y, fisher = TRUE, chisq = TRUE, expected = TRUE, sresid = TRUE, format = "SPSS")
+# #more simplistic way of doing Chi-Square
+```
+
+    ## 
+    ##    Cell Contents
+    ## |-------------------------|
+    ## |                   Count |
+    ## |         Expected Values |
+    ## | Chi-square contribution |
+    ## |             Row Percent |
+    ## |          Column Percent |
+    ## |           Total Percent |
+    ## |            Std Residual |
+    ## |-------------------------|
+    ## 
+    ## Total Observations in Table:  382 
+    ## 
+    ##               | studentdf$higher.y 
+    ## studentdf$sex |       no  |      yes  | Row Total | 
+    ## --------------|-----------|-----------|-----------|
+    ##             F |        3  |      195  |      198  | 
+    ##               |    9.330  |  188.670  |           | 
+    ##               |    4.294  |    0.212  |           | 
+    ##               |    1.515% |   98.485% |   51.832% | 
+    ##               |   16.667% |   53.571% |           | 
+    ##               |    0.785% |   51.047% |           | 
+    ##               |   -2.072  |    0.461  |           | 
+    ## --------------|-----------|-----------|-----------|
+    ##             M |       15  |      169  |      184  | 
+    ##               |    8.670  |  175.330  |           | 
+    ##               |    4.621  |    0.229  |           | 
+    ##               |    8.152% |   91.848% |   48.168% | 
+    ##               |   83.333% |   46.429% |           | 
+    ##               |    3.927% |   44.241% |           | 
+    ##               |    2.150  |   -0.478  |           | 
+    ## --------------|-----------|-----------|-----------|
+    ##  Column Total |       18  |      364  |      382  | 
+    ##               |    4.712% |   95.288% |           | 
+    ## --------------|-----------|-----------|-----------|
+    ## 
+    ##  
+    ## Statistics for All Table Factors
+    ## 
+    ## 
+    ## Pearson's Chi-squared test 
+    ## ------------------------------------------------------------
+    ## Chi^2 =  9.356621     d.f. =  1     p =  0.002221813 
+    ## 
+    ## Pearson's Chi-squared test with Yates' continuity correction 
+    ## ------------------------------------------------------------
+    ## Chi^2 =  7.936827     d.f. =  1     p =  0.004843871 
+    ## 
+    ##  
+    ## Fisher's Exact Test for Count Data
+    ## ------------------------------------------------------------
+    ## Sample estimate odds ratio:  0.1740415 
+    ## 
+    ## Alternative hypothesis: true odds ratio is not equal to 1
+    ## p =  0.002789078 
+    ## 95% confidence interval:  0.03175236 0.6300058 
+    ## 
+    ## Alternative hypothesis: true odds ratio is less than 1
+    ## p =  0.001921514 
+    ## 95% confidence interval:  0 0.5366559 
+    ## 
+    ## Alternative hypothesis: true odds ratio is greater than 1
+    ## p =  0.9997088 
+    ## 95% confidence interval:  0.04228962 Inf 
+    ## 
+    ## 
+    ##  
+    ##        Minimum expected frequency: 8.670157
+
+Notes from the crosstable:
+\* The Row Total column adds up Male and Female to 100%.
+\* Minimum expected frequency is greater than 5. THe values is: 8.670157. So the test is meaningful and we don;t need to use Fisher’s Exact Probability Test.
+
+Now we execute the Chi-Square test with the Yates correction. We use the Yates correction for the same reason as we used the bonferroni correction in the previous question, we want to prevent making a Type I error (a false positive). It simply subtracts 0.5 from the difference between each observed value and it’s expected value in a 2 X 2 table. This reduces the chi-squared value obtained and thus increases its p-value, there is controversy regarding using the yates correction, maybe have wrote that it overcorrects. (Tuman et al. [1991](#ref-tuman1991effects))
+
+THe test statistic for chi-square is known as x<sup>2</sup>. In our test x<sup>2</sup> is 7.9368, degrees of freedom is 1 and our p-value is 0.004844. This is a significant difference based on our 0.05 alpha value between the two sexes. We can now reject the Null Hypothesis.
+This significant result indicates there is a difference between the sex of a student and their ambitions for higher education.
+The result reflects the fact that when females were asked if they planned to do higher education 98.5% said yes and only 1.5% said no, whereas for males when asked, 92% said yes and 8% said no.
+
+Calculating the effect size, we calculate both a Phi effect size and Cramers effect size (which for our test are the same):
+
+``` r
+#Create your contingency table
+mytable<-xtabs(~higher.y+sex, data=studentdf)
+ctest<-stats::chisq.test(mytable, correct=TRUE)#chi square test
+#correct=TRUE to get Yates correction needed for 2x2 table
+#ctest#will give you the details of the test statistic and p-value
+
+ctest$expected#expected frequencies
+ctest$observed#observed frequencies
+ctest$p.value
+#Calculate effect size
+sjstats::phi(mytable)
+sjstats::cramer(mytable)
+```
+
+    ##         sex
+    ## higher.y          F          M
+    ##      no    9.329843   8.670157
+    ##      yes 188.670157 175.329843
+    ##         sex
+    ## higher.y   F   M
+    ##      no    3  15
+    ##      yes 195 169
+    ## [1] 0.004843871
+    ## [1] 0.1565049
+    ## [1] 0.1565049
+
+Reporting:
+
+Using the Chi-square test for independence (with Yates Continuity Correction) there was a significant association between the gender of the student and their reported ambition to do higher education x<sup>2</sup>(1, n=382) = 7.94, p = .0048, phi = 0.156. The effect size is small.
+
+# Modelling
+
+## What is linear Regression?
+
+## What are predictors?
 
 ## More
 
@@ -2691,6 +2816,12 @@ Cortez, Paulo, and Alice Maria Gonçalves Silva. 2008. “Using Data Mining to P
 <div id="ref-field2012discovering">
 
 Field, A., J. Miles, and Z. Field. 2012. *Discovering Statistics Using R*. SAGE Publications. <https://books.google.ie/books?id=wd2K2zC3swIC>.
+
+</div>
+
+<div id="ref-tuman1991effects">
+
+Tuman, Kenneth J, Robert J McCarthy, Robert J March, Giacomo A DeLaria, Rajesh V Patel, and Anthony D Ivankovich. 1991. “Effects of Epidural Anesthesia and Analgesia on Coagulation and Outcome After Major Vascular Surgery.” *Anesthesia & Analgesia* 73 (6): 696–704.
 
 </div>
 

@@ -148,7 +148,7 @@ if (!doNotTrack) {
 </tbody>
 </table>
 <h1 id="getting-started">Getting started</h1>
-<p>We explore a student exam performance data set. This is a data set about secondary school academical achievements in Portugal. The data contains two set of results, one set for results in Maths and one set for results in Portuguese. These are merged together to form one data set which I will endeavor to break down in order to learn about the basic properties of statistics, describing the Frequency and probabilities, hypothesis testing, Normality, Missing data, Relationships, Component Analysis and more.</p>
+<p>We explore a student exam performance data set. This is a data set about secondary school academical achievements in Portugal. The data contains two sets of results, one set for results in Maths and one set for results in Portuguese. These are merged together to form one data set which I will endeavor to break down in order to learn about the basic properties of statistics, describing the frequencies and probabilities, hypothesis testing, Normality, Missing data, Relationships, Component Analysis and more.</p>
 <p>This data set is from a paper by P.Cortez and A. Silva entitled “Using Data Mining to Predict Secondary School Student Performance”. (Cortez and Silva <a href="#ref-cortez2008using">2008</a>)</p>
 <p>We need to get the data</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#a6e22e">library</span>(<span style="color:#e6db74">&#34;dplyr&#34;</span>)
@@ -211,20 +211,18 @@ studentdf<span style="color:#f92672">=</span><span style="color:#a6e22e">merge</
 <p>let’s us pick a random student:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">studentdf <span style="color:#f92672">%&gt;%</span> 
   <span style="color:#a6e22e">sample_n</span>(<span style="color:#ae81ff">1</span>) 
-</code></pre></div><pre><code>##   school sex age address famsize pstatus medu fedu     mjob     fjob     reason
-## 1     GP   M  17       U     LE3       T    2    3 services services reputation
-##   nursery internet guardian.x traveltime.x studytime.x failures.x schoolsup.x
-## 1      no      yes     father            1           2          0          no
-##   famsup.x paid.x activities.x higher.x romantic.x famrel.x freetime.x goout.x
-## 1      yes    yes           no      yes         no        5          3       3
-##   dalc.x walc.x health.x absences.x g1.x g2.x g3.x guardian.y traveltime.y
-## 1      1      3        3          2   12   11   12     father            1
-##   studytime.y failures.y schoolsup.y famsup.y paid.y activities.y higher.y
-## 1           2          0          no      yes     no           no      yes
-##   romantic.y famrel.y freetime.y goout.y dalc.y walc.y health.y absences.y g1.y
-## 1         no        5          3       3      1      3        3          0   10
-##   g2.y g3.y
-## 1   11   11
+</code></pre></div><pre><code>##   school sex age address famsize pstatus medu fedu   mjob  fjob reason nursery
+## 1     GP   F  15       U     LE3       T    4    2 health other  other     yes
+##   internet guardian.x traveltime.x studytime.x failures.x schoolsup.x famsup.x
+## 1      yes     mother            1           2          0          no      yes
+##   paid.x activities.x higher.x romantic.x famrel.x freetime.x goout.x dalc.x
+## 1    yes           no      yes         no        4          3       3      1
+##   walc.x health.x absences.x g1.x g2.x g3.x guardian.y traveltime.y studytime.y
+## 1      1        5          2   11   13   13     mother            1           2
+##   failures.y schoolsup.y famsup.y paid.y activities.y higher.y romantic.y
+## 1          0          no      yes     no           no      yes         no
+##   famrel.y freetime.y goout.y dalc.y walc.y health.y absences.y g1.y g2.y g3.y
+## 1        4          3       3      1      1        5          0   16   14   16
 </code></pre>
 <h2 id="population-vs-sample">Population vs Sample</h2>
 <p>We are interested in finding results for the entire population of students that have completed exams in maths and Portuguese in Portugal, but we know that is not possible, so what we have is a sample. We will use this sample to infer things about the population as a whole.</p>
@@ -615,7 +613,7 @@ tpkurt
 <h3 id="confidence-interval">Confidence interval</h3>
 <p>In statistics we use confidence intervals to show how sure we are that a value would fall in a range of values.</p>
 <p>The common confidence intervals used are 90%, 95% and 99%. The idea is based on the Normal distribution. To say we are 95% confidence a value will fall into a range of values is the same as saying it will fall inside -1.96 standard deviations and +1.96 standard deviations of the mean. A 90% chance would correspond to 1.645 and a 99% chance would correspond to 2.576 deviations.</p>
-<p>Which confidence interval we decide to use depends on the population variance and also the size of the sample. A wide variance in a population would mean a large confidence interval. Certain industries use different confidence intervals to report their results when they are doing tests to answers questions. For example pharmaceutical science or manufacturing companies may have a tighter cut off value. These tests usually involves fitting a statistical model to data and testing a prediction. To decide if the model works, they need to know if the result is statistically significant. To do this the confidence intervals are used, if the test result is outside these intervals, or above a certain alpha value (usually 0.05), it unlikely the model is getting the right answer by chance. We will discuss this more later in hypothesis testing.</p>
+<p>Which confidence interval we decide to use depends on the population variance and also the size of the sample. A wide variance in a population would mean a large confidence interval. Certain industries use different confidence intervals to report their results when they are doing tests to answers questions. For example pharmaceutical science or manufacturing companies may have a tighter cut off value. These tests usually involves fitting a statistical model to data and testing a prediction. To decide if the model works, they need to know if the result is statistically significant. To do this the confidence intervals are used, if the test result is outside these intervals, or above a certain alpha value (usually 0.05), it unlikely the model is getting the right answer by chance. We will discuss this more later in hypothesis testing. For educational data sets such as the one we are currently analyzing a standard alpha value is 0.05 because we are working with human beings and because of the measurement error in recording the values.</p>
 <h3 id="z-score">Z-score</h3>
 <p>We only need the standard deviation and mean to use Confidence Intervals. To help us understand what are the critical values and their related probabilities. We need to standardize our Normal Distribution. To do this, we use z-scores. A standard Normal distribution has a mean of zero and standard deviation of one. The z-score is a number on the horizontal which corresponds to a number of standard deviations. So a z-score of 3 means that we are 3 standard deviations from the mean to the right. A z-score also comes with a z-score table, we can use this to calculate the area under the standard normal distribution, this area will give us a probability (and of course there is tools in R to help so we never really need to check a table, although could be useful with electricity goes out). If our distribution is normal for a give variable, then these z-score make it real easy to see for each value the probability of getting that value and the distance the value is from the mean.</p>
 <!-- The significance level is an expression of how rare your results are, under the assumption that the null hypothesis is true. It is usually expressed as a “p-value,” and the lower the p-value, the less likely the results are due purely to chance. -->
@@ -1100,7 +1098,7 @@ t[t<span style="color:#f92672">&gt;</span><span style="color:#ae81ff">0</span>]
 <li>Is there a difference in the health of the students between the students who’s address is rural vs urban?</li>
 <li>Does the reason for choosing the school impact the the final grade in Portugese?</li>
 <li>Are there any differences between each student’s mother’s Education and their Final Grade result in Maths including the zero results.</li>
-<li>Is there a difference between the male and females students in terms of their weekly study time?</li>
+<li>Is there a difference between the male and females students in terms of their ambition to go to higher education?</li>
 </ol>
 <h2 id="correlation-g2-and-g3">Correlation (G2 and G3)</h2>
 <p>Looking at the two variables for Maths. Please refer to [skew-and-kurtosis-analysis] for the g3 analysis of Maths.
@@ -2187,20 +2185,22 @@ rstatix<span style="color:#f92672">::</span><span style="color:#a6e22e">kruskal_
 <p><a href="https://guides.library.lincoln.ac.uk/c.php?g=110730">https://guides.library.lincoln.ac.uk/c.php?g=110730</a>&amp;p=4638045</p>
 <p>An Kruskal-Wallis test between groups was conducted to explore the impact of a Mother’s Job title on a student’s Final Maths results. Students were divided into four groups based on their mother’s job title(“teacher”, “health” care related, civil “services” (e.g. administrative or police), “at_home” or “other”), the box plots of each can be seen in this <a href="#g3mjobboxplot">Figure</a> (Media:10.5 for “teacher”, Median:13 for “health” , Median:11 for “services” Median:10 “at_home”, Median:10.5 for &ldquo;other). The groups were significantly different. H(4) = 18.04, p = .001. A small effect size was also indicated by the eta squared value (0.037).</p>
 <p>Focused comparisons of the mean ranks between groups showed that the Mother’s job title were only significant in two comparisons. THe first was when the mother’s job was at home, the Final grade results in Maths were lower in comparison to a mother working in the health service. The second was not as significant but still significant, when a mother’s job was at home, the final grade result was lower in comparison to a mother working in civil service. In summary, a students got better grades when their mother worked in the health or civil service sector rather than working at home.</p>
-<h2 id="-malefemale-weekly-study-">( male/female Weekly study )</h2>
+<h2 id="chi-square--malefemale-weekly-study-">Chi Square ( male/female Weekly study )</h2>
 <p>The Question:</p>
-<p>Is there a difference between the male and females students in terms of their weekly study time?</p>
+<ol start="8">
+<li>Is there a difference between the male and females students in terms of their ambition to go to higher education?</li>
+</ol>
 <p>the variables:</p>
 <pre><code>2 sex - student's sex (binary: &quot;F&quot; - female or &quot;M&quot; - male)
-14 studytime - weekly study time (numeric: 1 - &lt;2 hours, 2 - 2 to 5 hours, 3 - 5 to 10 hours, or 4 - &gt;10 hours)
+21 higher - wants to take higher education (binary: yes or no)
 </code></pre>
 <p>Choosing the right test:</p>
-<p>We are comparing ordinal variables here between two groups. I will use Portuguese studytime values. So it is obvious we won’t be able to use a parametric test here. Our outcome variable studytime is not continuous and not a normal distribution. THe Independent variable sex is categorical. This is different to previous questions, as my outcome variable was continuous. Our choice here is to use the CHi-square test / Fisher’s exact.</p>
+<p>We are comparing ordinal variables here between two groups. I will use Portuguese higher values. So it is obvious we won’t be able to use a parametric test here. Our outcome variable “higher” is not continuous and so not a normal distribution. The Independent variable sex is categorical. This is different to previous questions, as my outcome variable was continuous. Our choice here is to use the Chi-square test. Like all non-parametric statistics, the Chi-square is robust with respect to the distribution of the data, it doesn’t require homoscedasticity. The CHi-square test will show us if there is significant difference in our groups, it is then followed with a strength statistic.</p>
 <p>We start as always with stating the Null and alternative hypothesis:</p>
-<p><strong>H</strong><sub><strong>0</strong></sub>: There is NO difference between the male and females students in terms of their weekly study time. The distribution across the different study periods are the same for both sexes.</p>
-<p><strong>H</strong><sub><strong>a</strong></sub>: There is a difference between the male and females students in terms of their weekly study time.</p>
+<p><strong>H</strong><sub><strong>0</strong></sub>: There is NO difference between the male and females students in terms of their ambition to go to higher education.</p>
+<p><strong>H</strong><sub><strong>a</strong></sub>: There is a difference between the male and females students in terms of their ambition to go to higher education.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">studentdf <span style="color:#f92672">%&gt;%</span> 
-  <span style="color:#a6e22e">ggplot</span>( <span style="color:#a6e22e">aes</span>(x<span style="color:#f92672">=</span>studytime.y)) <span style="color:#f92672">+</span>
+  <span style="color:#a6e22e">ggplot</span>( <span style="color:#a6e22e">aes</span>(x<span style="color:#f92672">=</span>higher.y)) <span style="color:#f92672">+</span>
     <span style="color:#a6e22e">geom_histogram</span>(stat<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;count&#34;</span>, fill<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;#69b3a2&#34;</span>, color<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;#69b3a2&#34;</span>, position <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;identity&#39;</span>) <span style="color:#f92672">+</span>
     <span style="color:#a6e22e">facet_wrap</span>(<span style="color:#f92672">~</span>sex) <span style="color:#f92672">+</span> 
     <span style="color:#a6e22e">labs</span>(fill<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;&#34;</span>)
@@ -2210,8 +2210,120 @@ rstatix<span style="color:#f92672">::</span><span style="color:#a6e22e">kruskal_
 <p>Figure 39: Study times for males/females</p>
 </p>
 </div>
-<p>We will use the gmodels CrossTable function to compare the frequencies, this si how we make our comparisons, by comparing the expected frequency for a population to the observed one.
-# <code>{r, paged.print=FALSE, results=&quot;hold&quot;} # library(gmodels) # #Use the Crosstable function # #CrossTable(predictor, outcome, fisher = TRUE, chisq = TRUE, expected = TRUE) # gmodels::CrossTable(studentdf$sex, studentdf$studytime.y, fisher = TRUE, chisq = TRUE, expected = TRUE, sresid = TRUE, format = &quot;SPSS&quot;) #  # #more simplistic way of doing Chi-Square #  # #Create your contingency table # mytable&lt;-xtabs(~ubullsch+rsex, data=bully) #  # ctest&lt;-stats::chisq.test(mytable, correct=TRUE)#chi square test # #correct=TRUE to get Yates correction needed for 2x2 table #  # ctest#will give you the details of the test statistic and p-value # ctest$expected#expected frequencies # ctest$observed#observed frequencies # ctest$p.value # #Calculate effect size # sjstats::phi(mytable) # sjstats::cramer(mytable) #</code></p>
+<p>We will use the gmodels CrossTable function to compare the frequencies, this is how we make our comparisons, by comparing the expected frequency for a population to the observed one.
+This function will execute two types of tests, the fisher and the chi-square tests.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#a6e22e">library</span>(gmodels)
+<span style="color:#75715e">#Use the Crosstable function</span>
+<span style="color:#75715e">#CrossTable(predictor, outcome, fisher = TRUE, chisq = TRUE, expected = TRUE)</span>
+gmodels<span style="color:#f92672">::</span><span style="color:#a6e22e">CrossTable</span>(studentdf<span style="color:#f92672">$</span>sex, studentdf<span style="color:#f92672">$</span>higher.y, fisher <span style="color:#f92672">=</span> <span style="color:#66d9ef">TRUE</span>, chisq <span style="color:#f92672">=</span> <span style="color:#66d9ef">TRUE</span>, expected <span style="color:#f92672">=</span> <span style="color:#66d9ef">TRUE</span>, sresid <span style="color:#f92672">=</span> <span style="color:#66d9ef">TRUE</span>, format <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;SPSS&#34;</span>)
+<span style="color:#75715e"># #more simplistic way of doing Chi-Square</span>
+</code></pre></div><pre><code>## 
+##    Cell Contents
+## |-------------------------|
+## |                   Count |
+## |         Expected Values |
+## | Chi-square contribution |
+## |             Row Percent |
+## |          Column Percent |
+## |           Total Percent |
+## |            Std Residual |
+## |-------------------------|
+## 
+## Total Observations in Table:  382 
+## 
+##               | studentdf$higher.y 
+## studentdf$sex |       no  |      yes  | Row Total | 
+## --------------|-----------|-----------|-----------|
+##             F |        3  |      195  |      198  | 
+##               |    9.330  |  188.670  |           | 
+##               |    4.294  |    0.212  |           | 
+##               |    1.515% |   98.485% |   51.832% | 
+##               |   16.667% |   53.571% |           | 
+##               |    0.785% |   51.047% |           | 
+##               |   -2.072  |    0.461  |           | 
+## --------------|-----------|-----------|-----------|
+##             M |       15  |      169  |      184  | 
+##               |    8.670  |  175.330  |           | 
+##               |    4.621  |    0.229  |           | 
+##               |    8.152% |   91.848% |   48.168% | 
+##               |   83.333% |   46.429% |           | 
+##               |    3.927% |   44.241% |           | 
+##               |    2.150  |   -0.478  |           | 
+## --------------|-----------|-----------|-----------|
+##  Column Total |       18  |      364  |      382  | 
+##               |    4.712% |   95.288% |           | 
+## --------------|-----------|-----------|-----------|
+## 
+##  
+## Statistics for All Table Factors
+## 
+## 
+## Pearson's Chi-squared test 
+## ------------------------------------------------------------
+## Chi^2 =  9.356621     d.f. =  1     p =  0.002221813 
+## 
+## Pearson's Chi-squared test with Yates' continuity correction 
+## ------------------------------------------------------------
+## Chi^2 =  7.936827     d.f. =  1     p =  0.004843871 
+## 
+##  
+## Fisher's Exact Test for Count Data
+## ------------------------------------------------------------
+## Sample estimate odds ratio:  0.1740415 
+## 
+## Alternative hypothesis: true odds ratio is not equal to 1
+## p =  0.002789078 
+## 95% confidence interval:  0.03175236 0.6300058 
+## 
+## Alternative hypothesis: true odds ratio is less than 1
+## p =  0.001921514 
+## 95% confidence interval:  0 0.5366559 
+## 
+## Alternative hypothesis: true odds ratio is greater than 1
+## p =  0.9997088 
+## 95% confidence interval:  0.04228962 Inf 
+## 
+## 
+##  
+##        Minimum expected frequency: 8.670157
+</code></pre>
+<p>Notes from the crosstable:
+* The Row Total column adds up Male and Female to 100%.
+* Minimum expected frequency is greater than 5. THe values is: 8.670157. So the test is meaningful and we don;t need to use Fisher’s Exact Probability Test.</p>
+<p>Now we execute the Chi-Square test with the Yates correction. We use the Yates correction for the same reason as we used the bonferroni correction in the previous question, we want to prevent making a Type I error (a false positive). It simply subtracts 0.5 from the difference between each observed value and it’s expected value in a 2 X 2 table. This reduces the chi-squared value obtained and thus increases its p-value, there is controversy regarding using the yates correction, maybe have wrote that it overcorrects. (Tuman et al. <a href="#ref-tuman1991effects">1991</a>)</p>
+<p>THe test statistic for chi-square is known as x<sup>2</sup>. In our test x<sup>2</sup> is 7.9368, degrees of freedom is 1 and our p-value is 0.004844. This is a significant difference based on our 0.05 alpha value between the two sexes. We can now reject the Null Hypothesis.
+This significant result indicates there is a difference between the sex of a student and their ambitions for higher education.
+The result reflects the fact that when females were asked if they planned to do higher education 98.5% said yes and only 1.5% said no, whereas for males when asked, 92% said yes and 8% said no.</p>
+<p>Calculating the effect size, we calculate both a Phi effect size and Cramers effect size (which for our test are the same):</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#75715e">#Create your contingency table</span>
+mytable<span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">xtabs</span>(<span style="color:#f92672">~</span>higher.y<span style="color:#f92672">+</span>sex, data<span style="color:#f92672">=</span>studentdf)
+ctest<span style="color:#f92672">&lt;-</span>stats<span style="color:#f92672">::</span><span style="color:#a6e22e">chisq.test</span>(mytable, correct<span style="color:#f92672">=</span><span style="color:#66d9ef">TRUE</span>)<span style="color:#75715e">#chi square test</span>
+<span style="color:#75715e">#correct=TRUE to get Yates correction needed for 2x2 table</span>
+<span style="color:#75715e">#ctest#will give you the details of the test statistic and p-value</span>
+
+ctest<span style="color:#f92672">$</span>expected<span style="color:#75715e">#expected frequencies</span>
+ctest<span style="color:#f92672">$</span>observed<span style="color:#75715e">#observed frequencies</span>
+ctest<span style="color:#f92672">$</span>p.value
+<span style="color:#75715e">#Calculate effect size</span>
+sjstats<span style="color:#f92672">::</span><span style="color:#a6e22e">phi</span>(mytable)
+sjstats<span style="color:#f92672">::</span><span style="color:#a6e22e">cramer</span>(mytable)
+</code></pre></div><pre><code>##         sex
+## higher.y          F          M
+##      no    9.329843   8.670157
+##      yes 188.670157 175.329843
+##         sex
+## higher.y   F   M
+##      no    3  15
+##      yes 195 169
+## [1] 0.004843871
+## [1] 0.1565049
+## [1] 0.1565049
+</code></pre>
+<p>Reporting:</p>
+<p>Using the Chi-square test for independence (with Yates Continuity Correction) there was a significant association between the gender of the student and their reported ambition to do higher education x<sup>2</sup>(1, n=382) = 7.94, p = .0048, phi = 0.156. The effect size is small.</p>
+<h1 id="modelling">Modelling</h1>
+<h2 id="what-is-linear-regression">What is linear Regression?</h2>
+<h2 id="what-are-predictors">What are predictors?</h2>
 <h2 id="more">More</h2>
 <p>Parametric are most powerful, more robuseness becuse we use every score
 Parametric or non parametric
@@ -2238,6 +2350,9 @@ kendall more reilable</p>
 </div>
 <div id="ref-field2012discovering">
 <p>Field, A., J. Miles, and Z. Field. 2012. <em>Discovering Statistics Using R</em>. SAGE Publications. <a href="https://books.google.ie/books?id=wd2K2zC3swIC">https://books.google.ie/books?id=wd2K2zC3swIC</a>.</p>
+</div>
+<div id="ref-tuman1991effects">
+<p>Tuman, Kenneth J, Robert J McCarthy, Robert J March, Giacomo A DeLaria, Rajesh V Patel, and Anthony D Ivankovich. 1991. “Effects of Epidural Anesthesia and Analgesia on Coagulation and Outcome After Major Vascular Surgery.” <em>Anesthesia &amp; Analgesia</em> 73 (6): 696–704.</p>
 </div>
 <div id="ref-wikiportmap">
 <p>“Wikipedia.” 2020. Website. <a href="https://en.wikipedia.org/wiki/Portugal">https://en.wikipedia.org/wiki/Portugal</a>.</p>
@@ -2316,7 +2431,13 @@ kendall more reilable</p>
         <li><a href="#mann-whitney-health-for-rural-vs-urban">Mann-Whitney (Health for Rural vs Urban)</a></li>
         <li><a href="#anova-reason-vs-final-grade-in-portuguese-">ANOVA (Reason vs Final Grade in Portuguese )</a></li>
         <li><a href="#kruskal-wallis-mothers-education-and-maths-g3">Kruskal-Wallis (Mother’s Education and Maths G3)</a></li>
-        <li><a href="#-malefemale-weekly-study-">( male/female Weekly study )</a></li>
+        <li><a href="#chi-square--malefemale-weekly-study-">Chi Square ( male/female Weekly study )</a></li>
+      </ol>
+    </li>
+    <li><a href="#modelling">Modelling</a>
+      <ol>
+        <li><a href="#what-is-linear-regression">What is linear Regression?</a></li>
+        <li><a href="#what-are-predictors">What are predictors?</a></li>
         <li><a href="#more">More</a></li>
       </ol>
     </li>
