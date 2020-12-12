@@ -68,6 +68,14 @@ library("gridExtra") # for plots in a grid
 
 ``` r
 library("ggplot2") # For creating histograms and plots
+library("GGally") # for other plots
+```
+
+    ## Registered S3 method overwritten by 'GGally':
+    ##   method from   
+    ##   +.gg   ggplot2
+
+``` r
 library("stargazer")#For formatting outputs/tables
 ```
 
@@ -130,20 +138,20 @@ studentdf %>%
   sample_n(1) 
 ```
 
-    ##   school sex age address famsize pstatus medu fedu     mjob  fjob reason
-    ## 1     GP   F  16       U     GT3       T    4    2 services other course
+    ##   school sex age address famsize pstatus medu fedu    mjob     fjob reason
+    ## 1     GP   F  18       U     GT3       T    2    2 at_home services   home
     ##   nursery internet guardian.x traveltime.x studytime.x failures.x schoolsup.x
-    ## 1     yes      yes     mother            1           2          0          no
+    ## 1     yes      yes     mother            1           3          0          no
     ##   famsup.x paid.x activities.x higher.x romantic.x famrel.x freetime.x goout.x
-    ## 1      yes     no           no      yes         no        4          2       3
+    ## 1      yes    yes          yes      yes        yes        4          3       3
     ##   dalc.x walc.x health.x absences.x g1.x g2.x g3.x guardian.y traveltime.y
-    ## 1      1      1        5          2   15   16   16     mother            1
+    ## 1      1      1        3          0    9   10    0     mother            1
     ##   studytime.y failures.y schoolsup.y famsup.y paid.y activities.y higher.y
-    ## 1           2          0          no      yes    yes           no      yes
+    ## 1           3          0          no      yes     no          yes      yes
     ##   romantic.y famrel.y freetime.y goout.y dalc.y walc.y health.y absences.y g1.y
-    ## 1         no        4          2       3      1      1        5          2   16
+    ## 1        yes        4          3       3      1      1        3          0   11
     ##   g2.y g3.y
-    ## 1   15   16
+    ## 1   12   13
 
 ## Population vs Sample
 
@@ -881,154 +889,34 @@ Because our data set is relatively large, we don’t expect missing data to have
 
 In R we have a library called finalfit which has the function ff\_glimpse, which we can use to identify missing data.
 
+``` r
+studentdf %>% 
+  select(age,mjob,g3.y,reason) %>%
+  ff_glimpse()
+```
+
     ## $Continuous
-    ##                 label var_type   n missing_n missing_percent mean  sd  min
-    ## age               age    <int> 382         0             0.0 16.6 1.2 15.0
-    ## failures.x failures.x    <int> 382         0             0.0  0.3 0.7  0.0
-    ## famrel.x     famrel.x    <int> 382         0             0.0  3.9 0.9  1.0
-    ## freetime.x freetime.x    <int> 382         0             0.0  3.2 1.0  1.0
-    ## goout.x       goout.x    <int> 382         0             0.0  3.1 1.1  1.0
-    ## dalc.x         dalc.x    <int> 382         0             0.0  1.5 0.9  1.0
-    ## walc.x         walc.x    <int> 382         0             0.0  2.3 1.3  1.0
-    ## health.x     health.x    <int> 382         0             0.0  3.6 1.4  1.0
-    ## absences.x absences.x    <int> 382         0             0.0  5.3 7.6  0.0
-    ## g1.x             g1.x    <int> 382         0             0.0 10.9 3.3  3.0
-    ## g2.x             g2.x    <int> 369        13             3.4 11.1 3.3  5.0
-    ## g3.x             g3.x    <int> 343        39            10.2 11.6 3.3  4.0
-    ## failures.y failures.y    <int> 382         0             0.0  0.1 0.5  0.0
-    ## famrel.y     famrel.y    <int> 382         0             0.0  3.9 0.9  1.0
-    ## freetime.y freetime.y    <int> 382         0             0.0  3.2 1.0  1.0
-    ## goout.y       goout.y    <int> 382         0             0.0  3.1 1.1  1.0
-    ## dalc.y         dalc.y    <int> 382         0             0.0  1.5 0.9  1.0
-    ## walc.y         walc.y    <int> 382         0             0.0  2.3 1.3  1.0
-    ## health.y     health.y    <int> 382         0             0.0  3.6 1.4  1.0
-    ## absences.y absences.y    <int> 382         0             0.0  3.7 4.9  0.0
-    ## g1.y             g1.y    <int> 381         1             0.3 12.1 2.5  5.0
-    ## g2.y             g2.y    <int> 382         0             0.0 12.2 2.5  5.0
-    ## g3.y             g3.y    <int> 377         5             1.3 12.7 2.6  1.0
-    ##            quartile_25 median quartile_75  max
-    ## age               16.0   17.0        17.0 22.0
-    ## failures.x         0.0    0.0         0.0  3.0
-    ## famrel.x           4.0    4.0         5.0  5.0
-    ## freetime.x         3.0    3.0         4.0  5.0
-    ## goout.x            2.0    3.0         4.0  5.0
-    ## dalc.x             1.0    1.0         2.0  5.0
-    ## walc.x             1.0    2.0         3.0  5.0
-    ## health.x           3.0    4.0         5.0  5.0
-    ## absences.x         0.0    3.0         8.0 75.0
-    ## g1.x               8.0   10.5        13.0 19.0
-    ## g2.x               9.0   11.0        13.0 19.0
-    ## g3.x               9.0   11.0        14.0 20.0
-    ## failures.y         0.0    0.0         0.0  3.0
-    ## famrel.y           4.0    4.0         5.0  5.0
-    ## freetime.y         3.0    3.0         4.0  5.0
-    ## goout.y            2.0    3.0         4.0  5.0
-    ## dalc.y             1.0    1.0         2.0  5.0
-    ## walc.y             1.0    2.0         3.0  5.0
-    ## health.y           3.0    4.0         5.0  5.0
-    ## absences.y         0.0    2.0         6.0 32.0
-    ## g1.y              10.0   12.0        14.0 19.0
-    ## g2.y              11.0   12.0        14.0 19.0
-    ## g3.y              11.0   13.0        14.0 19.0
+    ##      label var_type   n missing_n missing_percent mean  sd  min quartile_25
+    ## age    age    <int> 382         0             0.0 16.6 1.2 15.0        16.0
+    ## g3.y  g3.y    <int> 377         5             1.3 12.7 2.6  1.0        11.0
+    ##      median quartile_75  max
+    ## age    17.0        17.0 22.0
+    ## g3.y   13.0        14.0 19.0
     ## 
     ## $Categorical
-    ##                     label var_type   n missing_n missing_percent levels_n
-    ## school             school    <fct> 382         0             0.0        2
-    ## sex                   sex    <fct> 382         0             0.0        2
-    ## address           address    <fct> 382         0             0.0        2
-    ## famsize           famsize    <fct> 382         0             0.0        2
-    ## pstatus           pstatus    <fct> 382         0             0.0        2
-    ## medu                 medu    <ord> 382         0             0.0        5
-    ## fedu                 fedu    <ord> 382         0             0.0        5
-    ## mjob                 mjob    <fct> 382         0             0.0        5
-    ## fjob                 fjob    <fct> 382         0             0.0        5
-    ## reason             reason    <fct> 382         0             0.0        4
-    ## nursery           nursery    <fct> 382         0             0.0        2
-    ## internet         internet    <fct> 382         0             0.0        2
-    ## guardian.x     guardian.x    <fct> 382         0             0.0        3
-    ## traveltime.x traveltime.x    <ord> 382         0             0.0        4
-    ## studytime.x   studytime.x    <ord> 382         0             0.0        4
-    ## schoolsup.x   schoolsup.x    <fct> 382         0             0.0        2
-    ## famsup.x         famsup.x    <fct> 382         0             0.0        2
-    ## paid.x             paid.x    <fct> 382         0             0.0        2
-    ## activities.x activities.x    <fct> 382         0             0.0        2
-    ## higher.x         higher.x    <fct> 382         0             0.0        2
-    ## romantic.x     romantic.x    <fct> 382         0             0.0        2
-    ## guardian.y     guardian.y    <fct> 382         0             0.0        3
-    ## traveltime.y traveltime.y    <ord> 382         0             0.0        4
-    ## studytime.y   studytime.y    <ord> 382         0             0.0        4
-    ## schoolsup.y   schoolsup.y    <fct> 382         0             0.0        2
-    ## famsup.y         famsup.y    <fct> 382         0             0.0        2
-    ## paid.y             paid.y    <fct> 382         0             0.0        2
-    ## activities.y activities.y    <fct> 382         0             0.0        2
-    ## higher.y         higher.y    <fct> 382         0             0.0        2
-    ## romantic.y     romantic.y    <fct> 382         0             0.0        2
-    ##                                                                                                                                  levels
-    ## school                                                                                                                       "GP", "MS"
-    ## sex                                                                                                                            "F", "M"
-    ## address                                                                                                                        "R", "U"
-    ## famsize                                                                                                                    "GT3", "LE3"
-    ## pstatus                                                                                                                        "A", "T"
-    ## medu         "0 - none", "1 - primary education (4th grade)", "2 – 5th to 9th grade", "3 – secondary education", "4 – higher education"
-    ## fedu         "0 - none", "1 - primary education (4th grade)", "2 – 5th to 9th grade", "3 – secondary education", "4 – higher education"
-    ## mjob                                                                                "at_home", "health", "other", "services", "teacher"
-    ## fjob                                                                                "at_home", "health", "other", "services", "teacher"
-    ## reason                                                                                          "course", "home", "other", "reputation"
-    ## nursery                                                                                                                     "no", "yes"
-    ## internet                                                                                                                    "no", "yes"
-    ## guardian.x                                                                                                  "father", "mother", "other"
-    ## traveltime.x                                                  "1 - <15 min", "2 - 15 to 30 min", "3 - 30 min. to 1 hour", "4 - >1 hour"
-    ## studytime.x                                                    "1 - <2 hours", "2 - 2 to 5 hours", "3 - 5 to 10 hours", "4 - >10 hours"
-    ## schoolsup.x                                                                                                                 "no", "yes"
-    ## famsup.x                                                                                                                    "no", "yes"
-    ## paid.x                                                                                                                      "no", "yes"
-    ## activities.x                                                                                                                "no", "yes"
-    ## higher.x                                                                                                                    "no", "yes"
-    ## romantic.x                                                                                                                  "no", "yes"
-    ## guardian.y                                                                                                  "father", "mother", "other"
-    ## traveltime.y                                                  "1 - <15 min", "2 - 15 to 30 min", "3 - 30 min. to 1 hour", "4 - >1 hour"
-    ## studytime.y                                                    "1 - <2 hours", "2 - 2 to 5 hours", "3 - 5 to 10 hours", "4 - >10 hours"
-    ## schoolsup.y                                                                                                                 "no", "yes"
-    ## famsup.y                                                                                                                    "no", "yes"
-    ## paid.y                                                                                                                      "no", "yes"
-    ## activities.y                                                                                                                "no", "yes"
-    ## higher.y                                                                                                                    "no", "yes"
-    ## romantic.y                                                                                                                  "no", "yes"
-    ##                      levels_count                    levels_percent
-    ## school                    342, 40                            90, 10
-    ## sex                      198, 184                            52, 48
-    ## address                   81, 301                            21, 79
-    ## famsize                  278, 104                            73, 27
-    ## pstatus                   38, 344                         9.9, 90.1
-    ## medu           3, 51, 98, 95, 135  0.79, 13.35, 25.65, 24.87, 35.34
-    ## fedu           2, 77, 105, 99, 99  0.52, 20.16, 27.49, 25.92, 25.92
-    ## mjob          53, 33, 138, 96, 62      13.9,  8.6, 36.1, 25.1, 16.2
-    ## fjob         16, 17, 211, 107, 31       4.2,  4.5, 55.2, 28.0,  8.1
-    ## reason           140, 110, 34, 98            36.6, 28.8,  8.9, 25.7
-    ## nursery                   72, 310                            19, 81
-    ## internet                  58, 324                            15, 85
-    ## guardian.x            91, 275, 16                  23.8, 72.0,  4.2
-    ## traveltime.x      250, 103, 21, 8            65.4, 27.0,  5.5,  2.1
-    ## studytime.x      103, 190, 62, 27            27.0, 49.7, 16.2,  7.1
-    ## schoolsup.x               331, 51                            87, 13
-    ## famsup.x                 144, 238                            38, 62
-    ## paid.x                   205, 177                            54, 46
-    ## activities.x             181, 201                            47, 53
-    ## higher.x                  18, 364                         4.7, 95.3
-    ## romantic.x               261, 121                            68, 32
-    ## guardian.y            91, 275, 16                  23.8, 72.0,  4.2
-    ## traveltime.y      250, 102, 22, 8            65.4, 26.7,  5.8,  2.1
-    ## studytime.y      102, 190, 63, 27            26.7, 49.7, 16.5,  7.1
-    ## schoolsup.y               332, 50                            87, 13
-    ## famsup.y                 143, 239                            37, 63
-    ## paid.y                    356, 26                        93.2,  6.8
-    ## activities.y             182, 200                            48, 52
-    ## higher.y                  18, 364                         4.7, 95.3
-    ## romantic.y               259, 123                            68, 32
+    ##         label var_type   n missing_n missing_percent levels_n
+    ## mjob     mjob    <fct> 382         0             0.0        5
+    ## reason reason    <fct> 382         0             0.0        4
+    ##                                                     levels        levels_count
+    ## mjob   "at_home", "health", "other", "services", "teacher" 53, 33, 138, 96, 62
+    ## reason             "course", "home", "other", "reputation"    140, 110, 34, 98
+    ##                      levels_percent
+    ## mjob   13.9,  8.6, 36.1, 25.1, 16.2
+    ## reason       36.6, 28.8,  8.9, 25.7
 
 Missing data can also include outliers, I will discuss these if when at any time in my analysis I have a distribution which is close to normal. We can look for outliers and remove them. Missing data and outliers are similar. Missing data if it is significant in our data set could reduce the the probability of rejecting the null hypothesis and so we could end up with a Type II error also known as a false negative.
 
-I am going to ignore missing data, which is one of the things we can do with missing data.
+During the next section, mostly I am going to ignore missing data, which is one of the things we can do with missing data.
 
 # Relationships
 
@@ -2336,10 +2224,6 @@ If the variances in the groups were not equal we would use Games-Howell
 userfriendlyscience::oneway(reasondf$reason,y=reasondf$g3.y,posthoc='Tukey')
 ```
 
-    ## Registered S3 method overwritten by 'GGally':
-    ##   method from   
-    ##   +.gg   ggplot2
-
     ## Registered S3 methods overwritten by 'lme4':
     ##   method                          from
     ##   cooks.distance.influence.merMod car 
@@ -2611,7 +2495,7 @@ An Kruskal-Wallis test between groups was conducted to explore the impact of a M
 
 Focused comparisons of the mean ranks between groups showed that the Mother’s job title were only significant in two comparisons. THe first was when the mother’s job was at home, the Final grade results in Maths were lower in comparison to a mother working in the health service. The second was not as significant but still significant, when a mother’s job was at home, the final grade result was lower in comparison to a mother working in civil service. In summary, a students got better grades when their mother worked in the health or civil service sector rather than working at home.
 
-## Chi Square ( male/female Weekly study )
+## Chi Square ( male/female higher education )
 
 The Question:
 
@@ -3011,7 +2895,7 @@ coef(model1)
     ##          (Intercept) studentdf$scale_g2.x 
     ##          -0.09064283           0.99846929
 
-The standardized equation is:
+The z-scale standardized equation is:
 
 G3 = -0.091 + 0.998 \* G2
 
@@ -3027,7 +2911,7 @@ In this section the model I want to create is a model that advances the previous
 
 Before proceeding, we need to check it makes sense to use these as a predictor. My thinking is that study should give better results in a exam and also maybe one of these school has better results than the other.
 
-I would like to use School, but I can see we have a bit of bias in teh data towards one school :
+I would like to use School, but I can see we have a bit of bias in the data towards one school :
 
 <div class="figure" style="text-align: center">
 
@@ -3041,41 +2925,313 @@ Figure 47: Boxplot of Final Maths grades and school
 
 </div>
 
-I will choose
+I will use the analysis I did for (Chi Square higher education section)\[\#chi-square–malefemale-higher-education-\]. In that section I show that there is a relationship between a mother’s job being in health and the grade a student obtains in the Maths Final Grade.
 
-## More
+First let’s look at the previous model as we had it using G2 grades:
 
-Parametric are most powerful, more robuseness becuse we use every score
-Parametric or non parametric
-pearson for correlation
+``` r
+#Pearson Correlation
+stargazer::stargazer(model1, type="text") #Tidy output of all the required stats
+```
 
-non para:
-spearson kendall
-kendall more reilable
+    ## 
+    ## ===============================================
+    ##                         Dependent variable:    
+    ##                     ---------------------------
+    ##                             scale_g3.x         
+    ## -----------------------------------------------
+    ## scale_g2.x                   0.998***          
+    ##                               (0.014)          
+    ##                                                
+    ## Constant                     -0.091***         
+    ##                               (0.014)          
+    ##                                                
+    ## -----------------------------------------------
+    ## Observations                    343            
+    ## R2                             0.935           
+    ## Adjusted R2                    0.935           
+    ## Residual Std. Error      0.255 (df = 341)      
+    ## F Statistic         4,902.121*** (df = 1; 341) 
+    ## ===============================================
+    ## Note:               *p<0.1; **p<0.05; ***p<0.01
 
-Which can I use to compare?
+  - Our R-squared result as we said is already high at 93.5% explained.
 
-Lecture 5 video 51 minutes
+I need to make a Dummy variable in order to use health from the mother’s job variable. “0” will be my reference category, which will be all other jobs except health and “1” will be health.
 
-use cooks if deleting outliers
+``` r
+studentdf <- studentdf %>%
+  mutate(dummy_mjob_health = if_else(mjob == "health",1, 0))
+```
 
-<!-- 5.3. Assumptions of parametric data -->
+Second model including dummy variable for Mother’s Job:
 
-<!-- alpha 0.05 fo education grades have an error -->
+``` r
+model2<-lm(studentdf$scale_g3.x~studentdf$scale_g2.x+studentdf$dummy_mjob_health)
+stargazer::stargazer(model2, type="text")
+```
 
-<!-- ok to use this -->
+    ## 
+    ## ===============================================
+    ##                         Dependent variable:    
+    ##                     ---------------------------
+    ##                             scale_g3.x         
+    ## -----------------------------------------------
+    ## scale_g2.x                   0.997***          
+    ##                               (0.014)          
+    ##                                                
+    ## dummy_mjob_health              0.032           
+    ##                               (0.048)          
+    ##                                                
+    ## Constant                     -0.093***         
+    ##                               (0.014)          
+    ##                                                
+    ## -----------------------------------------------
+    ## Observations                    343            
+    ## R2                             0.935           
+    ## Adjusted R2                    0.935           
+    ## Residual Std. Error      0.256 (df = 340)      
+    ## F Statistic         2,447.278*** (df = 2; 340) 
+    ## ===============================================
+    ## Note:               *p<0.1; **p<0.05; ***p<0.01
 
-<!-- but in medical testing, more regigroous, 0.05 -->
+  - What we see in the output is that dummy\_mjob\_health is not statistically significant.
+  - It doesn’t change the Adjusted R squared ratio.  
+  - THe mother’s job being health has little impact over all the fit of the model.
 
-# Explore
+To make the fit better, we can include an interaction term. Currently there is only a constant increase for students who’s mother’s work is in health. If we make a variable from “dummy\_mjob\_health” which is a multiplication of “dummy\_mjob\_health” times “g2.x”, we could improve the model. My g2.x values are scaled of course:
 
-# Analysis
+``` r
+studentdf <- studentdf %>%
+  mutate(dummy_mjob_health_interaction = if_else(mjob == "health",1*scale_g2.x, 0))
+model3<-lm(studentdf$scale_g3.x~studentdf$scale_g2.x + studentdf$dummy_mjob_health + studentdf$dummy_mjob_health_interaction)
+stargazer(model1, model3, type="text") #Quick model comparison
+```
 
-# Model
+    ## 
+    ## ===================================================================================
+    ##                                                Dependent variable:                 
+    ##                               -----------------------------------------------------
+    ##                                                    scale_g3.x                      
+    ##                                          (1)                        (2)            
+    ## -----------------------------------------------------------------------------------
+    ## scale_g2.x                             0.998***                   0.996***         
+    ##                                        (0.014)                    (0.015)          
+    ##                                                                                    
+    ## dummy_mjob_health                                                  0.024           
+    ##                                                                   (0.054)          
+    ##                                                                                    
+    ## dummy_mjob_health_interaction                                      0.021           
+    ##                                                                   (0.056)          
+    ##                                                                                    
+    ## Constant                              -0.091***                  -0.093***         
+    ##                                        (0.014)                    (0.015)          
+    ##                                                                                    
+    ## -----------------------------------------------------------------------------------
+    ## Observations                             343                        343            
+    ## R2                                      0.935                      0.935           
+    ## Adjusted R2                             0.935                      0.934           
+    ## Residual Std. Error                0.255 (df = 341)           0.256 (df = 339)     
+    ## F Statistic                   4,902.121*** (df = 1; 341) 1,627.422*** (df = 3; 339)
+    ## ===================================================================================
+    ## Note:                                                   *p<0.1; **p<0.05; ***p<0.01
 
-# Report
+  - we can conclude that this interaction term has no significant effect on the model.
+  - when we have multiple predictors, we use the adjusted R squared value, which is a correction similar to bonferroni correction we saw already.
 
-# Using R
+Let’s make the 4th model and add the gender.
+
+``` r
+studentdf <- studentdf %>%
+  mutate(dummy_gender_girl = if_else(sex == "F",1, 0))
+model4<-lm(studentdf$scale_g3.x~studentdf$scale_g2.x + studentdf$dummy_mjob_health +studentdf$dummy_gender_girl)
+stargazer(model1, model4, type="text") #Quick model comparison
+```
+
+    ## 
+    ## =========================================================================
+    ##                                      Dependent variable:                 
+    ##                     -----------------------------------------------------
+    ##                                          scale_g3.x                      
+    ##                                (1)                        (2)            
+    ## -------------------------------------------------------------------------
+    ## scale_g2.x                   0.998***                   0.996***         
+    ##                              (0.014)                    (0.015)          
+    ##                                                                          
+    ## dummy_mjob_health                                        0.033           
+    ##                                                         (0.049)          
+    ##                                                                          
+    ## dummy_gender_girl                                        -0.015          
+    ##                                                         (0.028)          
+    ##                                                                          
+    ## Constant                    -0.091***                  -0.086***         
+    ##                              (0.014)                    (0.020)          
+    ##                                                                          
+    ## -------------------------------------------------------------------------
+    ## Observations                   343                        343            
+    ## R2                            0.935                      0.935           
+    ## Adjusted R2                   0.935                      0.935           
+    ## Residual Std. Error      0.255 (df = 341)           0.256 (df = 339)     
+    ## F Statistic         4,902.121*** (df = 1; 341) 1,628.197*** (df = 3; 339)
+    ## =========================================================================
+    ## Note:                                         *p<0.1; **p<0.05; ***p<0.01
+
+  - Still not a statistically significant impact.
+
+Our equation for this model to predict G3 results:
+
+Stanardized
+
+    G3  = -0.085 + 0.996 * scale_g2.x + 0.033 * dummy_mjob_health + -0.015 * dummy_gender_girl 
+
+So for a female student who’s mother works in health, our model gives a mean of:
+
+    G3  = -0.085 + 0.996 * scale_g2.x + 0.033 * dummy_mjob_health + -0.015 * dummy_gender_girl
+    A mean result is 0 on the z-scale. dummy_mjob_health = 1 and dummy_gender_girl = 1
+    G3  = -0.085 + 0.996 * 0 + 0.033 * 1 + -0.015 * 1 = -0.067
+
+So for a male student who’s mother works doesn’t in health, our model gives a mean of:
+
+    G3  = -0.085 + 0.996 * scale_g2.x + 0.033 * dummy_mjob_health + -0.015 * dummy_gender_girl
+    A mean result is 0 on the z-scale. dummy_mjob_health = 0 and dummy_gender_girl = 0
+    G3  = -0.085 + 0.996 * 0 + 0.033 * 0 + -0.015 * 0 = -0.085 
+
+We know G3 has the following stats:
+
+``` r
+pastecs::stat.desc(studentdf$g3.x, basic=F)
+```
+
+    ##       median         mean      SE.mean CI.mean.0.95          var      std.dev 
+    ##   11.0000000   11.5685131    0.1772180    0.3485745   10.7723390    3.2821242 
+    ##     coef.var 
+    ##    0.2837118
+
+so for a female student who’s mother works in health, the mean would be:
+
+    grade = mean + Z (std.dev)
+    grade = 11.5685131 + (-0.067)(3.2821242) = 11.35
+
+So for a male student who’s mother works doesn’t in health, the mean would be:
+
+    grade = mean + Z (std.dev)
+    grade = 11.5685131 + (-0.085)(3.2821242) = 11.29
+
+Some considerations:
+
+*Predictors:*
+
+  - the more we add predictors to our model, the more we could be over-fitting our model to suit our data.
+  - It reduces our statistical power and increases the probability of Type II error(false negative). The statistical power is what allows us to distinguish an actual effect from one by chance.
+
+*Outliers:*
+
+  - Outliers can pull the equation away from the pattern
+  - removing outliers can increase the probability of Type I error(false positive).
+
+To remove outliers, we can use the method of considering which are outside certain deviations from mean or by using Cook’s distance:
+
+<div class="figure" style="text-align: center">
+
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-122-1.png" alt="Cook's D for model1" width="672" />
+
+<p class="caption">
+
+Figure 48: Cook’s D for model1
+
+</p>
+
+</div>
+
+  - According to (Stephanie [2018](#ref-stephanie_2018)), a general rule of thumb is that observations with a Cook’s D of more than 3 times the mean, is a possible outlier. In the figure above, in red we have the values which are greater than 4 times the mean Cook’s D.
+
+*Collinearity:*
+
+  - Collinearity occurs when two or more independent variables are giving the same information, one could be redundant.
+  - To check collinearity, we examine the correlation matrix that compares the independent variables with each other.
+  - If we get a correlation coefficient of above 0.8, then we may have collinearity.
+  - It is *obvious* :man\_facepalming: now that using G2 grades for Maths falls into this category
+  - below I show that each of the previous grades show a correlation coefficient of above 0.8.
+
+<!-- end list -->
+
+``` r
+studentdf %>%
+  select(g1.x,g2.x,g3.x) %>%
+  ggpairs() 
+```
+
+    ## Warning in ggally_statistic(data = data, mapping = mapping, na.rm = na.rm, :
+    ## Removed 13 rows containing missing values
+
+    ## Warning in ggally_statistic(data = data, mapping = mapping, na.rm = na.rm, :
+    ## Removed 39 rows containing missing values
+
+    ## Warning: Removed 13 rows containing missing values (geom_point).
+
+    ## Warning: Removed 13 rows containing non-finite values (stat_density).
+
+    ## Warning in ggally_statistic(data = data, mapping = mapping, na.rm = na.rm, :
+    ## Removed 39 rows containing missing values
+
+    ## Warning: Removed 39 rows containing missing values (geom_point).
+    
+    ## Warning: Removed 39 rows containing missing values (geom_point).
+
+    ## Warning: Removed 39 rows containing non-finite values (stat_density).
+
+<div class="figure" style="text-align: center">
+
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-123-1.png" alt="Matrix plot of relationships" width="1152" />
+
+<p class="caption">
+
+Figure 49: Matrix plot of relationships
+
+</p>
+
+</div>
+
+  - My Model so far is NOT GOOD. I have violated one assumption. Collinearity makes it difficult as I have seen to assess individual predictors.
+  - we can do a few thing to deal with collinearity:
+      - remove them
+      - Combine them to make a new variables mathematically based on the context and theory of the model
+      - Estimate a latent variable using principal component analysis or factor analysis.
+
+Let’s check without g2.x results what our model looks like:
+
+``` r
+model5<-lm(studentdf$scale_g3.x~studentdf$dummy_gender_girl+studentdf$dummy_mjob_health)
+stargazer::stargazer(model5, type="text")
+```
+
+    ## 
+    ## ===============================================
+    ##                         Dependent variable:    
+    ##                     ---------------------------
+    ##                             scale_g3.x         
+    ## -----------------------------------------------
+    ## dummy_gender_girl            -0.273**          
+    ##                               (0.106)          
+    ##                                                
+    ## dummy_mjob_health             0.427**          
+    ##                               (0.186)          
+    ##                                                
+    ## Constant                       0.101           
+    ##                               (0.078)          
+    ##                                                
+    ## -----------------------------------------------
+    ## Observations                    343            
+    ## R2                             0.034           
+    ## Adjusted R2                    0.028           
+    ## Residual Std. Error      0.986 (df = 340)      
+    ## F Statistic           5.906*** (df = 2; 340)   
+    ## ===============================================
+    ## Note:               *p<0.1; **p<0.05; ***p<0.01
+
+  - vastly changes our model. Both are statistically significant.
+  - the R squared value is poor, these two predictors only explain 2.8% of the Grade 3 results.
+  - The F-statistic result is (F(2, 340) = 5.9, p \< .01), which is statistically significant. We can conclude that this regression model is significantly better at predicting the G3 grades than if we used the mean value of G3, but just being better than the mean is not great. That’s a low bar.
 
 # References
 
@@ -3096,6 +3252,12 @@ Field, A., J. Miles, and Z. Field. 2012. *Discovering Statistics Using R*. SAGE 
 <div id="ref-haviland1990yates">
 
 Haviland, Mark G. 1990. “Yates’s Correction for Continuity and the Analysis of 2\(\times\) 2 Contingency Tables.” *Statistics in Medicine* 9 (4): 363–67.
+
+</div>
+
+<div id="ref-stephanie_2018">
+
+Stephanie. 2018. “Cook’s Distance / Cook’s d: Definition, Interpretation.” *Statistics How To*. <https://www.statisticshowto.com/cooks-distance/>.
 
 </div>
 

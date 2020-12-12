@@ -16,6 +16,7 @@ languages:
 # Force a locale to be use, really useful to develop the application ! Should be commented in production, the "weight" should rocks.
 # DefaultContentLanguage: fr
 
+# https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.2/styles/school-book.min.css 
 # Allow raw html in markdown file
 # https://xyproto.github.io/splash/docs/
 # https://gohugo.io/getting-started/configuration-markup/
@@ -37,7 +38,7 @@ markup:
     lineNos: false
     lineNumbersInTable: true
     noClasses: true
-    style: monokai
+    style: colorful
     # style: solarized-dark
     tabWidth: 4
 

@@ -43,6 +43,7 @@ library("viridis")
 library("finalfit") # for ff_glimpse(studentdf)
 library("gridExtra") # for plots in a grid
 library("ggplot2") # For creating histograms and plots
+library("GGally") # for other plots
 library("stargazer")#For formatting outputs/tables
 #download.file(url="https://archive.ics.uci.edu/ml/machine-learning-databases/00320/student.zip", destfile="student.zip")
 #unzip("student.zip",exdir = "studentdf")
@@ -578,13 +579,15 @@ studentdf %>% filter(is.na(g3.x)) %>% summary()
 Because our data set is relatively large, we don't expect missing data to have a serious impact. It all goes back to being representative of the population. 
 
 In R we have a library called finalfit which has the function ff_glimpse, which we can use to identify missing data.
-```{r, echo=FALSE,warning=FALSE}
-ff_glimpse(studentdf)
+```{r, warning=FALSE}
+studentdf %>% 
+  select(age,mjob,g3.y,reason) %>%
+  ff_glimpse()
 ```
 
 Missing data can also include outliers, I will discuss these if when at any time in my analysis I have a distribution which is close to normal. We can look for outliers and remove them. Missing data and outliers are similar.  Missing data if it is significant in our data set could reduce the the probability of rejecting the null hypothesis and so we could end up with a Type II error also known as a false negative. 
 
-I am going to ignore missing data, which is one of the things we can do with missing data. 
+During the next section, mostly I am going to ignore missing data, which is one of the things we can do with missing data. 
 
 # Relationships
 
@@ -1360,7 +1363,7 @@ An Kruskal-Wallis test between groups was conducted to explore the impact of a M
 Focused comparisons of the mean ranks between groups showed that the Mother's job title were only significant in two comparisons. THe first was when the mother's job was at home, the Final grade results in Maths were lower in comparison to a mother working in the health service. The second was not as significant but still significant, when a mother's job was at home, the final grade result was lower in comparison to a mother working in civil service. In summary, a students got better grades when their mother worked in the health or civil service sector rather than working at home.  
 
 
-## Chi Square ( male/female Weekly study )
+## Chi Square ( male/female higher education )
 
 The Question:
 
@@ -1558,7 +1561,7 @@ The final thing is to put together the equation of the line with the coefficient
 coef(model1)
 ```
 
-The standardized equation is:
+The z-scale standardized equation is:
 
  G3 = -0.091 + 0.998 * G2
 
@@ -1576,7 +1579,7 @@ In this section the model I want to create is a model that advances the previous
 
 Before proceeding, we need to check it makes sense to use these as a predictor. My thinking is that study should give better results in a exam and also maybe one of these school has better results than the other. 
 
-I would like to use School, but I can see we have a bit of bias in teh data towards one school :
+I would like to use School, but I can see we have a bit of bias in the data towards one school :
 ```{r,  echo=FALSE, results="hold", warning=FALSE, fig.cap="Boxplot of Final Maths grades and school", fig.align = "center"}
 studentdf %>%
   ggplot(aes(x=g3.x, y=school, fill=school)) +
@@ -1588,43 +1591,167 @@ studentdf %>%
     xlab("Grade 3 Maths result")
 ```
 
-I will choose 
+I will use the analysis I did for (Chi Square higher education section)[#chi-square--malefemale-higher-education-]. In that section I show that there is a relationship between a mother's job being in health and the grade a student obtains in the Maths Final Grade. 
+
+First let's look at the previous model as we had it using G2 grades:
+
+```{r, results="hold",warning=FALSE}
+#Pearson Correlation
+stargazer::stargazer(model1, type="text") #Tidy output of all the required stats
+```
+
+* Our R-squared result as we said is already high at 93.5% explained. 
+
+
+I need to make a Dummy variable in order to use health from the mother's job variable. "0" will be my reference category, which will be all other jobs except health and "1" will be health. 
+```{r, results="hold",warning=FALSE}
+studentdf <- studentdf %>%
+  mutate(dummy_mjob_health = if_else(mjob == "health",1, 0))
+```
+
+Second model including dummy variable for Mother's Job:
+```{r, results="hold",warning=FALSE}
+model2<-lm(studentdf$scale_g3.x~studentdf$scale_g2.x+studentdf$dummy_mjob_health)
+stargazer::stargazer(model2, type="text")
+```
+
+* What we see in the output is that dummy_mjob_health is not statistically significant. 
+* It doesn't change the Adjusted R squared ratio.  
+* THe mother's job being health has little impact over all the fit of the model. 
+
+
+To make the fit better, we can include an interaction term. Currently there is only a constant increase for students who's mother's work is in health. If we make a variable from "dummy_mjob_health" which is a multiplication of "dummy_mjob_health" times "g2.x", we could improve the model. My g2.x values are scaled of course: 
+```{r, results="hold",warning=FALSE}
+studentdf <- studentdf %>%
+  mutate(dummy_mjob_health_interaction = if_else(mjob == "health",1*scale_g2.x, 0))
+model3<-lm(studentdf$scale_g3.x~studentdf$scale_g2.x + studentdf$dummy_mjob_health + studentdf$dummy_mjob_health_interaction)
+stargazer(model1, model3, type="text") #Quick model comparison
+```
+
+* we can conclude that this interaction term has no significant effect on the model. 
+* when we have multiple predictors, we use the adjusted R squared value, which is a correction similar to bonferroni correction we saw already. 
+
+Let's make the 4th model and add the gender. 
+```{r, results="hold",warning=FALSE}
+studentdf <- studentdf %>%
+  mutate(dummy_gender_girl = if_else(sex == "F",1, 0))
+model4<-lm(studentdf$scale_g3.x~studentdf$scale_g2.x + studentdf$dummy_mjob_health +studentdf$dummy_gender_girl)
+stargazer(model1, model4, type="text") #Quick model comparison
+```
+
+* Still not a statistically significant impact. 
+
+Our equation for this model to predict G3 results:
+
+Stanardized 
+```
+G3  = -0.085 + 0.996 * scale_g2.x + 0.033 * dummy_mjob_health + -0.015 * dummy_gender_girl 
+```
+
+So for a female student who's mother works in health, our model gives a mean of:
+```
+G3  = -0.085 + 0.996 * scale_g2.x + 0.033 * dummy_mjob_health + -0.015 * dummy_gender_girl
+A mean result is 0 on the z-scale. dummy_mjob_health = 1 and dummy_gender_girl = 1
+G3  = -0.085 + 0.996 * 0 + 0.033 * 1 + -0.015 * 1 = -0.067
+```
+So for a male student who's mother works doesn't in health, our model gives a mean of:
+```
+G3  = -0.085 + 0.996 * scale_g2.x + 0.033 * dummy_mjob_health + -0.015 * dummy_gender_girl
+A mean result is 0 on the z-scale. dummy_mjob_health = 0 and dummy_gender_girl = 0
+G3  = -0.085 + 0.996 * 0 + 0.033 * 0 + -0.015 * 0 = -0.085 
+```
+We know G3 has the following stats:
+```{r}
+pastecs::stat.desc(studentdf$g3.x, basic=F)
+```
+
+so for a female student who's mother works in health, the mean would be:
+```
+grade = mean + Z (std.dev)
+grade = 11.5685131 + (-0.067)(3.2821242) = 11.35
+```
+So for a male student who's mother works doesn't in health, the mean would be:
+```
+grade = mean + Z (std.dev)
+grade = 11.5685131 + (-0.085)(3.2821242) = 11.29
+```
+
+*Some considerations:*
+
+*Predictors:*
+
+* the more we add predictors to our model, the more we could be over-fitting our model to suit our data. 
+* It reduces our statistical power and increases the probability of Type II error(false negative). The statistical power is what allows us to distinguish an actual effect from one by chance. 
+* predictors need to have variations, can't be constant 
+* predictors should be independent
+
+*Outliers:*
+
+* Outliers can pull the equation away from the pattern
+* removing outliers can increase the probability of Type I error(false positive).  
+
+To remove outliers, we can use the method of considering which are outside certain deviations from mean or by using Cook's distance:
+```{r,  echo=FALSE, results="hold", warning=FALSE, fig.cap="Cook's D for model1", fig.align = "center"}
+as_tibble(cooks.distance(model1)) %>%
+  ggplot(aes(x=seq_along(value), y=value)) +
+  geom_point() +
+  geom_hline(yintercept = 4*mean(cooks.distance(model1), na.rm=T), col="red") + 
+  geom_text(x=1:length(cooks.distance(model1))+1, y=cooks.distance(model1), label=ifelse(cooks.distance(model1)>4*mean(cooks.distance(model1), na.rm=T),names(cooks.distance(model1)),""), col="red") 
+```
+
+* According to [@stephanie_2018], a general rule of thumb is that observations with a Cook’s D of more than 3 times the mean, is a possible outlier. In the figure above, in red we have the values which are greater than 4 times the mean Cook's D.
+
+*Collinearity:*
+
+* Collinearity occurs when two or more independent variables are giving the same information, one could be redundant. 
+* To check collinearity, we examine the correlation matrix that compares the independent variables with each other. 
+* If we get a correlation coefficient of above 0.8, then we may have collinearity. 
+* It is *obvious* :man_facepalming: now that using G2 grades for Maths falls into this category
+* below I show that each of the previous grades show a correlation coefficient of above 0.8. 
+```{r,fig.width=12, fig.height=12, fig.align = "center",fig.cap="Matrix plot of relationships"}
+studentdf %>%
+  select(g1.x,g2.x,g3.x) %>%
+  ggpairs() 
+```
+* My Model so far is NOT GOOD. I have violated one assumption. Collinearity makes it difficult as I have seen to assess individual predictors.
+* we can do a few thing to deal with collinearity:
+  + remove them
+  + Combine them to make a new variables mathematically based on the context and theory of the model
+  + Estimate a latent variable using principal component analysis or factor analysis. 
 
 
 
+Let's check without g2.x results what our model looks like:
+```{r, results="hold",warning=FALSE}
+model5<-lm(studentdf$scale_g3.x~studentdf$dummy_gender_girl+studentdf$dummy_mjob_health)
+stargazer::stargazer(model5, type="text")
+```
 
+* vastly changes our model. Both are statistically significant. 
+* the R squared value is poor, these two predictors only explain 2.8% of the Grade 3 results.
+* The F-statistic result is (F(2, 340) = 5.9, p < .01), which is statistically significant. We can conclude that this regression model is significantly better at predicting the G3 grades than if we used the mean value of G3, but just being better than the mean is not great. That's a low bar. 
 
-## More
-Parametric are most powerful, more robuseness becuse we use every score
-Parametric or non parametric
-pearson for correlation 
+*Association:*
 
-non para:
-spearson kendall
-kendall more reilable
+* For MLR (multi-linear regressions), we must have some proof there is an actually real link between these variables used as predictors and the outcome variable. We can use test statistics as we have seen in the previous sections for this. 
 
-Which can I use to compare?
+*Time Order:*
 
-Lecture 5 video 51 minutes
+* making sure the predictor happens before the outcome variable, so threat it can be a cause
 
-use cooks if deleting outliers 
+*Non-spuriousness*
 
-<!-- 5.3. Assumptions of parametric data -->
+* Try to reduce spurious relationships, relationships that are just a coincidence, don't leave out key predictors, even if they are not significant, because they may interact with the predictors. 
 
-<!-- alpha 0.05 fo education grades have an error -->
-<!-- ok to use this -->
-<!-- but in medical testing, more regigroous, 0.05 -->
+*Outcome variable*
 
-# Explore
+* Must be continuous
 
-# Analysis
+### Reporting my model:
 
-# Model
-
-# Report
-
-# Using R
-
-
+A multiple regression analysis was conducted to determine if a student’s G2 grade score, gender and Mother's jobcould predict a student’s academic G3 Final grade result in Maths. 
+In order to include the type of educational institute being attended in the regression model it was recorded into two variables iot_dummy (0 for university or college, 1 for IoT), and college_dummy (0 for university or IoT, 1 for college). 
+Examination of the histogram, normal P-P plot of standardised residuals and the scatterplot of the dependent variable, academic satisfaction, and standardised residuals showed that the some outliers existed. However, examination of the standardised residuals showed that none could be considered to have undue influence (95% within limits of -1.96 to plus 1.96 and none with Cook’s distance >1 as outlined in Field (2013). 
+Examination for multicollinearity showed that the tolerance and variance influence factor measures were within acceptable levels (tolerance >0.4, VIF <2.5 ) as outlined in Tarling (2008). The scatterplot of standardised residuals showed that the data met the assumptions of homogeneity of variance and linearity. The data also meets the assumption of non-zero variances of the predictors.  
 
 # References
