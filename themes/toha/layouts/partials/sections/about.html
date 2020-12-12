@@ -12,7 +12,7 @@
   <div class="row pt-sm-2 pt-md-4 align-self-center">
     <!-- summary -->
     <div class="col-sm-6">
-      <h3 class="p-1">{{ $author.name }}</h3>
+      <h3 class="p-1">{{ $author.name | emojify}}</h3>
       {{ if .designation }}
       <h5 class="p-1">
         {{ .designation }}
@@ -22,7 +22,7 @@
       </h5>
       {{ end }}
       <p class="p-1 text-justify">
-        {{ .summary | markdownify }}
+        {{ .summary | markdownify | emojify }}
       </p>
       <div class="text-container ml-auto">
         <ul class="social-link d-flex">

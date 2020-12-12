@@ -68,6 +68,17 @@ library("gridExtra") # for plots in a grid
 
 ``` r
 library("ggplot2") # For creating histograms and plots
+library("stargazer")#For formatting outputs/tables
+```
+
+    ## 
+    ## Please cite as:
+
+    ##  Hlavac, Marek (2018). stargazer: Well-Formatted Regression and Summary Statistics Tables.
+
+    ##  R package version 5.2.2. https://CRAN.R-project.org/package=stargazer
+
+``` r
 #download.file(url="https://archive.ics.uci.edu/ml/machine-learning-databases/00320/student.zip", destfile="student.zip")
 #unzip("student.zip",exdir = "studentdf")
 list.files("studentdf")
@@ -119,18 +130,20 @@ studentdf %>%
   sample_n(1) 
 ```
 
-    ##   school sex age address famsize pstatus medu fedu   mjob  fjob reason nursery
-    ## 1     GP   F  15       U     LE3       T    4    2 health other  other     yes
-    ##   internet guardian.x traveltime.x studytime.x failures.x schoolsup.x famsup.x
-    ## 1      yes     mother            1           2          0          no      yes
-    ##   paid.x activities.x higher.x romantic.x famrel.x freetime.x goout.x dalc.x
-    ## 1    yes           no      yes         no        4          3       3      1
-    ##   walc.x health.x absences.x g1.x g2.x g3.x guardian.y traveltime.y studytime.y
-    ## 1      1        5          2   11   13   13     mother            1           2
-    ##   failures.y schoolsup.y famsup.y paid.y activities.y higher.y romantic.y
-    ## 1          0          no      yes     no           no      yes         no
-    ##   famrel.y freetime.y goout.y dalc.y walc.y health.y absences.y g1.y g2.y g3.y
-    ## 1        4          3       3      1      1        5          0   16   14   16
+    ##   school sex age address famsize pstatus medu fedu     mjob  fjob reason
+    ## 1     GP   F  16       U     GT3       T    4    2 services other course
+    ##   nursery internet guardian.x traveltime.x studytime.x failures.x schoolsup.x
+    ## 1     yes      yes     mother            1           2          0          no
+    ##   famsup.x paid.x activities.x higher.x romantic.x famrel.x freetime.x goout.x
+    ## 1      yes     no           no      yes         no        4          2       3
+    ##   dalc.x walc.x health.x absences.x g1.x g2.x g3.x guardian.y traveltime.y
+    ## 1      1      1        5          2   15   16   16     mother            1
+    ##   studytime.y failures.y schoolsup.y famsup.y paid.y activities.y higher.y
+    ## 1           2          0          no      yes    yes           no      yes
+    ##   romantic.y famrel.y freetime.y goout.y dalc.y walc.y health.y absences.y g1.y
+    ## 1         no        4          2       3      1      1        5          2   16
+    ##   g2.y g3.y
+    ## 1   15   16
 
 ## Population vs Sample
 
@@ -1251,8 +1264,10 @@ cor.test(studentdf$g2.x, studentdf$g3.x, method='pearson')
     ##       cor 
     ## 0.9669345
 
+The correlation coefficient is a commonly used measure of the size of an effect: values of ±.1 represent a small effect, ±.3 is a medium effect and ±.5 is a large effect
+
 Spearman and Kandal are only needed if our data did not fit a normal distribution.
-Below i will report Spearman’s rank correlation rho and Kendall’s rank correlation tau:
+Below I will report Spearman’s rank correlation rho and Kendall’s rank correlation tau:
 
 ``` r
 cor.test(studentdf$g2.x, studentdf$g3.x, method = "spearman")
@@ -1284,7 +1299,7 @@ cor.test(studentdf$g2.x, studentdf$g3.x, method = "kendall")
 
 To report Pearson coefficient here we say:
 
-343 student grades at two time intervals, Time 1 G2(M=11.09, SD=3.32) and Time 2 G3(M=11.57, SD=3.28) were investigated. A positive Pearson r correlation coefficient of 0.97 was revealed. There is a really strong correlation between g2 results and the final grade g3 with t(341) = 70 with a p-value \< 0.001
+343 student grades at two time intervals, Time 1 G2(M=11.09, SD=3.32) and Time 2 G3(M=11.57, SD=3.28) were investigated. A positive Pearson r correlation coefficient of 0.97 was revealed. There is strong correlation between g2 results and the final grade g3 with t(341) = 70 with a p-value \< 0.001. The size of the effect is large.
 
 ## Correlation (absences and G3)
 
@@ -1449,7 +1464,7 @@ cor.test(studentdf$absences.x, studentdf$g3.x, method = "kendall")
 
 The result is a coefficient that is closer to zero. The significance of the result is the same as Spearman.
 
-Grade g3 results were significantly related with grade g2 results, tau = 0.2, p \< 0.001.
+Grade G3(M=11.57, SD=3.28) results were significantly related with school absences(Mdn = 3.0000000), tau = 0.2, p \< 0.001.
 
 ## T-Test (G3 and family size)
 
@@ -2150,7 +2165,7 @@ The variables:
 For this question, we are dealing with multiple groups. It is a comparison of more than 2 samples. Our G3 needs ot be tested to see that it’s parametric, if it does we can see in the [Test Table](#testtable) that we can use ANOVA. ANOVA is another analysis technique which compares again the mean, but it also uses the variance of the data to decide if the means are different.
 
 ANOVA requires on independent categorical variables, which is “reason” and one continuous ratio variable which will be “Grade 3”.
-ANOVA produces a F-statisti, which is similiar to t-statistic from the t-test.
+ANOVA produces a F-statistic, which is similiar to t-statistic from the t-test.
 Quick check to make sure g3.y is normal.
 
 ``` r
@@ -2592,8 +2607,6 @@ rstatix::kruskal_effsize(studentdf, g3.x.all~mjob, ci = FALSE, conf.level = 0.95
 
 Reporting
 
-https://guides.library.lincoln.ac.uk/c.php?g=110730\&p=4638045
-
 An Kruskal-Wallis test between groups was conducted to explore the impact of a Mother’s Job title on a student’s Final Maths results. Students were divided into four groups based on their mother’s job title(“teacher”, “health” care related, civil “services” (e.g. administrative or police), “at\_home” or “other”), the box plots of each can be seen in this [Figure](#g3mjobboxplot) (Media:10.5 for “teacher”, Median:13 for “health” , Median:11 for “services” Median:10 “at\_home”, Median:10.5 for "other). The groups were significantly different. H(4) = 18.04, p = .001. A small effect size was also indicated by the eta squared value (0.037).
 
 Focused comparisons of the mean ranks between groups showed that the Mother’s job title were only significant in two comparisons. THe first was when the mother’s job was at home, the Final grade results in Maths were lower in comparison to a mother working in the health service. The second was not as significant but still significant, when a mother’s job was at home, the final grade result was lower in comparison to a mother working in civil service. In summary, a students got better grades when their mother worked in the health or civil service sector rather than working at home.
@@ -2721,10 +2734,11 @@ gmodels::CrossTable(studentdf$sex, studentdf$higher.y, fisher = TRUE, chisq = TR
     ##        Minimum expected frequency: 8.670157
 
 Notes from the crosstable:
-\* The Row Total column adds up Male and Female to 100%.
-\* Minimum expected frequency is greater than 5. THe values is: 8.670157. So the test is meaningful and we don;t need to use Fisher’s Exact Probability Test.
 
-Now we execute the Chi-Square test with the Yates correction. We use the Yates correction for the same reason as we used the bonferroni correction in the previous question, we want to prevent making a Type I error (a false positive). It simply subtracts 0.5 from the difference between each observed value and it’s expected value in a 2 X 2 table. This reduces the chi-squared value obtained and thus increases its p-value, there is controversy regarding using the yates correction, maybe have wrote that it overcorrects. (Tuman et al. [1991](#ref-tuman1991effects))
+  - The Row Total column adds up Male and Female to 100%.
+  - Minimum expected frequency is greater than 5. THe values is: 8.670157. So the test is meaningful and we don;t need to use Fisher’s Exact Probability Test.
+
+Now we execute the Chi-Square test with the Yates correction. We use the Yates correction for the same reason as we used the bonferroni correction in the previous question, we want to prevent making a Type I error (a false positive). It simply subtracts 0.5 from the difference between each observed value and it’s expected value in a 2 X 2 table. This reduces the chi-squared value obtained and thus increases its p-value, there is controversy regarding using the Yates correction, maybe have wrote that it overcorrects. (Haviland [1990](#ref-haviland1990yates))
 
 THe test statistic for chi-square is known as x<sup>2</sup>. In our test x<sup>2</sup> is 7.9368, degrees of freedom is 1 and our p-value is 0.004844. This is a significant difference based on our 0.05 alpha value between the two sexes. We can now reject the Null Hypothesis.
 This significant result indicates there is a difference between the sex of a student and their ambitions for higher education.
@@ -2765,9 +2779,269 @@ Using the Chi-square test for independence (with Yates Continuity Correction) th
 
 # Modelling
 
+In this section we will discuss predictive modeling. Predictive models are used to explore the relationships between one outcome variable and a set of independent predictors. Before exploring this relationship, there should be a sound theoretical reason for using the predictive variables, the idea of fishing for a relationship by trial and error is a bad idea. Ideally we would need statistical evidence to include a variable as a predictor. So for our model we will use past data to predict new outcome varibles.
+
 ## What is linear Regression?
 
-## What are predictors?
+The simplest regression is linear regression. This is where we are predicting an outcome variable from a predictor variable. We do this by fitting a statistical model to the data in the form of a straight line. Then we need to gauge how well that line fits the data. The equation of the line is
+
+<img src="line_equ.png" width="78" style="display: block; margin: auto;" />
+
+e is the error which varies randomly for the data. It shows us that the lines does not fit perfectly for all data points. a is the intercept and the point where the line crosses the y-axis. b is the slope of the line which is the gradient, it represents the amount of change the outcome variable goes through for one unit change in the predictor variable.
+As a basic strategy for predicting an outcome, we could choose the mean. We can then calculate R<sup>2</sup>, which is a ratio of the SS<sub>M</sub> over SS<sub>T</sub>.
+
+<div class="figure" style="text-align: center">
+
+<img src="linear_R.png" alt="How R squared is Calculated" width="100%" />
+
+<p class="caption">
+
+Figure 40: How R squared is Calculated
+
+</p>
+
+</div>
+
+We can also use a test statistic to determine how good our model is, by using ANOVA and it’s F-statistic. This is best shown by doing an example using our data set. We know from my analysis earlier in section [Correlation (G2 and G3)](#correlation-g2-and-g3) that there is a strong correlation between the Maths grades at G2 and G3. So we want to determine whether a grade at time G2 is the main predictor of a students score at G3(Final grade). In R, the response (outcome) variable is g2.x and the predictor variable is g3.x. It is good practice to standard this grades, so I will do that now:
+
+Total number of samples:
+
+    ##     n
+    ## 1 382
+
+Before proceeding with linear regression, there are a few assumptions:
+1\. That there is a relationship, a linear one between the variables
+2\. Homoscedasticity (we can do this visually or with a test)
+3\. Independent observations
+4\. The residual errors should follow a normal distribution (this is the space between the linear line model and the data point)
+
+Visuals for scale\_g2.x (already done in [Correlation (G2 and G3)](#correlation-g2-and-g3), but putting them here again for completeness)
+
+<div class="figure" style="text-align: center">
+
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-104-1.png" alt="G2 with scale results Histogram" width="672" />
+
+<p class="caption">
+
+Figure 41: G2 with scale results Histogram
+
+</p>
+
+</div>
+
+    ##                                                    V1
+    ## median                      -0.0269509544829408982658
+    ## mean                        -0.0000000000000001013232
+    ## SE.mean                      0.0520579206295353549838
+    ## CI.mean.0.95                 0.1023683228241922954505
+    ## var                          1.0000000000000000000000
+    ## std.dev                      1.0000000000000000000000
+    ## coef.var     -9869403390497242.0000000000000000000000
+    ## skew (g1) 
+    ##  1.661684 
+    ## Excess Kur (g2) 
+    ##       -2.320396
+
+Skew is good, Kurtosis is high at -2.32 for scale\_g2.x
+
+``` r
+zstabsences<- abs(studentdf$scale_g2.x)
+FSA::perc(as.numeric(zstabsences), 1.96, "gt")
+FSA::perc(as.numeric(zstabsences), 3.29, "gt")
+```
+
+    ## [1] 4.336043
+    ## [1] 0
+
+Zero outliers outside the 3.29 SD of mean, so for a sample this size we can take it as normal.
+
+<div class="figure" style="text-align: center">
+
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-106-1.png" alt="G3 with scale results Histogram" width="672" />
+
+<p class="caption">
+
+Figure 42: G3 with scale results Histogram
+
+</p>
+
+</div>
+
+    ##                                                  V1
+    ## median                     -0.173214994795454213516
+    ## mean                        0.000000000000000124981
+    ## SE.mean                     0.053994924715603881404
+    ## CI.mean.0.95                0.106203948153981972413
+    ## var                         1.000000000000000000000
+    ## std.dev                     1.000000000000000000000
+    ## coef.var     8001215524444572.000000000000000000000
+    ## skew (g1) 
+    ##  1.599138 
+    ## Excess Kur (g2) 
+    ##       -1.733549
+
+Skew is good, Kurtosis is good for scale\_g3.x.
+
+Q-Q plots:
+
+<div class="figure">
+
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-107-1.png" alt="G2  Q-Q plot" width="672" />
+
+<p class="caption">
+
+Figure 43: G2 Q-Q plot
+
+</p>
+
+</div>
+
+<div class="figure">
+
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-108-1.png" alt="G3  Q-Q plot" width="672" />
+
+<p class="caption">
+
+Figure 44: G3 Q-Q plot
+
+</p>
+
+</div>
+
+Scatter plot of g2 and g3 showing no homogeneity of variance:
+
+    ## `geom_smooth()` using formula 'y ~ x'
+
+<div class="figure" style="text-align: center">
+
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-109-1.png" alt="Scatter plot of the scaled g2 vs g3 results" width="672" />
+
+<p class="caption">
+
+Figure 45: Scatter plot of the scaled g2 vs g3 results
+
+</p>
+
+</div>
+
+The predictor(G3) here doesn’t need to be normal.
+
+``` r
+#Pearson Correlation
+cor.test(studentdf$scale_g2.x, studentdf$scale_g3.x, method='pearson')
+```
+
+    ## 
+    ##  Pearson's product-moment correlation
+    ## 
+    ## data:  studentdf$scale_g2.x and studentdf$scale_g3.x
+    ## t = 70.015, df = 341, p-value < 0.00000000000000022
+    ## alternative hypothesis: true correlation is not equal to 0
+    ## 95 percent confidence interval:
+    ##  0.9592617 0.9731820
+    ## sample estimates:
+    ##       cor 
+    ## 0.9669345
+
+We can then form a simple linear regression model which should give us the same answer as the Pearson correlation. We use ANOVA to give us the F-statistic and then after we can compare that F-statistic to a standard F-statistic distribution. THe ANOVA output also gives us our SS<sub>M</sub> and SS<sub>T</sub> values as well as the mean squares for the model(MS<sub>M</sub>) and the residual mean squares (MS<sub>R</sub>), which allows us to calculate the F-Ratio. A good model should have a large F-ratio.
+
+<div class="figure" style="text-align: center">
+
+<img src="f_ratio.png" alt="F-ratio" width="10%" />
+
+<p class="caption">
+
+Figure 46: F-ratio
+
+</p>
+
+</div>
+
+``` r
+model1<-lm(studentdf$scale_g3.x~studentdf$scale_g2.x)
+anova(model1)
+```
+
+    ## Analysis of Variance Table
+    ## 
+    ## Response: studentdf$scale_g3.x
+    ##                       Df Sum Sq Mean Sq F value                Pr(>F)    
+    ## studentdf$scale_g2.x   1 319.76  319.76  4902.1 < 0.00000000000000022 ***
+    ## Residuals            341  22.24    0.07                                  
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+``` r
+summary(model1)
+```
+
+    ## 
+    ## Call:
+    ## lm(formula = studentdf$scale_g3.x ~ studentdf$scale_g2.x)
+    ## 
+    ## Residuals:
+    ##      Min       1Q   Median       3Q      Max 
+    ## -0.68393 -0.06701 -0.04810  0.24146  0.84704 
+    ## 
+    ## Coefficients:
+    ##                      Estimate Std. Error t value             Pr(>|t|)    
+    ## (Intercept)          -0.09064    0.01385  -6.544        0.00000000022 ***
+    ## studentdf$scale_g2.x  0.99847    0.01426  70.015 < 0.0000000000000002 ***
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ## 
+    ## Residual standard error: 0.2554 on 341 degrees of freedom
+    ##   (39 observations deleted due to missingness)
+    ## Multiple R-squared:  0.935,  Adjusted R-squared:  0.9348 
+    ## F-statistic:  4902 on 1 and 341 DF,  p-value: < 0.00000000000000022
+
+Findings:
+
+  - The p-value for ANOVA is exactly the same as the value we got for Pearson (p-value: \< 0.00000000000000022).
+  - The ANOVA summary command produces the Multiple R-squared result which is 0.935, so R = sqrt(0.935) = 0.966954 which is Pearson’s R.
+  - The R squared number can also tell us how much of the variation in G3 results is explained by G2. Only 6.5% is not explained by G2, which means as factors are involved in a students getting a G3 result.
+  - The F-statistic result is (F(1, 341) = 4902, p \< .001), which is statistically significant. We can conclude that this regression model is significantly better at predicting the G3 grades than if we used the mean value of G3.
+
+The final thing is to put together the equation of the line with the coefficient.
+
+``` r
+coef(model1)
+```
+
+    ##          (Intercept) studentdf$scale_g2.x 
+    ##          -0.09064283           0.99846929
+
+The standardized equation is:
+
+G3 = -0.091 + 0.998 \* G2
+
+## Multiple Linear Regression
+
+This is an extension of the simple linear regression. Seem below: bx<sub>0</sub> is the intercept with the Y axis and then the other b’s are the coefficients which apply to each of the predictors.
+<img src="multi_equ.png" width="326" style="display: block; margin: auto;" />
+Before continuing with creating a multiple linear regression and using predictors variables, something we may need to do some modifications to variables which are nominal so that they have a numeric value. For example in our data, we we wanted to examine the impact of the schools on the G3 final grade result. I would need to add a new column changing the reference school to 0 and the other school to 1. These are known as *Dummy variables*.
+
+In order to add to my simple linear model from the previous, section I would like to be able to refer back to some of my test statistics from the Relationships section, but unfortunately for me, I found many statistically non significant relationships.
+
+In this section the model I want to create is a model that advances the previous model. Although that G2 grade is a good predictor. It could be hard to improve the model, but there is 6.5% which is unexplained.
+
+Before proceeding, we need to check it makes sense to use these as a predictor. My thinking is that study should give better results in a exam and also maybe one of these school has better results than the other.
+
+I would like to use School, but I can see we have a bit of bias in teh data towards one school :
+
+<div class="figure" style="text-align: center">
+
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-115-1.png" alt="Boxplot of Final Maths grades and school" width="672" />
+
+<p class="caption">
+
+Figure 47: Boxplot of Final Maths grades and school
+
+</p>
+
+</div>
+
+I will choose
 
 ## More
 
@@ -2819,9 +3093,9 @@ Field, A., J. Miles, and Z. Field. 2012. *Discovering Statistics Using R*. SAGE 
 
 </div>
 
-<div id="ref-tuman1991effects">
+<div id="ref-haviland1990yates">
 
-Tuman, Kenneth J, Robert J McCarthy, Robert J March, Giacomo A DeLaria, Rajesh V Patel, and Anthony D Ivankovich. 1991. “Effects of Epidural Anesthesia and Analgesia on Coagulation and Outcome After Major Vascular Surgery.” *Anesthesia & Analgesia* 73 (6): 696–704.
+Haviland, Mark G. 1990. “Yates’s Correction for Continuity and the Analysis of 2\(\times\) 2 Contingency Tables.” *Statistics in Medicine* 9 (4): 363–67.
 
 </div>
 
