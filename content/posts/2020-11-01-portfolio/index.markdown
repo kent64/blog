@@ -16,13 +16,13 @@ link-citations: true
 
 I am writing this blog as part of an assignment. My Details:
 
-|                 |                              |
-| --------------- | ---------------------------- |
-| Student Name:   | B Kent                       |
-| Student Number: | cxxxxxxxx                    |
-| Programme Code: | TU060                        |
-| Version R:      | R version 4.0.3 (2020-10-10) |
-| R packages:     |                              |
+|                 |                                                           |
+| --------------- | --------------------------------------------------------- |
+| Student Name:   | Brendan Kent                                              |
+| Student Number: | C08861692                                                 |
+| Programme Code: | TU060                                                     |
+| Version R:      | R version 4.0.3 (2020-10-10)                              |
+| R packages:     | Listed in <a href="#getting-started">Getting startedr</a> |
 
 # Getting started
 
@@ -33,261 +33,35 @@ This data set is from a paper by P.Cortez and A. Silva entitled “Using Data Mi
 We need to get the data
 
 ``` r
-library("dplyr")
-```
-
-    ## 
-    ## Attaching package: 'dplyr'
-
-    ## The following objects are masked from 'package:stats':
-    ## 
-    ##     filter, lag
-
-    ## The following objects are masked from 'package:base':
-    ## 
-    ##     intersect, setdiff, setequal, union
-
-``` r
-library("tidyr")
 library("viridis")
-```
-
-    ## Loading required package: viridisLite
-
-``` r
 library("finalfit") # for ff_glimpse(studentdf)
 library("gridExtra") # for plots in a grid
-```
-
-    ## 
-    ## Attaching package: 'gridExtra'
-
-    ## The following object is masked from 'package:dplyr':
-    ## 
-    ##     combine
-
-``` r
 library("ggplot2") # For creating histograms and plots
 library("GGally") # for other plots
-```
-
-    ## Registered S3 method overwritten by 'GGally':
-    ##   method from   
-    ##   +.gg   ggplot2
-
-``` r
 library("stargazer")#For formatting outputs/tables
-```
 
-    ## 
-    ## Please cite as:
-
-    ##  Hlavac, Marek (2018). stargazer: Well-Formatted Regression and Summary Statistics Tables.
-
-    ##  R package version 5.2.2. https://CRAN.R-project.org/package=stargazer
-
-``` r
 # and other libraries used in this File
 library("semTools")
-```
-
-    ## Loading required package: lavaan
-
-    ## This is lavaan 0.6-7
-
-    ## lavaan is BETA software! Please report any bugs.
-
-    ## 
-
-    ## ###############################################################################
-
-    ## This is semTools 0.5-3
-
-    ## All users of R (or SEM) are invited to submit functions or ideas for functions.
-
-    ## ###############################################################################
-
-``` r
 library("sjstats")
 library("car")
-```
-
-    ## Loading required package: carData
-
-    ## Registered S3 methods overwritten by 'car':
-    ##   method                          from
-    ##   influence.merMod                lme4
-    ##   cooks.distance.influence.merMod lme4
-    ##   dfbeta.influence.merMod         lme4
-    ##   dfbetas.influence.merMod        lme4
-
-    ## 
-    ## Attaching package: 'car'
-
-    ## The following object is masked from 'package:dplyr':
-    ## 
-    ##     recode
-
-``` r
 library("stats")
 library("effectsize")
-```
-
-    ## 
-    ## Attaching package: 'effectsize'
-
-    ## The following objects are masked from 'package:sjstats':
-    ## 
-    ##     cohens_f, phi
-
-``` r
 library("FSA")
-```
-
-    ## ## FSA v0.8.30. See citation('FSA') if used in publication.
-    ## ## Run fishR() for related website and fishR('IFAR') for related book.
-
-    ## 
-    ## Attaching package: 'FSA'
-
-    ## The following object is masked from 'package:car':
-    ## 
-    ##     bootCase
-
-    ## The following object is masked from 'package:sjstats':
-    ## 
-    ##     se
-
-``` r
 library("gmodels")
-```
-
-    ## 
-    ## Attaching package: 'gmodels'
-
-    ## The following object is masked from 'package:sjstats':
-    ## 
-    ##     ci
-
-``` r
 library("knitr")
 library("pastecs")
-```
-
-    ## 
-    ## Attaching package: 'pastecs'
-
-    ## The following object is masked from 'package:tidyr':
-    ## 
-    ##     extract
-
-    ## The following objects are masked from 'package:dplyr':
-    ## 
-    ##     first, last
-
-``` r
 library("psych")
-```
-
-    ## 
-    ## Attaching package: 'psych'
-
-    ## The following object is masked from 'package:FSA':
-    ## 
-    ##     headtail
-
-    ## The following object is masked from 'package:effectsize':
-    ## 
-    ##     phi
-
-    ## The following object is masked from 'package:car':
-    ## 
-    ##     logit
-
-    ## The following object is masked from 'package:sjstats':
-    ## 
-    ##     phi
-
-    ## The following object is masked from 'package:semTools':
-    ## 
-    ##     skew
-
-    ## The following object is masked from 'package:lavaan':
-    ## 
-    ##     cor2cov
-
-    ## The following objects are masked from 'package:ggplot2':
-    ## 
-    ##     %+%, alpha
-
-``` r
 library("rstatix")
-```
-
-    ## 
-    ## Attaching package: 'rstatix'
-
-    ## The following objects are masked from 'package:effectsize':
-    ## 
-    ##     cohens_d, eta_squared
-
-    ## The following object is masked from 'package:stats':
-    ## 
-    ##     filter
-
-``` r
 library("sjstats")
 library("stargazer")
 library("userfriendlyscience")
-```
-
-    ## Registered S3 methods overwritten by 'ufs':
-    ##   method                     from               
-    ##   grid.draw.ggProportionPlot userfriendlyscience
-    ##   pander.associationMatrix   userfriendlyscience
-    ##   pander.dataShape           userfriendlyscience
-    ##   pander.descr               userfriendlyscience
-    ##   pander.normalityAssessment userfriendlyscience
-    ##   print.CramersV             userfriendlyscience
-    ##   print.associationMatrix    userfriendlyscience
-    ##   print.confIntOmegaSq       userfriendlyscience
-    ##   print.confIntV             userfriendlyscience
-    ##   print.dataShape            userfriendlyscience
-    ##   print.descr                userfriendlyscience
-    ##   print.ggProportionPlot     userfriendlyscience
-    ##   print.meanConfInt          userfriendlyscience
-    ##   print.multiVarFreq         userfriendlyscience
-    ##   print.normalityAssessment  userfriendlyscience
-    ##   print.regrInfluential      userfriendlyscience
-    ##   print.scaleDiagnosis       userfriendlyscience
-    ##   print.scaleStructure       userfriendlyscience
-    ##   print.scatterMatrix        userfriendlyscience
-
-    ## 
-    ## Attaching package: 'userfriendlyscience'
-
-    ## The following objects are masked from 'package:FSA':
-    ## 
-    ##     is.even, is.odd
-
-    ## The following object is masked from 'package:semTools':
-    ## 
-    ##     reliability
-
-``` r
 library("lmtest")
-```
-
-    ## Loading required package: zoo
-
-    ## 
-    ## Attaching package: 'zoo'
-
-    ## The following objects are masked from 'package:base':
-    ## 
-    ##     as.Date, as.Date.numeric
-
-``` r
+library("Epi")
+library("DescTools")
+library("arm")
+library("generalhoslem")
+library("dplyr")
+library("tidyr")
 #download.file(url="https://archive.ics.uci.edu/ml/machine-learning-databases/00320/student.zip", destfile="student.zip")
 #unzip("student.zip",exdir = "studentdf")
 list.files("studentdf")
@@ -339,20 +113,18 @@ studentdf %>%
   sample_n(1) 
 ```
 
-    ##   school sex age address famsize pstatus medu fedu    mjob     fjob reason
-    ## 1     MS   F  18       U     LE3       T    1    1 at_home services course
-    ##   nursery internet guardian.x traveltime.x studytime.x failures.x schoolsup.x
-    ## 1     yes      yes     father            2           3          0          no
-    ##   famsup.x paid.x activities.x higher.x romantic.x famrel.x freetime.x goout.x
-    ## 1       no     no           no      yes         no        5          3       2
-    ##   dalc.x walc.x health.x absences.x g1.x g2.x g3.x guardian.y traveltime.y
-    ## 1      1      1        4          0   18   16   16     father            2
-    ##   studytime.y failures.y schoolsup.y famsup.y paid.y activities.y higher.y
-    ## 1           3          0          no       no     no           no      yes
-    ##   romantic.y famrel.y freetime.y goout.y dalc.y walc.y health.y absences.y g1.y
-    ## 1         no        5          3       2      1      1        4          0   19
-    ##   g2.y g3.y
-    ## 1   17   18
+    ##   school sex age address famsize pstatus medu fedu    mjob  fjob reason nursery
+    ## 1     GP   F  17       U     GT3       T    2    3 at_home other   home     yes
+    ##   internet guardian.x traveltime.x studytime.x failures.x schoolsup.x famsup.x
+    ## 1       no     father            2           1          0          no      yes
+    ##   paid.x activities.x higher.x romantic.x famrel.x freetime.x goout.x dalc.x
+    ## 1    yes           no      yes         no        3          3       3      1
+    ##   walc.x health.x absences.x g1.x g2.x g3.x guardian.y traveltime.y studytime.y
+    ## 1      4        3          3    7    7    8     father            2           1
+    ##   failures.y schoolsup.y famsup.y paid.y activities.y higher.y romantic.y
+    ## 1          0          no      yes     no           no      yes         no
+    ##   famrel.y freetime.y goout.y dalc.y walc.y health.y absences.y g1.y g2.y g3.y
+    ## 1        3          3       3      1      4        3          4   12   13   13
 
 ## Population vs Sample
 
@@ -1092,7 +864,7 @@ In R we have a library called finalfit which has the function ff\_glimpse, which
 
 ``` r
 studentdf %>% 
-  select(age,mjob,g3.y,reason) %>%
+  dplyr::select(age, mjob, g3.y, reason) %>%
   ff_glimpse()
 ```
 
@@ -1271,7 +1043,7 @@ The following are outliers at 1.96 SDs, these students did really well\!
 studentdf %>%
   mutate(zscale = scale(g2.x)) %>%
   filter(zscale > 1.96 | zscale < -1.96) %>%
-  select(zscale, g1.x,g2.x,g3.x)
+  dplyr::select(zscale, g1.x,g2.x,g3.x)
 ```
 
     ##      zscale g1.x g2.x g3.x
@@ -1440,7 +1212,7 @@ length(a[a==FALSE])
 studentdf %>% 
   filter(absences.x < 40,
          absences.y < 40) %>%
-  select(absences.x, absences.y) %>%
+  dplyr::select(absences.x, absences.y) %>%
   gather(key=Type, value=Value) %>% 
   ggplot(aes(x=Value,fill=Type)) + 
   labs(x="number of school absences") +
@@ -1897,7 +1669,7 @@ FSA::perc(as.numeric(zg1), 3.29, "gt")
 studentdf %>%
   mutate(zscale = scale(g1.x)) %>%
   filter(zscale > 1.96 | zscale < -1.96) %>%
-  select(zscale, g1.x,g2.x,g3.x)
+  dplyr::select(zscale, g1.x,g2.x,g3.x)
 ```
 
     ##       zscale g1.x g2.x g3.x
@@ -2352,7 +2124,7 @@ Removing these outliers:
 studentdf %>%
   mutate(zscale = scale(g3.y)) %>%
   filter(zscale > 3.29 | zscale < -3.29) %>%
-  select(zscale, g3.y)
+  dplyr::select(zscale, g3.y)
 reasondf <- studentdf %>%
   mutate(zscale = scale(g3.y)) %>%
   filter(zscale < 3.29 | zscale > -3.29)
@@ -3365,7 +3137,7 @@ Figure 48: Cook’s D for model1
 
 ``` r
 studentdf %>%
-  select(g1.x,g2.x,g3.x) %>%
+  dplyr::select(g1.x,g2.x,g3.x) %>%
   ggpairs() 
 ```
 
@@ -3561,51 +3333,64 @@ Question:
 
 Can a model be built to predict if a student answered “yes” to the question “Do you want to take higher education?”.?
 
+Making a dummy variables for our test and remove the NAs:
+
 ``` r
-table(studentdf$higher.x)
+logregressiondf <- studentdf %>% 
+  mutate(dummy_higher = if_else(studentdf$higher.x == "yes", 1, 0)) %>%
+  filter(!is.na(g3.x))
+```
+
+``` r
+table(logregressiondf$higher.x)
+table(logregressiondf$dummy_higher)
 ```
 
     ## 
     ##  no yes 
-    ##  18 364
+    ##  11 332 
+    ## 
+    ##   0   1 
+    ##  11 332
 
-  - No has a low frequency but it’s just enough to continue to build the model.
+  - “No” has a low frequency but it’s just enough to continue to build the model.
 
-We will use “dummy\_gender\_girl” from the last section to start our prediction model:
+WE will be comparing out model against a baseline model which is using the category of the most commonly occurred variables to predict, by comparing against that we can assess our model and see that it improves prediction.
+
+We will use G3 Results from the last section to start our prediction model:
 
 ``` r
 #Make sure categorical data is used as factors
-logmodel1 <- glm(higher.x ~ studentdf$dummy_gender_girl, data = studentdf, na.action = na.exclude, family = binomial(link=logit))
+logmodel1 <- glm(dummy_higher ~ g3.x, data = logregressiondf, na.action = na.exclude, family = binomial(link=logit))
 #Full summary of the model
 summary(logmodel1)
 ```
 
     ## 
     ## Call:
-    ## glm(formula = higher.x ~ studentdf$dummy_gender_girl, family = binomial(link = logit), 
-    ##     data = studentdf, na.action = na.exclude)
+    ## glm(formula = dummy_higher ~ g3.x, family = binomial(link = logit), 
+    ##     data = logregressiondf, na.action = na.exclude)
     ## 
     ## Deviance Residuals: 
     ##     Min       1Q   Median       3Q      Max  
-    ## -2.8947   0.1747   0.1747   0.4124   0.4124  
+    ## -2.8043   0.1494   0.2295   0.2646   0.6062  
     ## 
     ## Coefficients:
-    ##                             Estimate Std. Error z value             Pr(>|z|)
-    ## (Intercept)                   2.4218     0.2694   8.989 < 0.0000000000000002
-    ## studentdf$dummy_gender_girl   1.7525     0.6411   2.734              0.00627
-    ##                                
-    ## (Intercept)                 ***
-    ## studentdf$dummy_gender_girl ** 
+    ##             Estimate Std. Error z value Pr(>|z|)  
+    ## (Intercept)   0.4451     1.0726   0.415   0.6781  
+    ## g3.x          0.2889     0.1128   2.562   0.0104 *
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## 
     ## (Dispersion parameter for binomial family taken to be 1)
     ## 
-    ##     Null deviance: 145.12  on 381  degrees of freedom
-    ## Residual deviance: 135.04  on 380  degrees of freedom
-    ## AIC: 139.04
+    ##     Null deviance: 97.32  on 342  degrees of freedom
+    ## Residual deviance: 89.67  on 341  degrees of freedom
+    ## AIC: 93.67
     ## 
     ## Number of Fisher Scoring iterations: 7
+
+  - G3 results are significantly improving our prediction with a p-value \<.05 and from the z-value, we see it’s having a positive effect. It contributes 0.289 to the log odds.
 
 Chi-square plus significance:
 
@@ -3615,13 +3400,277 @@ lmtest::lrtest(logmodel1)
 
     ## Likelihood ratio test
     ## 
-    ## Model 1: higher.x ~ studentdf$dummy_gender_girl
-    ## Model 2: higher.x ~ 1
+    ## Model 1: dummy_higher ~ g3.x
+    ## Model 2: dummy_higher ~ 1
     ##   #Df  LogLik Df  Chisq Pr(>Chisq)   
-    ## 1   2 -67.521                        
-    ## 2   1 -72.560 -1 10.079     0.0015 **
+    ## 1   2 -44.835                        
+    ## 2   1 -48.660 -1 7.6495   0.005679 **
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Showing Chi-square and Pseudo R2 calculation for informational purposes:
+
+``` r
+#lmtest:lrtest achieves the same thing
+modelChi <- logmodel1$null.deviance - logmodel1$deviance
+cat("modelChi: ", modelChi, "\n")
+pseudo.R2 <- modelChi / logmodel1$null.deviance
+cat("pseudo.R2: ", pseudo.R2, "\n")
+chidf <- logmodel1$df.null - logmodel1$df.residual
+cat("chidf: ", chidf, "\n")
+chisq.prob <- 1 - pchisq(modelChi, chidf)
+cat("chisq.prob: ", chisq.prob, "\n")
+```
+
+    ## modelChi:  7.649521 
+    ## pseudo.R2:  0.07860192 
+    ## chidf:  1 
+    ## chisq.prob:  0.005678741
+
+  - the Chi Square p-value is significant so we can reject the Null hypothesis that the model is not better than chance. The pseudo R squared value tells that 7.8% is explained by this predictor.
+  - x<sup>2</sup>(1) = 7.65, p = 0.006
+
+<img src="https://latex.codecogs.com/gif.latex?x^{4}/5" title="x^{4}/5" />
+
+``` r
+#Output the sensitivity, specificity, and ROC plot
+Epi::ROC(form=logregressiondf$dummy_higher ~ logregressiondf$dummy_gender_girl, plot="ROC")
+```
+
+<div class="figure" style="text-align: center">
+
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-134-1.png" alt="Sensitivity, specificity, and ROC plot" width="100%" />
+
+<p class="caption">
+
+Figure 53: Sensitivity, specificity, and ROC plot
+
+</p>
+
+</div>
+
+``` r
+print("Pseudo Rsquared:") 
+DescTools::PseudoR2(logmodel1, which="CoxSnell")
+DescTools::PseudoR2(logmodel1, which="Nagelkerke")
+print("Summary of the model with co-efficients:")
+stargazer(logmodel1, type="text")
+```
+
+    ## [1] "Pseudo Rsquared:"
+    ##   CoxSnell 
+    ## 0.02205496 
+    ## Nagelkerke 
+    ## 0.08928017 
+    ## [1] "Summary of the model with co-efficients:"
+    ## 
+    ## =============================================
+    ##                       Dependent variable:    
+    ##                   ---------------------------
+    ##                          dummy_higher        
+    ## ---------------------------------------------
+    ## g3.x                        0.289**          
+    ##                             (0.113)          
+    ##                                              
+    ## Constant                     0.445           
+    ##                             (1.073)          
+    ##                                              
+    ## ---------------------------------------------
+    ## Observations                  343            
+    ## Log Likelihood              -44.835          
+    ## Akaike Inf. Crit.           93.670           
+    ## =============================================
+    ## Note:             *p<0.1; **p<0.05; ***p<0.01
+
+``` r
+print("Exponentiate the co-efficients:")
+exp(coefficients(logmodel1))
+print("odds ratios and 95% CI:")
+cbind(Estimate=round(coef(logmodel1),4),
+OR=round(exp(coef(logmodel1)),4))
+print("Probability of answering yes when male")
+arm::invlogit(coef(logmodel1)[1]+ coef(logmodel1)[2]*0)#YES this is the same as just having the 1st co-efficient
+print("#Probability of answering yes when female")
+arm::invlogit(coef(logmodel1)[1]+ coef(logmodel1)[2]*1)
+print("Check the assumption of linearity of independent variables and log odds using a Hosmer-Lemeshow test, if this is not statsitically significant we are ok")
+DescTools::PseudoR2(logmodel1, which="Nagelkerke")
+```
+
+    ## [1] "Exponentiate the co-efficients:"
+    ## (Intercept)        g3.x 
+    ##    1.560701    1.334996 
+    ## [1] "odds ratios and 95% CI:"
+    ##             Estimate     OR
+    ## (Intercept)   0.4451 1.5607
+    ## g3.x          0.2889 1.3350
+    ## [1] "Probability of answering yes when male"
+    ## (Intercept) 
+    ##    0.609482 
+    ## [1] "#Probability of answering yes when female"
+    ## (Intercept) 
+    ##   0.6756963 
+    ## [1] "Check the assumption of linearity of independent variables and log odds using a Hosmer-Lemeshow test, if this is not statsitically significant we are ok"
+    ## Nagelkerke 
+    ## 0.08928017
+
+``` r
+print("Collinearity:")
+vifmodel<-car::vif(logmodel1) #You can ignore the warning messages, GVIF^(1/(2*Df)) is the value of interest
+```
+
+    ## Error in vif.default(logmodel1): model contains fewer than 2 terms
+
+``` r
+vifmodel
+print("Tolerance:")
+1/vifmodel
+```
+
+    ## [1] "Collinearity:"
+    ##        studentdf$scale_g2.x studentdf$dummy_mjob_health 
+    ##                    1.032592                    1.014245 
+    ## studentdf$dummy_gender_girl 
+    ##                    1.018496 
+    ## [1] "Tolerance:"
+    ##        studentdf$scale_g2.x studentdf$dummy_mjob_health 
+    ##                   0.9684367                   0.9859552 
+    ## studentdf$dummy_gender_girl 
+    ##                   0.9818397
+
+  - If the VIF value is greater than 2.5 or the Tolerance is less than 0.4, then you have concerns over multicollinearity. I have an error for car::vif because model is too small, it has only one predictor.
+
+*Now extend the model with the students gender results*
+
+``` r
+#Make sure categorical data is used as factors
+logmodel2 <- glm(dummy_higher ~ g3.x + dummy_gender_girl, data = logregressiondf, na.action = na.exclude, family = binomial(link=logit))
+
+#Full summary of the model
+summary(logmodel2)
+
+#Chi-square plus significance
+lmtest::lrtest(logmodel2)
+
+#Pseudo Rsquared 
+DescTools::PseudoR2(logmodel2, which="CoxSnell")
+DescTools::PseudoR2(logmodel2, which="Nagelkerke")
+
+#Summary of the model with co-efficients
+stargazer(logmodel2, type="text")
+```
+
+    ## 
+    ## Call:
+    ## glm(formula = dummy_higher ~ g3.x + dummy_gender_girl, family = binomial(link = logit), 
+    ##     data = logregressiondf, na.action = na.exclude)
+    ## 
+    ## Deviance Residuals: 
+    ##     Min       1Q   Median       3Q      Max  
+    ## -2.9225   0.1008   0.1578   0.2782   0.8029  
+    ## 
+    ## Coefficients:
+    ##                   Estimate Std. Error z value Pr(>|z|)   
+    ## (Intercept)        -0.7400     1.1800  -0.627  0.53062   
+    ## g3.x                0.3413     0.1200   2.845  0.00445 **
+    ## dummy_gender_girl   1.9244     0.8090   2.379  0.01737 * 
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ## 
+    ## (Dispersion parameter for binomial family taken to be 1)
+    ## 
+    ##     Null deviance: 97.320  on 342  degrees of freedom
+    ## Residual deviance: 82.162  on 340  degrees of freedom
+    ## AIC: 88.162
+    ## 
+    ## Number of Fisher Scoring iterations: 7
+    ## 
+    ## Likelihood ratio test
+    ## 
+    ## Model 1: dummy_higher ~ g3.x + dummy_gender_girl
+    ## Model 2: dummy_higher ~ 1
+    ##   #Df  LogLik Df  Chisq Pr(>Chisq)    
+    ## 1   3 -41.081                         
+    ## 2   1 -48.660 -2 15.157  0.0005113 ***
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ##   CoxSnell 
+    ## 0.04322818 
+    ## Nagelkerke 
+    ##   0.174991 
+    ## 
+    ## =============================================
+    ##                       Dependent variable:    
+    ##                   ---------------------------
+    ##                          dummy_higher        
+    ## ---------------------------------------------
+    ## g3.x                       0.341***          
+    ##                             (0.120)          
+    ##                                              
+    ## dummy_gender_girl           1.924**          
+    ##                             (0.809)          
+    ##                                              
+    ## Constant                    -0.740           
+    ##                             (1.180)          
+    ##                                              
+    ## ---------------------------------------------
+    ## Observations                  343            
+    ## Log Likelihood              -41.081          
+    ## Akaike Inf. Crit.           88.162           
+    ## =============================================
+    ## Note:             *p<0.1; **p<0.05; ***p<0.01
+
+``` r
+#Output the sensitivity, specificity, and ROC plot
+Epi::ROC(form=logregressiondf$dummy_higher ~ logregressiondf$g3.x + logregressiondf$dummy_gender_girl, plot="ROC")
+```
+
+<div class="figure" style="text-align: center">
+
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-139-1.png" alt="Sensitivity, specificity, and ROC plot" width="100%" />
+
+<p class="caption">
+
+Figure 54: Sensitivity, specificity, and ROC plot
+
+</p>
+
+</div>
+
+``` r
+print("Exponentiate the co-efficients")
+exp(coefficients(logmodel2))
+print("odds ratios ")
+cbind(Estimate=round(coef(logmodel2),4),
+OR=round(exp(coef(logmodel2)),4))
+```
+
+    ## [1] "Exponentiate the co-efficients"
+    ##       (Intercept)              g3.x dummy_gender_girl 
+    ##         0.4771305         1.4068330         6.8512312 
+    ## [1] "odds ratios "
+    ##                   Estimate     OR
+    ## (Intercept)        -0.7400 0.4771
+    ## g3.x                0.3413 1.4068
+    ## dummy_gender_girl   1.9244 6.8512
+
+``` r
+#Check the assumption of linearity of independent variables and log odds using a Hosmer-Lemeshow test, if this is not statistically significant we are ok
+DescTools::PseudoR2(logmodel2, which="Nagelkerke")
+print("Collinearity:")
+vifmodel<-car::vif(logmodel2)#You can ignore the warning messages, GVIF^(1/(2*Df)) is the value of interest
+vifmodel
+print("Tolerance:")
+1/vifmodel
+```
+
+    ## Nagelkerke 
+    ##   0.174991 
+    ## [1] "Collinearity:"
+    ##              g3.x dummy_gender_girl 
+    ##          1.027227          1.027227 
+    ## [1] "Tolerance:"
+    ##              g3.x dummy_gender_girl 
+    ##         0.9734948         0.9734948
 
 # References
 

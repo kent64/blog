@@ -129,11 +129,11 @@ if (!doNotTrack) {
 <tbody>
 <tr>
 <td>Student Name:</td>
-<td>B Kent</td>
+<td>Brendan Kent</td>
 </tr>
 <tr>
 <td>Student Number:</td>
-<td>cxxxxxxxx</td>
+<td>C08861692</td>
 </tr>
 <tr>
 <td>Programme Code:</td>
@@ -145,7 +145,7 @@ if (!doNotTrack) {
 </tr>
 <tr>
 <td>R packages:</td>
-<td></td>
+<td>Listed in <a href="#getting-started">Getting startedr</a></td>
 </tr>
 </tbody>
 </table>
@@ -153,46 +153,36 @@ if (!doNotTrack) {
 <p>We explore a student exam performance data set. This is a data set about secondary school academical achievements in Portugal. The data contains two sets of results, one set for results in Maths and one set for results in Portuguese. These are merged together to form one data set which I will endeavor to break down in order to learn about the basic properties of statistics, describing the frequencies and probabilities, hypothesis testing, Normality, Missing data, Relationships, Component Analysis and more.</p>
 <p>This data set is from a paper by P.Cortez and A. Silva entitled “Using Data Mining to Predict Secondary School Student Performance”. (Cortez and Silva <a href="#ref-cortez2008using">2008</a>)</p>
 <p>We need to get the data</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#06b;font-weight:bold">library</span>(<span style="background-color:#fff0f0">&#34;dplyr&#34;</span>)
-</code></pre></div><pre><code>## 
-## Attaching package: 'dplyr'
-
-## The following objects are masked from 'package:stats':
-## 
-##     filter, lag
-
-## The following objects are masked from 'package:base':
-## 
-##     intersect, setdiff, setequal, union
-</code></pre>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#06b;font-weight:bold">library</span>(<span style="background-color:#fff0f0">&#34;tidyr&#34;</span>)
-<span style="color:#06b;font-weight:bold">library</span>(<span style="background-color:#fff0f0">&#34;viridis&#34;</span>)
-</code></pre></div><pre><code>## Loading required package: viridisLite
-</code></pre>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#06b;font-weight:bold">library</span>(<span style="background-color:#fff0f0">&#34;finalfit&#34;</span>) <span style="color:#888"># for ff_glimpse(studentdf)</span>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#06b;font-weight:bold">library</span>(<span style="background-color:#fff0f0">&#34;viridis&#34;</span>)
+<span style="color:#06b;font-weight:bold">library</span>(<span style="background-color:#fff0f0">&#34;finalfit&#34;</span>) <span style="color:#888"># for ff_glimpse(studentdf)</span>
 <span style="color:#06b;font-weight:bold">library</span>(<span style="background-color:#fff0f0">&#34;gridExtra&#34;</span>) <span style="color:#888"># for plots in a grid</span>
-</code></pre></div><pre><code>## 
-## Attaching package: 'gridExtra'
-
-## The following object is masked from 'package:dplyr':
-## 
-##     combine
-</code></pre>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#06b;font-weight:bold">library</span>(<span style="background-color:#fff0f0">&#34;ggplot2&#34;</span>) <span style="color:#888"># For creating histograms and plots</span>
+<span style="color:#06b;font-weight:bold">library</span>(<span style="background-color:#fff0f0">&#34;ggplot2&#34;</span>) <span style="color:#888"># For creating histograms and plots</span>
 <span style="color:#06b;font-weight:bold">library</span>(<span style="background-color:#fff0f0">&#34;GGally&#34;</span>) <span style="color:#888"># for other plots</span>
-</code></pre></div><pre><code>## Registered S3 method overwritten by 'GGally':
-##   method from   
-##   +.gg   ggplot2
-</code></pre>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#06b;font-weight:bold">library</span>(<span style="background-color:#fff0f0">&#34;stargazer&#34;</span>)<span style="color:#888">#For formatting outputs/tables</span>
-</code></pre></div><pre><code>## 
-## Please cite as:
+<span style="color:#06b;font-weight:bold">library</span>(<span style="background-color:#fff0f0">&#34;stargazer&#34;</span>)<span style="color:#888">#For formatting outputs/tables</span>
 
-##  Hlavac, Marek (2018). stargazer: Well-Formatted Regression and Summary Statistics Tables.
-
-##  R package version 5.2.2. https://CRAN.R-project.org/package=stargazer
-</code></pre>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#888">#download.file(url=&#34;https://archive.ics.uci.edu/ml/machine-learning-databases/00320/student.zip&#34;, destfile=&#34;student.zip&#34;)</span>
+<span style="color:#888"># and other libraries used in this File</span>
+<span style="color:#06b;font-weight:bold">library</span>(<span style="background-color:#fff0f0">&#34;semTools&#34;</span>)
+<span style="color:#06b;font-weight:bold">library</span>(<span style="background-color:#fff0f0">&#34;sjstats&#34;</span>)
+<span style="color:#06b;font-weight:bold">library</span>(<span style="background-color:#fff0f0">&#34;car&#34;</span>)
+<span style="color:#06b;font-weight:bold">library</span>(<span style="background-color:#fff0f0">&#34;stats&#34;</span>)
+<span style="color:#06b;font-weight:bold">library</span>(<span style="background-color:#fff0f0">&#34;effectsize&#34;</span>)
+<span style="color:#06b;font-weight:bold">library</span>(<span style="background-color:#fff0f0">&#34;FSA&#34;</span>)
+<span style="color:#06b;font-weight:bold">library</span>(<span style="background-color:#fff0f0">&#34;gmodels&#34;</span>)
+<span style="color:#06b;font-weight:bold">library</span>(<span style="background-color:#fff0f0">&#34;knitr&#34;</span>)
+<span style="color:#06b;font-weight:bold">library</span>(<span style="background-color:#fff0f0">&#34;pastecs&#34;</span>)
+<span style="color:#06b;font-weight:bold">library</span>(<span style="background-color:#fff0f0">&#34;psych&#34;</span>)
+<span style="color:#06b;font-weight:bold">library</span>(<span style="background-color:#fff0f0">&#34;rstatix&#34;</span>)
+<span style="color:#06b;font-weight:bold">library</span>(<span style="background-color:#fff0f0">&#34;sjstats&#34;</span>)
+<span style="color:#06b;font-weight:bold">library</span>(<span style="background-color:#fff0f0">&#34;stargazer&#34;</span>)
+<span style="color:#06b;font-weight:bold">library</span>(<span style="background-color:#fff0f0">&#34;userfriendlyscience&#34;</span>)
+<span style="color:#06b;font-weight:bold">library</span>(<span style="background-color:#fff0f0">&#34;lmtest&#34;</span>)
+<span style="color:#06b;font-weight:bold">library</span>(<span style="background-color:#fff0f0">&#34;Epi&#34;</span>)
+<span style="color:#06b;font-weight:bold">library</span>(<span style="background-color:#fff0f0">&#34;DescTools&#34;</span>)
+<span style="color:#06b;font-weight:bold">library</span>(<span style="background-color:#fff0f0">&#34;arm&#34;</span>)
+<span style="color:#06b;font-weight:bold">library</span>(<span style="background-color:#fff0f0">&#34;generalhoslem&#34;</span>)
+<span style="color:#06b;font-weight:bold">library</span>(<span style="background-color:#fff0f0">&#34;dplyr&#34;</span>)
+<span style="color:#06b;font-weight:bold">library</span>(<span style="background-color:#fff0f0">&#34;tidyr&#34;</span>)
+<span style="color:#888">#download.file(url=&#34;https://archive.ics.uci.edu/ml/machine-learning-databases/00320/student.zip&#34;, destfile=&#34;student.zip&#34;)</span>
 <span style="color:#888">#unzip(&#34;student.zip&#34;,exdir = &#34;studentdf&#34;)</span>
 <span style="color:#06b;font-weight:bold">list.files</span>(<span style="background-color:#fff0f0">&#34;studentdf&#34;</span>)
 </code></pre></div><pre><code>## [1] &quot;student-mat.csv&quot; &quot;student-merge.R&quot; &quot;student-por.csv&quot; &quot;student.txt&quot;
@@ -226,20 +216,18 @@ studentdf<span style="color:#333">=</span><span style="color:#06b;font-weight:bo
 <p>let’s us pick a random student:</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">studentdf <span style="color:#333">%&gt;%</span> 
   <span style="color:#06b;font-weight:bold">sample_n</span>(<span style="color:#60e;font-weight:bold">1</span>) 
-</code></pre></div><pre><code>##   school sex age address famsize pstatus medu fedu     mjob     fjob reason
-## 1     GP   F  17       U     GT3       A    4    3 services services course
-##   nursery internet guardian.x traveltime.x studytime.x failures.x schoolsup.x
-## 1     yes      yes     mother            1           2          0          no
-##   famsup.x paid.x activities.x higher.x romantic.x famrel.x freetime.x goout.x
-## 1      yes    yes           no      yes        yes        5          2       2
-##   dalc.x walc.x health.x absences.x g1.x g2.x g3.x guardian.y traveltime.y
-## 1      1      2        5         23   13   13   13     mother            1
-##   studytime.y failures.y schoolsup.y famsup.y paid.y activities.y higher.y
-## 1           2          0          no      yes     no           no      yes
-##   romantic.y famrel.y freetime.y goout.y dalc.y walc.y health.y absences.y g1.y
-## 1        yes        5          2       2      1      2        5         14   15
-##   g2.y g3.y
-## 1   14   17
+</code></pre></div><pre><code>##   school sex age address famsize pstatus medu fedu    mjob  fjob reason nursery
+## 1     GP   F  17       U     GT3       T    2    3 at_home other   home     yes
+##   internet guardian.x traveltime.x studytime.x failures.x schoolsup.x famsup.x
+## 1       no     father            2           1          0          no      yes
+##   paid.x activities.x higher.x romantic.x famrel.x freetime.x goout.x dalc.x
+## 1    yes           no      yes         no        3          3       3      1
+##   walc.x health.x absences.x g1.x g2.x g3.x guardian.y traveltime.y studytime.y
+## 1      4        3          3    7    7    8     father            2           1
+##   failures.y schoolsup.y famsup.y paid.y activities.y higher.y romantic.y
+## 1          0          no      yes     no           no      yes         no
+##   famrel.y freetime.y goout.y dalc.y walc.y health.y absences.y g1.y g2.y g3.y
+## 1        3          3       3      1      4        3          4   12   13   13
 </code></pre>
 <h2 id="population-vs-sample">Population vs Sample</h2>
 <p>We are interested in finding results for the entire population of students that have completed exams in maths and Portuguese in Portugal, but we know that is not possible, so what we have is a sample. We will use this sample to infer things about the population as a whole.</p>
@@ -936,7 +924,7 @@ t[t<span style="color:#333">&gt;</span><span style="color:#60e;font-weight:bold"
 <p>Because our data set is relatively large, we don’t expect missing data to have a serious impact. It all goes back to being representative of the population.</p>
 <p>In R we have a library called finalfit which has the function ff_glimpse, which we can use to identify missing data.</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">studentdf <span style="color:#333">%&gt;%</span> 
-  <span style="color:#06b;font-weight:bold">select</span>(age,mjob,g3.y,reason) <span style="color:#333">%&gt;%</span>
+  dplyr<span style="color:#333">::</span><span style="color:#06b;font-weight:bold">select</span>(age, mjob, g3.y, reason) <span style="color:#333">%&gt;%</span>
   <span style="color:#06b;font-weight:bold">ff_glimpse</span>()
 </code></pre></div><pre><code>## $Continuous
 ##      label var_type   n missing_n missing_percent mean  sd  min quartile_25
@@ -1067,7 +1055,7 @@ The following are outliers at 1.96 SDs, these students did really well!</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">studentdf <span style="color:#333">%&gt;%</span>
   <span style="color:#06b;font-weight:bold">mutate</span>(zscale <span style="color:#333">=</span> <span style="color:#06b;font-weight:bold">scale</span>(g2.x)) <span style="color:#333">%&gt;%</span>
   <span style="color:#06b;font-weight:bold">filter</span>(zscale <span style="color:#333">&gt;</span> <span style="color:#60e;font-weight:bold">1.96</span> <span style="color:#333">|</span> zscale <span style="color:#333">&lt;</span> <span style="color:#60e;font-weight:bold">-1.96</span>) <span style="color:#333">%&gt;%</span>
-  <span style="color:#06b;font-weight:bold">select</span>(zscale, g1.x,g2.x,g3.x)
+  dplyr<span style="color:#333">::</span><span style="color:#06b;font-weight:bold">select</span>(zscale, g1.x,g2.x,g3.x)
 </code></pre></div><pre><code>##      zscale g1.x g2.x g3.x
 ## 1  2.082574   18   18   18
 ## 2  2.082574   18   18   18
@@ -1179,7 +1167,9 @@ Below I will report Spearman’s rank correlation rho and Kendall’s rank corre
 ## 0.895293
 </code></pre>
 <p>To report Pearson coefficient here we say:</p>
+<blockquote class="blockquote">
 <p>343 student grades at two time intervals, Time 1 G2(M=11.09, SD=3.32) and Time 2 G3(M=11.57, SD=3.28) were investigated. A positive Pearson r correlation coefficient of 0.97 was revealed. There is strong correlation between g2 results and the final grade g3 with t(341) = 70 with a p-value &lt; 0.001. The size of the effect is large.</p>
+</blockquote>
 <h2 id="correlation-absences-and-g3">Correlation (absences and G3)</h2>
 <p>Again we will use hypothesis testing to determine if there is a correlation between the number of school absences and the G3 result.
 To make a correlation, we use tests which give us a correlation coefficient, r. This coefficient tells us the strength and the direction of the linear relationship between the number of school absences and the G3 result.</p>
@@ -1215,7 +1205,7 @@ a <span style="color:#333">&lt;-</span> <span style="color:#06b;font-weight:bold
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">studentdf <span style="color:#333">%&gt;%</span> 
   <span style="color:#06b;font-weight:bold">filter</span>(absences.x <span style="color:#333">&lt;</span> <span style="color:#60e;font-weight:bold">40</span>,
          absences.y <span style="color:#333">&lt;</span> <span style="color:#60e;font-weight:bold">40</span>) <span style="color:#333">%&gt;%</span>
-  <span style="color:#06b;font-weight:bold">select</span>(absences.x, absences.y) <span style="color:#333">%&gt;%</span>
+  dplyr<span style="color:#333">::</span><span style="color:#06b;font-weight:bold">select</span>(absences.x, absences.y) <span style="color:#333">%&gt;%</span>
   <span style="color:#06b;font-weight:bold">gather</span>(key<span style="color:#333">=</span>Type, value<span style="color:#333">=</span>Value) <span style="color:#333">%&gt;%</span> 
   <span style="color:#06b;font-weight:bold">ggplot</span>(<span style="color:#06b;font-weight:bold">aes</span>(x<span style="color:#333">=</span>Value,fill<span style="color:#333">=</span>Type)) <span style="color:#333">+</span> 
   <span style="color:#06b;font-weight:bold">labs</span>(x<span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;number of school absences&#34;</span>) <span style="color:#333">+</span>
@@ -1450,10 +1440,14 @@ effes
 <p>Figure 23: Cohen’s d and Eta</p>
 </p>
 </div>
-<p>Reporting the results with Cohen’s d effect
-An independent-samples t-test was conducted to compare Maths grade 2 results for students who had families less than or equal to 3 and those who had families greater than 3. No significant difference in the Maths grades was found (M= 11.80, SD= 3.23 for students with a family size less than or equal to 3, M=11.48, SD= 3.27 for students who had families greater than 3), t(341) = -0.82, p = 0.41. Cohen’s d also indicated a very weak effect size (-0.09).</p>
-<p>Reporting the results with eta squred effect
-An independent-samples t-test was conducted to compare Maths grade 2 results for students who had families less than or equal to 3 and those who had families greater than 3. No significant difference in the Maths grades was found (M= 11.80, SD= 3.23 for students with a family size less than or equal to 3, M=11.48, SD= 3.27 for students who had families greater than 3), t(341) = -0.82, p = 0.41. A very small effect size was also indicted by the eta squared value (0.002).</p>
+<p>Reporting the results with Cohen’s d effect</p>
+<blockquote class="blockquote">
+<p>An independent-samples t-test was conducted to compare Maths grade 2 results for students who had families less than or equal to 3 and those who had families greater than 3. No significant difference in the Maths grades was found (M= 11.80, SD= 3.23 for students with a family size less than or equal to 3, M=11.48, SD= 3.27 for students who had families greater than 3), t(341) = -0.82, p = 0.41. Cohen’s d also indicated a very weak effect size (-0.09).</p>
+</blockquote>
+<p>Reporting the results with eta squred effect</p>
+<blockquote class="blockquote">
+<p>An independent-samples t-test was conducted to compare Maths grade 2 results for students who had families less than or equal to 3 and those who had families greater than 3. No significant difference in the Maths grades was found (M= 11.80, SD= 3.23 for students with a family size less than or equal to 3, M=11.48, SD= 3.27 for students who had families greater than 3), t(341) = -0.82, p = 0.41. A very small effect size was also indicted by the eta squared value (0.002).</p>
+</blockquote>
 <h2 id="paired-t-test">Paired t-test</h2>
 <p>Question:</p>
 <p>Is there a difference between grade 1 and grade 3 in Maths for students who paid for extra classes?</p>
@@ -1505,7 +1499,7 @@ FSA<span style="color:#333">::</span><span style="color:#06b;font-weight:bold">p
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">studentdf <span style="color:#333">%&gt;%</span>
   <span style="color:#06b;font-weight:bold">mutate</span>(zscale <span style="color:#333">=</span> <span style="color:#06b;font-weight:bold">scale</span>(g1.x)) <span style="color:#333">%&gt;%</span>
   <span style="color:#06b;font-weight:bold">filter</span>(zscale <span style="color:#333">&gt;</span> <span style="color:#60e;font-weight:bold">1.96</span> <span style="color:#333">|</span> zscale <span style="color:#333">&lt;</span> <span style="color:#60e;font-weight:bold">-1.96</span>) <span style="color:#333">%&gt;%</span>
-  <span style="color:#06b;font-weight:bold">select</span>(zscale, g1.x,g2.x,g3.x)
+  dplyr<span style="color:#333">::</span><span style="color:#06b;font-weight:bold">select</span>(zscale, g1.x,g2.x,g3.x)
 </code></pre></div><pre><code>##       zscale g1.x g2.x g3.x
 ## 1  -2.048646    4   NA   NA
 ## 2   2.131498   18   18   18
@@ -1630,7 +1624,9 @@ effes
 ## 0.034
 </code></pre>
 <p>The result is that we don’t see a significant difference. We cannot reject the Null hypothesis because the p-value is greater than our alpha (0.05).</p>
-<p>“A paired-samples t-test was conducted for the students who got paid classes for the time intervals G1(M=11, SD=2.99) and G3 (M=11.41, SD=3.1). The means increased by 0.266 with a 95% confidence interval ranging from 0.49 to 0.051. Test result was t(168) = -2.44 and p-value was 0.016. The result is not significant at p &lt; .05. The Eta squared statistic (0.034) indicated a small effect size”</p>
+<blockquote class="blockquote">
+<p>A paired-samples t-test was conducted for the students who got paid classes for the time intervals G1(M=11, SD=2.99) and G3 (M=11.41, SD=3.1). The means increased by 0.266 with a 95% confidence interval ranging from 0.49 to 0.051. Test result was t(168) = -2.44 and p-value was 0.016. The result is not significant at p &lt; .05. The Eta squared statistic (0.034) indicated a small effect size</p>
+</blockquote>
 <p>I would have expected a significant difference here since we are paying for extra classes. But perhaps we started paying for classes before the first Grade G1. Also there are other things which could have contributed to the difference or lack of difference between these grades.</p>
 <h2 id="mann-whitney-health-for-rural-vs-urban">Mann-Whitney (Health for Rural vs Urban)</h2>
 <p>The question:</p>
@@ -1746,8 +1742,10 @@ Looking again at the <a href="#testtable">Test Table</a>. We have two independen
 <img src="rose.png" width="10%" style="display: block; margin: auto;" /></p>
 <p>We need a z-score for this. We can use qnorm() to get it from the p-value. The z-value is -0.3322507 and N is 382.
 Rosenthal’s r is then -0.0169994</p>
-<p>Reporting:
-&ldquo;Health levels for students who had an Urban address(Mdn = 4 IQR = 2) did not differ significantly from those who had an Rural address(Mdn=4 IQR=2). Rosenthal’s r indicates a small effect. (U = 12473, z = 0.33, p = .74, r = 0.17)</p>
+<p>Reporting:</p>
+<blockquote class="blockquote">
+<p>Health levels for students who had an Urban address(Mdn = 4 IQR = 2) did not differ significantly from those who had an Rural address(Mdn=4 IQR=2). Rosenthal’s r indicates a small effect. (U = 12473, z = 0.33, p = .74, r = 0.17)</p>
+</blockquote>
 <p>My Analysis is that this should have been quite clear from the box plot and was only worth going this far to demonstrate a Mann-Whitney test.</p>
 <h2 id="anova-reason-vs-final-grade-in-portuguese-">ANOVA (Reason vs Final Grade in Portuguese )</h2>
 <p>The question:</p>
@@ -1809,7 +1807,7 @@ Removing these outliers:</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">studentdf <span style="color:#333">%&gt;%</span>
   <span style="color:#06b;font-weight:bold">mutate</span>(zscale <span style="color:#333">=</span> <span style="color:#06b;font-weight:bold">scale</span>(g3.y)) <span style="color:#333">%&gt;%</span>
   <span style="color:#06b;font-weight:bold">filter</span>(zscale <span style="color:#333">&gt;</span> <span style="color:#60e;font-weight:bold">3.29</span> <span style="color:#333">|</span> zscale <span style="color:#333">&lt;</span> <span style="color:#60e;font-weight:bold">-3.29</span>) <span style="color:#333">%&gt;%</span>
-  <span style="color:#06b;font-weight:bold">select</span>(zscale, g3.y)
+  dplyr<span style="color:#333">::</span><span style="color:#06b;font-weight:bold">select</span>(zscale, g3.y)
 reasondf <span style="color:#333">&lt;-</span> studentdf <span style="color:#333">%&gt;%</span>
   <span style="color:#06b;font-weight:bold">mutate</span>(zscale <span style="color:#333">=</span> <span style="color:#06b;font-weight:bold">scale</span>(g3.y)) <span style="color:#333">%&gt;%</span>
   <span style="color:#06b;font-weight:bold">filter</span>(zscale <span style="color:#333">&lt;</span> <span style="color:#60e;font-weight:bold">3.29</span> <span style="color:#333">|</span> zscale <span style="color:#333">&gt;</span> <span style="color:#60e;font-weight:bold">-3.29</span>)
@@ -1869,36 +1867,7 @@ In this case we can use Tukey as the post-hoc test option since variances in the
 This is similar to the welsh modification(var.equal) in the t-test, where we needed to know if there was homogeneity of the variance also.
 If the variances in the groups were not equal we would use Games-Howell</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">userfriendlyscience<span style="color:#333">::</span><span style="color:#06b;font-weight:bold">oneway</span>(reasondf<span style="color:#333">$</span>reason,y<span style="color:#333">=</span>reasondf<span style="color:#333">$</span>g3.y,posthoc<span style="color:#333">=</span><span style="background-color:#fff0f0">&#39;Tukey&#39;</span>)
-</code></pre></div><pre><code>## Registered S3 methods overwritten by 'lme4':
-##   method                          from
-##   cooks.distance.influence.merMod car 
-##   influence.merMod                car 
-##   dfbeta.influence.merMod         car 
-##   dfbetas.influence.merMod        car
-
-## Registered S3 methods overwritten by 'ufs':
-##   method                     from               
-##   grid.draw.ggProportionPlot userfriendlyscience
-##   pander.associationMatrix   userfriendlyscience
-##   pander.dataShape           userfriendlyscience
-##   pander.descr               userfriendlyscience
-##   pander.normalityAssessment userfriendlyscience
-##   print.CramersV             userfriendlyscience
-##   print.associationMatrix    userfriendlyscience
-##   print.confIntOmegaSq       userfriendlyscience
-##   print.confIntV             userfriendlyscience
-##   print.dataShape            userfriendlyscience
-##   print.descr                userfriendlyscience
-##   print.ggProportionPlot     userfriendlyscience
-##   print.meanConfInt          userfriendlyscience
-##   print.multiVarFreq         userfriendlyscience
-##   print.normalityAssessment  userfriendlyscience
-##   print.regrInfluential      userfriendlyscience
-##   print.scaleDiagnosis       userfriendlyscience
-##   print.scaleStructure       userfriendlyscience
-##   print.scatterMatrix        userfriendlyscience
-
-## ### Oneway Anova for y=g3.y and x=reason (groups: course, home, other, reputation)
+</code></pre></div><pre><code>## ### Oneway Anova for y=g3.y and x=reason (groups: course, home, other, reputation)
 ## 
 ## Omega squared: 95% CI = [NA; .04], point estimate = .01
 ## Eta Squared: 95% CI = [0; .04], point estimate = .02
@@ -1933,8 +1902,10 @@ aoveta
 ## 1 reason 0.017
 </code></pre>
 <p>Checking Eta with the <a href="#effect">Effect Table</a></p>
-<p>Reporting the results with eta squared effect
-An one-way between-groups analysis of variance (ANOVA) was conducted to to explore the impact of the reason for attending a school the Final Grades in Portuguese. Students were divided into four groups based on their reason for attending the school (close to ‘home’, school ‘reputation’, ‘course’ preference or ‘other’). No statistically significant difference in the final grades and associated reason was found (M=12.33, SD=2.6 for reason course, M=12.75, SD=2.4 for reason home, M=12.48, SD=3.0 for reason other and M=13.16, SD=2.6 for reason reputation) , (F(3, 373) = 2.09, p = .101). A small effect size was also indicated by the eta squared value (0.017).</p>
+<p>Reporting the results with eta squared effect</p>
+<blockquote class="blockquote">
+<p>An one-way between-groups analysis of variance (ANOVA) was conducted to to explore the impact of the reason for attending a school the Final Grades in Portuguese. Students were divided into four groups based on their reason for attending the school (close to ‘home’, school ‘reputation’, ‘course’ preference or ‘other’). No statistically significant difference in the final grades and associated reason was found (M=12.33, SD=2.6 for reason course, M=12.75, SD=2.4 for reason home, M=12.48, SD=3.0 for reason other and M=13.16, SD=2.6 for reason reputation) , (F(3, 373) = 2.09, p = .101). A small effect size was also indicated by the eta squared value (0.017).</p>
+</blockquote>
 <h2 id="kruskal-wallis-mothers-education-and-maths-g3">Kruskal-Wallis (Mother’s Education and Maths G3)</h2>
 <p>The question:</p>
 <p>Are there any differences between each student’s mother’s Education and their Final Grade result in Maths including the zero results.</p>
@@ -2073,13 +2044,13 @@ rstatix<span style="color:#333">::</span><span style="color:#06b;font-weight:bol
 ## 1 g3.x.all   382  0.0372 eta2[H] small
 </code></pre>
 <p>Reporting</p>
+<blockquote class="blockquote">
 <p>An Kruskal-Wallis test between groups was conducted to explore the impact of a Mother’s Job title on a student’s Final Maths results. Students were divided into four groups based on their mother’s job title(“teacher”, “health” care related, civil “services” (e.g. administrative or police), “at_home” or “other”), the box plots of each can be seen in this <a href="#g3mjobboxplot">Figure</a> (Media:10.5 for “teacher”, Median:13 for “health” , Median:11 for “services” Median:10 “at_home”, Median:10.5 for &ldquo;other). The groups were significantly different. H(4) = 18.04, p = .001. A small effect size was also indicated by the eta squared value (0.037).</p>
 <p>Focused comparisons of the mean ranks between groups showed that the Mother’s job title were only significant in two comparisons. THe first was when the mother’s job was at home, the Final grade results in Maths were lower in comparison to a mother working in the health service. The second was not as significant but still significant, when a mother’s job was at home, the final grade result was lower in comparison to a mother working in civil service. In summary, a students got better grades when their mother worked in the health or civil service sector rather than working at home.</p>
+</blockquote>
 <h2 id="chi-square--malefemale-higher-education-">Chi Square ( male/female higher education )</h2>
 <p>The Question:</p>
-<ol start="8">
-<li>Is there a difference between the male and females students in terms of their ambition to go to higher education?</li>
-</ol>
+<p>Is there a difference between the male and females students in terms of their ambition to go to higher education?</p>
 <p>the variables:</p>
 <pre><code>2 sex - student's sex (binary: &quot;F&quot; - female or &quot;M&quot; - male)
 21 higher - wants to take higher education (binary: yes or no)
@@ -2212,7 +2183,9 @@ sjstats<span style="color:#333">::</span><span style="color:#06b;font-weight:bol
 ## [1] 0.1565049
 </code></pre>
 <p>Reporting:</p>
+<blockquote class="blockquote">
 <p>Using the Chi-square test for independence (with Yates Continuity Correction) there was a significant association between the gender of the student and their reported ambition to do higher education x<sup>2</sup>(1, n=382) = 7.94, p = .0048, phi = 0.156. The effect size is small.</p>
+</blockquote>
 <h1 id="modelling">Modelling</h1>
 <p>In this section we will discuss predictive modeling. Predictive models are used to explore the relationships between one outcome variable and a set of independent predictors. Before exploring this relationship, there should be a sound theoretical reason for using the predictive variables, the idea of fishing for a relationship by trial and error is a bad idea. Ideally we would need statistical evidence to include a variable as a predictor. So for our model we will use past data to predict new outcome varibles.</p>
 <h2 id="what-is-linear-regression">What is linear Regression?</h2>
@@ -2323,7 +2296,7 @@ FSA<span style="color:#333">::</span><span style="color:#06b;font-weight:bold">p
 </code></pre>
 <p>We can then form a simple linear regression model which should give us the same answer as the Pearson correlation. We use ANOVA to give us the F-statistic and then after we can compare that F-statistic to a standard F-statistic distribution. THe ANOVA output also gives us our SS<sub>M</sub> and SS<sub>T</sub> values as well as the mean squares for the model(MS<sub>M</sub>) and the residual mean squares (MS<sub>R</sub>), which allows us to calculate the F-Ratio. A good model should have a large F-ratio.</p>
 <div class="figure" style="text-align: center">
-<p><img src="f_ratio.png" alt="F-ratio" width="10%" /></p>
+<p><img src="f_ratio.png" alt="F-ratio" width="60%" /></p>
 <p class="caption">
 <p>Figure 46: F-ratio</p>
 </p>
@@ -2584,28 +2557,9 @@ grade = 11.5685131 + (-0.085)(3.2821242) = 11.29
 </ul>
 <!-- end list -->
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">studentdf <span style="color:#333">%&gt;%</span>
-  <span style="color:#06b;font-weight:bold">select</span>(g1.x,g2.x,g3.x) <span style="color:#333">%&gt;%</span>
+  dplyr<span style="color:#333">::</span><span style="color:#06b;font-weight:bold">select</span>(g1.x,g2.x,g3.x) <span style="color:#333">%&gt;%</span>
   <span style="color:#06b;font-weight:bold">ggpairs</span>() 
-</code></pre></div><pre><code>## Warning in ggally_statistic(data = data, mapping = mapping, na.rm = na.rm, :
-## Removed 13 rows containing missing values
-
-## Warning in ggally_statistic(data = data, mapping = mapping, na.rm = na.rm, :
-## Removed 39 rows containing missing values
-
-## Warning: Removed 13 rows containing missing values (geom_point).
-
-## Warning: Removed 13 rows containing non-finite values (stat_density).
-
-## Warning in ggally_statistic(data = data, mapping = mapping, na.rm = na.rm, :
-## Removed 39 rows containing missing values
-
-## Warning: Removed 39 rows containing missing values (geom_point).
-
-## Warning: Removed 39 rows containing missing values (geom_point).
-
-## Warning: Removed 39 rows containing non-finite values (stat_density).
-</code></pre>
-<div class="figure" style="text-align: center">
+</code></pre></div><div class="figure" style="text-align: center">
 <p><img src="/blog/posts/studentperf/index_files/figure-html/unnamed-chunk-123-1.png" alt="Matrix plot of relationships" width="1152" /></p>
 <p class="caption">
 <p>Figure 49: Matrix plot of relationships</p>
@@ -2682,7 +2636,9 @@ vifmodel
 <li>If the VIF value is greater than 2.5 or the Tolerance is less than 0.4, then you have concerns over multicollinearity.</li>
 </ul>
 <p>Reporting:</p>
+<blockquote class="blockquote">
 <p>Tests to see if the data met the assumption of collinearity indicated that multicollinearity was not a concern (scale_g2.x, Tolerance = .97, VIF = 1.03; dummy_mjob_health, Tolerance = .99 VIF = 1.01, dummy_gender_girl Tolerance=.98, VIF=1.02).</p>
+</blockquote>
 <p><em>Association:</em></p>
 <ul>
 <li>For MLR (multi-linear regressions), we must have some proof there is an actually real link between these variables used as predictors and the outcome variable. We can use test statistics as we have seen in the previous sections for this.</li>
@@ -2728,10 +2684,307 @@ vifmodel
 <blockquote class="blockquote">
 <p>A multiple regression analysis was conducted to determine if a student’s G2 grade score, gender and Mother’s job could predict a student’s academic G3 Final grade result in Maths.</p>
 <p>In order to include the Mother’s job and the gender in the regression model it was recorded into two variables dummy_mjob_health (1 for health, 0 for all other jobs), and dummy_gender_girl (1 for Female, 0 for Male).
-Examination of the histogram, normal P-P plot of standardised residuals and the scatterplot of the dependent variable, academic satisfaction, and standardised residuals showed that the some outliers existed. However, examination of the standardised residuals showed that none could be considered to have undue influence (95% within limits of -1.96 to plus 1.96 and none with Cook’s distance &gt;1 as outlined in Field (2013).</p>
-<p>Examination for multicollinearity showed that the tolerance and variance influence factor measures were within acceptable levels (tolerance &gt;0.4, VIF &lt;2.5 ) as outlined in Tarling (2008). The scatterplot of standardised residuals showed that the data met the assumptions of homogeneity of variance and linearity. The data also meets the assumption of non-zero variances of the predictors.</p>
+Examination of the histogram, normal P-P plot of standardized residuals and the scatterplot of the dependent variable, academic satisfaction, and standardized residuals showed that the some outliers existed. However, examination of the standardized residuals showed that none could be considered to have undue influence (95% within limits of -1.96 to plus 1.96 and none with Cook’s distance &gt;1 as outlined in Field (2013).</p>
+<p>Examination for multicollinearity showed that the tolerance and variance influence factor measures were within acceptable levels (tolerance &gt;0.4, VIF &lt;2.5 ) as outlined in Tarling (2008). The scatterplot of standardized residuals showed that the data met the assumptions of homogeneity of variance and linearity. The data also meets the assumption of non-zero variances of the predictors.</p>
 </blockquote>
 <h2 id="what-is-logistic-resgression">What is logistic Resgression?</h2>
+<p>When we want to predict a categorical outcome variable from a model, we need to use a logistic regression. The predictor variables can be continuous or categorical. We can’t use the same method as linear regression because we could violate the assumption of linearity, so we will use a probability of belonging to a outcome category.</p>
+<p>Our output variables will have binary representation
++ code 0 when the event does not occur
++ code 1 for when it does</p>
+<p>We can also do <em>multinomial logistic regression</em>, where the outcome varible is not a binary category. It is essentially a series of binary logistic regressions, where we compare all to a base category.</p>
+<p>Assumptions of logistic Regression:</p>
+<ul>
+<li>Outcome variables must be nominal/binary.</li>
+<li>Independent predictors</li>
+<li>No multicollinearity between predictors</li>
+<li>Needs to be a linear relationship between the log odds used to find the probability and the predictors.</li>
+<li>Requires a large sample. Minimum of 10 cases for the least frequency outcome for each independent variable.</li>
+</ul>
+<p>Question:</p>
+<p>Can a model be built to predict if a student answered “yes” to the question “Do you want to take higher education?”.?</p>
+<p>Making a dummy variables for our test and remove the NAs:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">logregressiondf <span style="color:#333">&lt;-</span> studentdf <span style="color:#333">%&gt;%</span> 
+  <span style="color:#06b;font-weight:bold">mutate</span>(dummy_higher <span style="color:#333">=</span> <span style="color:#06b;font-weight:bold">if_else</span>(studentdf<span style="color:#333">$</span>higher.x <span style="color:#333">==</span> <span style="background-color:#fff0f0">&#34;yes&#34;</span>, <span style="color:#60e;font-weight:bold">1</span>, <span style="color:#60e;font-weight:bold">0</span>)) <span style="color:#333">%&gt;%</span>
+  <span style="color:#06b;font-weight:bold">filter</span>(<span style="color:#333">!</span><span style="color:#06b;font-weight:bold">is.na</span>(g3.x))
+</code></pre></div><div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#06b;font-weight:bold">table</span>(logregressiondf<span style="color:#333">$</span>higher.x)
+<span style="color:#06b;font-weight:bold">table</span>(logregressiondf<span style="color:#333">$</span>dummy_higher)
+</code></pre></div><pre><code>## 
+##  no yes 
+##  11 332 
+## 
+##   0   1 
+##  11 332
+</code></pre>
+<ul>
+<li>“No” has a low frequency but it’s just enough to continue to build the model.</li>
+</ul>
+<p>WE will be comparing out model against a baseline model which is using the category of the most commonly occurred variables to predict, by comparing against that we can assess our model and see that it improves prediction.</p>
+<p>We will use G3 Results from the last section to start our prediction model:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#888">#Make sure categorical data is used as factors</span>
+logmodel1 <span style="color:#333">&lt;-</span> <span style="color:#06b;font-weight:bold">glm</span>(dummy_higher <span style="color:#333">~</span> g3.x, data <span style="color:#333">=</span> logregressiondf, na.action <span style="color:#333">=</span> na.exclude, family <span style="color:#333">=</span> <span style="color:#06b;font-weight:bold">binomial</span>(link<span style="color:#333">=</span>logit))
+<span style="color:#888">#Full summary of the model</span>
+<span style="color:#06b;font-weight:bold">summary</span>(logmodel1)
+</code></pre></div><pre><code>## 
+## Call:
+## glm(formula = dummy_higher ~ g3.x, family = binomial(link = logit), 
+##     data = logregressiondf, na.action = na.exclude)
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -2.8043   0.1494   0.2295   0.2646   0.6062  
+## 
+## Coefficients:
+##             Estimate Std. Error z value Pr(&gt;|z|)  
+## (Intercept)   0.4451     1.0726   0.415   0.6781  
+## g3.x          0.2889     0.1128   2.562   0.0104 *
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 97.32  on 342  degrees of freedom
+## Residual deviance: 89.67  on 341  degrees of freedom
+## AIC: 93.67
+## 
+## Number of Fisher Scoring iterations: 7
+</code></pre>
+<ul>
+<li>G3 results are significantly improving our prediction with a p-value &lt;.05 and from the z-value, we see it’s having a positive effect. It contributes 0.289 to the log odds.</li>
+</ul>
+<p>Chi-square plus significance:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">lmtest<span style="color:#333">::</span><span style="color:#06b;font-weight:bold">lrtest</span>(logmodel1)
+</code></pre></div><pre><code>## Likelihood ratio test
+## 
+## Model 1: dummy_higher ~ g3.x
+## Model 2: dummy_higher ~ 1
+##   #Df  LogLik Df  Chisq Pr(&gt;Chisq)   
+## 1   2 -44.835                        
+## 2   1 -48.660 -1 7.6495   0.005679 **
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+</code></pre>
+<p>Showing Chi-square and Pseudo R2 calculation for informational purposes:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#888">#lmtest:lrtest achieves the same thing</span>
+modelChi <span style="color:#333">&lt;-</span> logmodel1<span style="color:#333">$</span>null.deviance <span style="color:#333">-</span> logmodel1<span style="color:#333">$</span>deviance
+<span style="color:#06b;font-weight:bold">cat</span>(<span style="background-color:#fff0f0">&#34;modelChi: &#34;</span>, modelChi, <span style="background-color:#fff0f0">&#34;\n&#34;</span>)
+pseudo.R2 <span style="color:#333">&lt;-</span> modelChi <span style="color:#333">/</span> logmodel1<span style="color:#333">$</span>null.deviance
+<span style="color:#06b;font-weight:bold">cat</span>(<span style="background-color:#fff0f0">&#34;pseudo.R2: &#34;</span>, pseudo.R2, <span style="background-color:#fff0f0">&#34;\n&#34;</span>)
+chidf <span style="color:#333">&lt;-</span> logmodel1<span style="color:#333">$</span>df.null <span style="color:#333">-</span> logmodel1<span style="color:#333">$</span>df.residual
+<span style="color:#06b;font-weight:bold">cat</span>(<span style="background-color:#fff0f0">&#34;chidf: &#34;</span>, chidf, <span style="background-color:#fff0f0">&#34;\n&#34;</span>)
+chisq.prob <span style="color:#333">&lt;-</span> <span style="color:#60e;font-weight:bold">1</span> <span style="color:#333">-</span> <span style="color:#06b;font-weight:bold">pchisq</span>(modelChi, chidf)
+<span style="color:#06b;font-weight:bold">cat</span>(<span style="background-color:#fff0f0">&#34;chisq.prob: &#34;</span>, chisq.prob, <span style="background-color:#fff0f0">&#34;\n&#34;</span>)
+</code></pre></div><pre><code>## modelChi:  7.649521 
+## pseudo.R2:  0.07860192 
+## chidf:  1 
+## chisq.prob:  0.005678741
+</code></pre>
+<ul>
+<li>the Chi Square p-value is significant so we can reject the Null hypothesis that the model is not better than chance. The pseudo R squared value tells that 7.8% is explained by this predictor.</li>
+<li>x<sup>2</sup>(1) = 7.65, p = 0.006</li>
+</ul>
+<p><img src="https://latex.codecogs.com/gif.latex?x^{4}/5" title="x^{4}/5" /></p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#888">#Output the sensitivity, specificity, and ROC plot</span>
+Epi<span style="color:#333">::</span><span style="color:#06b;font-weight:bold">ROC</span>(form<span style="color:#333">=</span>logregressiondf<span style="color:#333">$</span>dummy_higher <span style="color:#333">~</span> logregressiondf<span style="color:#333">$</span>dummy_gender_girl, plot<span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;ROC&#34;</span>)
+</code></pre></div><div class="figure" style="text-align: center">
+<p><img src="/blog/posts/studentperf/index_files/figure-html/unnamed-chunk-134-1.png" alt="Sensitivity, specificity, and ROC plot" width="100%" /></p>
+<p class="caption">
+<p>Figure 53: Sensitivity, specificity, and ROC plot</p>
+</p>
+</div>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#06b;font-weight:bold">print</span>(<span style="background-color:#fff0f0">&#34;Pseudo Rsquared:&#34;</span>) 
+DescTools<span style="color:#333">::</span><span style="color:#06b;font-weight:bold">PseudoR2</span>(logmodel1, which<span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;CoxSnell&#34;</span>)
+DescTools<span style="color:#333">::</span><span style="color:#06b;font-weight:bold">PseudoR2</span>(logmodel1, which<span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;Nagelkerke&#34;</span>)
+<span style="color:#06b;font-weight:bold">print</span>(<span style="background-color:#fff0f0">&#34;Summary of the model with co-efficients:&#34;</span>)
+<span style="color:#06b;font-weight:bold">stargazer</span>(logmodel1, type<span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;text&#34;</span>)
+</code></pre></div><pre><code>## [1] &quot;Pseudo Rsquared:&quot;
+##   CoxSnell 
+## 0.02205496 
+## Nagelkerke 
+## 0.08928017 
+## [1] &quot;Summary of the model with co-efficients:&quot;
+## 
+## =============================================
+##                       Dependent variable:    
+##                   ---------------------------
+##                          dummy_higher        
+## ---------------------------------------------
+## g3.x                        0.289**          
+##                             (0.113)          
+##                                              
+## Constant                     0.445           
+##                             (1.073)          
+##                                              
+## ---------------------------------------------
+## Observations                  343            
+## Log Likelihood              -44.835          
+## Akaike Inf. Crit.           93.670           
+## =============================================
+## Note:             *p&lt;0.1; **p&lt;0.05; ***p&lt;0.01
+</code></pre>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#06b;font-weight:bold">print</span>(<span style="background-color:#fff0f0">&#34;Exponentiate the co-efficients:&#34;</span>)
+<span style="color:#06b;font-weight:bold">exp</span>(<span style="color:#06b;font-weight:bold">coefficients</span>(logmodel1))
+<span style="color:#06b;font-weight:bold">print</span>(<span style="background-color:#fff0f0">&#34;odds ratios and 95% CI:&#34;</span>)
+<span style="color:#06b;font-weight:bold">cbind</span>(Estimate<span style="color:#333">=</span><span style="color:#06b;font-weight:bold">round</span>(<span style="color:#06b;font-weight:bold">coef</span>(logmodel1),<span style="color:#60e;font-weight:bold">4</span>),
+OR<span style="color:#333">=</span><span style="color:#06b;font-weight:bold">round</span>(<span style="color:#06b;font-weight:bold">exp</span>(<span style="color:#06b;font-weight:bold">coef</span>(logmodel1)),<span style="color:#60e;font-weight:bold">4</span>))
+<span style="color:#06b;font-weight:bold">print</span>(<span style="background-color:#fff0f0">&#34;Probability of answering yes when male&#34;</span>)
+arm<span style="color:#333">::</span><span style="color:#06b;font-weight:bold">invlogit</span>(<span style="color:#06b;font-weight:bold">coef</span>(logmodel1)[1]<span style="color:#333">+</span> <span style="color:#06b;font-weight:bold">coef</span>(logmodel1)[2]<span style="color:#333">*</span><span style="color:#60e;font-weight:bold">0</span>)<span style="color:#888">#YES this is the same as just having the 1st co-efficient</span>
+<span style="color:#06b;font-weight:bold">print</span>(<span style="background-color:#fff0f0">&#34;#Probability of answering yes when female&#34;</span>)
+arm<span style="color:#333">::</span><span style="color:#06b;font-weight:bold">invlogit</span>(<span style="color:#06b;font-weight:bold">coef</span>(logmodel1)[1]<span style="color:#333">+</span> <span style="color:#06b;font-weight:bold">coef</span>(logmodel1)[2]<span style="color:#333">*</span><span style="color:#60e;font-weight:bold">1</span>)
+<span style="color:#06b;font-weight:bold">print</span>(<span style="background-color:#fff0f0">&#34;Check the assumption of linearity of independent variables and log odds using a Hosmer-Lemeshow test, if this is not statsitically significant we are ok&#34;</span>)
+DescTools<span style="color:#333">::</span><span style="color:#06b;font-weight:bold">PseudoR2</span>(logmodel1, which<span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;Nagelkerke&#34;</span>)
+</code></pre></div><pre><code>## [1] &quot;Exponentiate the co-efficients:&quot;
+## (Intercept)        g3.x 
+##    1.560701    1.334996 
+## [1] &quot;odds ratios and 95% CI:&quot;
+##             Estimate     OR
+## (Intercept)   0.4451 1.5607
+## g3.x          0.2889 1.3350
+## [1] &quot;Probability of answering yes when male&quot;
+## (Intercept) 
+##    0.609482 
+## [1] &quot;#Probability of answering yes when female&quot;
+## (Intercept) 
+##   0.6756963 
+## [1] &quot;Check the assumption of linearity of independent variables and log odds using a Hosmer-Lemeshow test, if this is not statsitically significant we are ok&quot;
+## Nagelkerke 
+## 0.08928017
+</code></pre>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#06b;font-weight:bold">print</span>(<span style="background-color:#fff0f0">&#34;Collinearity:&#34;</span>)
+vifmodel<span style="color:#333">&lt;-</span>car<span style="color:#333">::</span><span style="color:#06b;font-weight:bold">vif</span>(logmodel1) <span style="color:#888">#You can ignore the warning messages, GVIF^(1/(2*Df)) is the value of interest</span>
+</code></pre></div><pre><code>## Error in vif.default(logmodel1): model contains fewer than 2 terms
+</code></pre>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">vifmodel
+<span style="color:#06b;font-weight:bold">print</span>(<span style="background-color:#fff0f0">&#34;Tolerance:&#34;</span>)
+<span style="color:#60e;font-weight:bold">1</span><span style="color:#333">/</span>vifmodel
+</code></pre></div><pre><code>## [1] &quot;Collinearity:&quot;
+##        studentdf$scale_g2.x studentdf$dummy_mjob_health 
+##                    1.032592                    1.014245 
+## studentdf$dummy_gender_girl 
+##                    1.018496 
+## [1] &quot;Tolerance:&quot;
+##        studentdf$scale_g2.x studentdf$dummy_mjob_health 
+##                   0.9684367                   0.9859552 
+## studentdf$dummy_gender_girl 
+##                   0.9818397
+</code></pre>
+<ul>
+<li>If the VIF value is greater than 2.5 or the Tolerance is less than 0.4, then you have concerns over multicollinearity. I have an error for car::vif because model is too small, it has only one predictor.</li>
+</ul>
+<p><em>Now extend the model with the students gender results</em></p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#888">#Make sure categorical data is used as factors</span>
+logmodel2 <span style="color:#333">&lt;-</span> <span style="color:#06b;font-weight:bold">glm</span>(dummy_higher <span style="color:#333">~</span> g3.x <span style="color:#333">+</span> dummy_gender_girl, data <span style="color:#333">=</span> logregressiondf, na.action <span style="color:#333">=</span> na.exclude, family <span style="color:#333">=</span> <span style="color:#06b;font-weight:bold">binomial</span>(link<span style="color:#333">=</span>logit))
+
+<span style="color:#888">#Full summary of the model</span>
+<span style="color:#06b;font-weight:bold">summary</span>(logmodel2)
+
+<span style="color:#888">#Chi-square plus significance</span>
+lmtest<span style="color:#333">::</span><span style="color:#06b;font-weight:bold">lrtest</span>(logmodel2)
+
+<span style="color:#888">#Pseudo Rsquared </span>
+DescTools<span style="color:#333">::</span><span style="color:#06b;font-weight:bold">PseudoR2</span>(logmodel2, which<span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;CoxSnell&#34;</span>)
+DescTools<span style="color:#333">::</span><span style="color:#06b;font-weight:bold">PseudoR2</span>(logmodel2, which<span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;Nagelkerke&#34;</span>)
+
+<span style="color:#888">#Summary of the model with co-efficients</span>
+<span style="color:#06b;font-weight:bold">stargazer</span>(logmodel2, type<span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;text&#34;</span>)
+</code></pre></div><pre><code>## 
+## Call:
+## glm(formula = dummy_higher ~ g3.x + dummy_gender_girl, family = binomial(link = logit), 
+##     data = logregressiondf, na.action = na.exclude)
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -2.9225   0.1008   0.1578   0.2782   0.8029  
+## 
+## Coefficients:
+##                   Estimate Std. Error z value Pr(&gt;|z|)   
+## (Intercept)        -0.7400     1.1800  -0.627  0.53062   
+## g3.x                0.3413     0.1200   2.845  0.00445 **
+## dummy_gender_girl   1.9244     0.8090   2.379  0.01737 * 
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 97.320  on 342  degrees of freedom
+## Residual deviance: 82.162  on 340  degrees of freedom
+## AIC: 88.162
+## 
+## Number of Fisher Scoring iterations: 7
+## 
+## Likelihood ratio test
+## 
+## Model 1: dummy_higher ~ g3.x + dummy_gender_girl
+## Model 2: dummy_higher ~ 1
+##   #Df  LogLik Df  Chisq Pr(&gt;Chisq)    
+## 1   3 -41.081                         
+## 2   1 -48.660 -2 15.157  0.0005113 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+##   CoxSnell 
+## 0.04322818 
+## Nagelkerke 
+##   0.174991 
+## 
+## =============================================
+##                       Dependent variable:    
+##                   ---------------------------
+##                          dummy_higher        
+## ---------------------------------------------
+## g3.x                       0.341***          
+##                             (0.120)          
+##                                              
+## dummy_gender_girl           1.924**          
+##                             (0.809)          
+##                                              
+## Constant                    -0.740           
+##                             (1.180)          
+##                                              
+## ---------------------------------------------
+## Observations                  343            
+## Log Likelihood              -41.081          
+## Akaike Inf. Crit.           88.162           
+## =============================================
+## Note:             *p&lt;0.1; **p&lt;0.05; ***p&lt;0.01
+</code></pre>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#888">#Output the sensitivity, specificity, and ROC plot</span>
+Epi<span style="color:#333">::</span><span style="color:#06b;font-weight:bold">ROC</span>(form<span style="color:#333">=</span>logregressiondf<span style="color:#333">$</span>dummy_higher <span style="color:#333">~</span> logregressiondf<span style="color:#333">$</span>g3.x <span style="color:#333">+</span> logregressiondf<span style="color:#333">$</span>dummy_gender_girl, plot<span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;ROC&#34;</span>)
+</code></pre></div><div class="figure" style="text-align: center">
+<p><img src="/blog/posts/studentperf/index_files/figure-html/unnamed-chunk-139-1.png" alt="Sensitivity, specificity, and ROC plot" width="100%" /></p>
+<p class="caption">
+<p>Figure 54: Sensitivity, specificity, and ROC plot</p>
+</p>
+</div>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#06b;font-weight:bold">print</span>(<span style="background-color:#fff0f0">&#34;Exponentiate the co-efficients&#34;</span>)
+<span style="color:#06b;font-weight:bold">exp</span>(<span style="color:#06b;font-weight:bold">coefficients</span>(logmodel2))
+<span style="color:#06b;font-weight:bold">print</span>(<span style="background-color:#fff0f0">&#34;odds ratios &#34;</span>)
+<span style="color:#06b;font-weight:bold">cbind</span>(Estimate<span style="color:#333">=</span><span style="color:#06b;font-weight:bold">round</span>(<span style="color:#06b;font-weight:bold">coef</span>(logmodel2),<span style="color:#60e;font-weight:bold">4</span>),
+OR<span style="color:#333">=</span><span style="color:#06b;font-weight:bold">round</span>(<span style="color:#06b;font-weight:bold">exp</span>(<span style="color:#06b;font-weight:bold">coef</span>(logmodel2)),<span style="color:#60e;font-weight:bold">4</span>))
+</code></pre></div><pre><code>## [1] &quot;Exponentiate the co-efficients&quot;
+##       (Intercept)              g3.x dummy_gender_girl 
+##         0.4771305         1.4068330         6.8512312 
+## [1] &quot;odds ratios &quot;
+##                   Estimate     OR
+## (Intercept)        -0.7400 0.4771
+## g3.x                0.3413 1.4068
+## dummy_gender_girl   1.9244 6.8512
+</code></pre>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#888">#Check the assumption of linearity of independent variables and log odds using a Hosmer-Lemeshow test, if this is not statistically significant we are ok</span>
+DescTools<span style="color:#333">::</span><span style="color:#06b;font-weight:bold">PseudoR2</span>(logmodel2, which<span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;Nagelkerke&#34;</span>)
+<span style="color:#06b;font-weight:bold">print</span>(<span style="background-color:#fff0f0">&#34;Collinearity:&#34;</span>)
+vifmodel<span style="color:#333">&lt;-</span>car<span style="color:#333">::</span><span style="color:#06b;font-weight:bold">vif</span>(logmodel2)<span style="color:#888">#You can ignore the warning messages, GVIF^(1/(2*Df)) is the value of interest</span>
+vifmodel
+<span style="color:#06b;font-weight:bold">print</span>(<span style="background-color:#fff0f0">&#34;Tolerance:&#34;</span>)
+<span style="color:#60e;font-weight:bold">1</span><span style="color:#333">/</span>vifmodel
+</code></pre></div><pre><code>## Nagelkerke 
+##   0.174991 
+## [1] &quot;Collinearity:&quot;
+##              g3.x dummy_gender_girl 
+##          1.027227          1.027227 
+## [1] &quot;Tolerance:&quot;
+##              g3.x dummy_gender_girl 
+##         0.9734948         0.9734948
+</code></pre>
 <h1 id="references">References</h1>
 <div id="refs" class="references">
 <div id="ref-cortez2008using">

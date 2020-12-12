@@ -223,6 +223,7 @@ figcaption {
 }
 
 pre {
+    background-color: #5dbcd2;
   margin: 5px;
   font-size: 12px;
 }
