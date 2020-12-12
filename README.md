@@ -1,6 +1,6 @@
-My Blog code :sparkles:
+# My Blog code :sparkles:
 
-Contains:
+## Contains:
 * The entire website which is served by Github pages in the docs/ folder
 * A few modifications to the hugo theme in the theme/ folder
 * R code used to produce the content/ folder
