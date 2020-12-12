@@ -159,6 +159,7 @@ h6 {
   background-color: #248baa15;
   padding: 0.3rem;
   padding-left: 1rem;
+  font-size: 1rem;
 }
 
 .post-content blockquote > p {
@@ -226,6 +227,15 @@ pre {
   font-size: 12px;
 }
 
+ol {
+    display: block;
+    list-style-type: decimal;
+    margin-block-start: 0em;
+    margin-block-end: 0em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    padding-inline-start: 8px;
+}
 /*
 pre > code {
   padding: 10px !important;

@@ -87,6 +87,207 @@ library("stargazer")#For formatting outputs/tables
     ##  R package version 5.2.2. https://CRAN.R-project.org/package=stargazer
 
 ``` r
+# and other libraries used in this File
+library("semTools")
+```
+
+    ## Loading required package: lavaan
+
+    ## This is lavaan 0.6-7
+
+    ## lavaan is BETA software! Please report any bugs.
+
+    ## 
+
+    ## ###############################################################################
+
+    ## This is semTools 0.5-3
+
+    ## All users of R (or SEM) are invited to submit functions or ideas for functions.
+
+    ## ###############################################################################
+
+``` r
+library("sjstats")
+library("car")
+```
+
+    ## Loading required package: carData
+
+    ## Registered S3 methods overwritten by 'car':
+    ##   method                          from
+    ##   influence.merMod                lme4
+    ##   cooks.distance.influence.merMod lme4
+    ##   dfbeta.influence.merMod         lme4
+    ##   dfbetas.influence.merMod        lme4
+
+    ## 
+    ## Attaching package: 'car'
+
+    ## The following object is masked from 'package:dplyr':
+    ## 
+    ##     recode
+
+``` r
+library("stats")
+library("effectsize")
+```
+
+    ## 
+    ## Attaching package: 'effectsize'
+
+    ## The following objects are masked from 'package:sjstats':
+    ## 
+    ##     cohens_f, phi
+
+``` r
+library("FSA")
+```
+
+    ## ## FSA v0.8.30. See citation('FSA') if used in publication.
+    ## ## Run fishR() for related website and fishR('IFAR') for related book.
+
+    ## 
+    ## Attaching package: 'FSA'
+
+    ## The following object is masked from 'package:car':
+    ## 
+    ##     bootCase
+
+    ## The following object is masked from 'package:sjstats':
+    ## 
+    ##     se
+
+``` r
+library("gmodels")
+```
+
+    ## 
+    ## Attaching package: 'gmodels'
+
+    ## The following object is masked from 'package:sjstats':
+    ## 
+    ##     ci
+
+``` r
+library("knitr")
+library("pastecs")
+```
+
+    ## 
+    ## Attaching package: 'pastecs'
+
+    ## The following object is masked from 'package:tidyr':
+    ## 
+    ##     extract
+
+    ## The following objects are masked from 'package:dplyr':
+    ## 
+    ##     first, last
+
+``` r
+library("psych")
+```
+
+    ## 
+    ## Attaching package: 'psych'
+
+    ## The following object is masked from 'package:FSA':
+    ## 
+    ##     headtail
+
+    ## The following object is masked from 'package:effectsize':
+    ## 
+    ##     phi
+
+    ## The following object is masked from 'package:car':
+    ## 
+    ##     logit
+
+    ## The following object is masked from 'package:sjstats':
+    ## 
+    ##     phi
+
+    ## The following object is masked from 'package:semTools':
+    ## 
+    ##     skew
+
+    ## The following object is masked from 'package:lavaan':
+    ## 
+    ##     cor2cov
+
+    ## The following objects are masked from 'package:ggplot2':
+    ## 
+    ##     %+%, alpha
+
+``` r
+library("rstatix")
+```
+
+    ## 
+    ## Attaching package: 'rstatix'
+
+    ## The following objects are masked from 'package:effectsize':
+    ## 
+    ##     cohens_d, eta_squared
+
+    ## The following object is masked from 'package:stats':
+    ## 
+    ##     filter
+
+``` r
+library("sjstats")
+library("stargazer")
+library("userfriendlyscience")
+```
+
+    ## Registered S3 methods overwritten by 'ufs':
+    ##   method                     from               
+    ##   grid.draw.ggProportionPlot userfriendlyscience
+    ##   pander.associationMatrix   userfriendlyscience
+    ##   pander.dataShape           userfriendlyscience
+    ##   pander.descr               userfriendlyscience
+    ##   pander.normalityAssessment userfriendlyscience
+    ##   print.CramersV             userfriendlyscience
+    ##   print.associationMatrix    userfriendlyscience
+    ##   print.confIntOmegaSq       userfriendlyscience
+    ##   print.confIntV             userfriendlyscience
+    ##   print.dataShape            userfriendlyscience
+    ##   print.descr                userfriendlyscience
+    ##   print.ggProportionPlot     userfriendlyscience
+    ##   print.meanConfInt          userfriendlyscience
+    ##   print.multiVarFreq         userfriendlyscience
+    ##   print.normalityAssessment  userfriendlyscience
+    ##   print.regrInfluential      userfriendlyscience
+    ##   print.scaleDiagnosis       userfriendlyscience
+    ##   print.scaleStructure       userfriendlyscience
+    ##   print.scatterMatrix        userfriendlyscience
+
+    ## 
+    ## Attaching package: 'userfriendlyscience'
+
+    ## The following objects are masked from 'package:FSA':
+    ## 
+    ##     is.even, is.odd
+
+    ## The following object is masked from 'package:semTools':
+    ## 
+    ##     reliability
+
+``` r
+library("lmtest")
+```
+
+    ## Loading required package: zoo
+
+    ## 
+    ## Attaching package: 'zoo'
+
+    ## The following objects are masked from 'package:base':
+    ## 
+    ##     as.Date, as.Date.numeric
+
+``` r
 #download.file(url="https://archive.ics.uci.edu/ml/machine-learning-databases/00320/student.zip", destfile="student.zip")
 #unzip("student.zip",exdir = "studentdf")
 list.files("studentdf")
@@ -139,19 +340,19 @@ studentdf %>%
 ```
 
     ##   school sex age address famsize pstatus medu fedu    mjob     fjob reason
-    ## 1     GP   F  18       U     GT3       T    2    2 at_home services   home
+    ## 1     MS   F  18       U     LE3       T    1    1 at_home services course
     ##   nursery internet guardian.x traveltime.x studytime.x failures.x schoolsup.x
-    ## 1     yes      yes     mother            1           3          0          no
+    ## 1     yes      yes     father            2           3          0          no
     ##   famsup.x paid.x activities.x higher.x romantic.x famrel.x freetime.x goout.x
-    ## 1      yes    yes          yes      yes        yes        4          3       3
+    ## 1       no     no           no      yes         no        5          3       2
     ##   dalc.x walc.x health.x absences.x g1.x g2.x g3.x guardian.y traveltime.y
-    ## 1      1      1        3          0    9   10    0     mother            1
+    ## 1      1      1        4          0   18   16   16     father            2
     ##   studytime.y failures.y schoolsup.y famsup.y paid.y activities.y higher.y
-    ## 1           3          0          no      yes     no          yes      yes
+    ## 1           3          0          no       no     no           no      yes
     ##   romantic.y famrel.y freetime.y goout.y dalc.y walc.y health.y absences.y g1.y
-    ## 1        yes        4          3       3      1      1        3          0   11
+    ## 1         no        5          3       2      1      1        4          0   19
     ##   g2.y g3.y
-    ## 1   12   13
+    ## 1   17   18
 
 ## Population vs Sample
 
@@ -1187,7 +1388,11 @@ cor.test(studentdf$g2.x, studentdf$g3.x, method = "kendall")
 
 To report Pearson coefficient here we say:
 
+<blockquote class="blockquote">
+
 343 student grades at two time intervals, Time 1 G2(M=11.09, SD=3.32) and Time 2 G3(M=11.57, SD=3.28) were investigated. A positive Pearson r correlation coefficient of 0.97 was revealed. There is strong correlation between g2 results and the final grade g3 with t(341) = 70 with a p-value \< 0.001. The size of the effect is large.
+
+</blockquote>
 
 ## Correlation (absences and G3)
 
@@ -1592,10 +1797,20 @@ Figure 23: Cohen’s d and Eta
 </div>
 
 Reporting the results with Cohen’s d effect
+
+<blockquote class="blockquote">
+
 An independent-samples t-test was conducted to compare Maths grade 2 results for students who had families less than or equal to 3 and those who had families greater than 3. No significant difference in the Maths grades was found (M= 11.80, SD= 3.23 for students with a family size less than or equal to 3, M=11.48, SD= 3.27 for students who had families greater than 3), t(341) = -0.82, p = 0.41. Cohen’s d also indicated a very weak effect size (-0.09).
 
+</blockquote>
+
 Reporting the results with eta squred effect
+
+<blockquote class="blockquote">
+
 An independent-samples t-test was conducted to compare Maths grade 2 results for students who had families less than or equal to 3 and those who had families greater than 3. No significant difference in the Maths grades was found (M= 11.80, SD= 3.23 for students with a family size less than or equal to 3, M=11.48, SD= 3.27 for students who had families greater than 3), t(341) = -0.82, p = 0.41. A very small effect size was also indicted by the eta squared value (0.002).
+
+</blockquote>
 
 ## Paired t-test
 
@@ -1869,7 +2084,11 @@ effes
 
 The result is that we don’t see a significant difference. We cannot reject the Null hypothesis because the p-value is greater than our alpha (0.05).
 
-“A paired-samples t-test was conducted for the students who got paid classes for the time intervals G1(M=11, SD=2.99) and G3 (M=11.41, SD=3.1). The means increased by 0.266 with a 95% confidence interval ranging from 0.49 to 0.051. Test result was t(168) = -2.44 and p-value was 0.016. The result is not significant at p \< .05. The Eta squared statistic (0.034) indicated a small effect size”
+<blockquote class="blockquote">
+
+A paired-samples t-test was conducted for the students who got paid classes for the time intervals G1(M=11, SD=2.99) and G3 (M=11.41, SD=3.1). The means increased by 0.266 with a 95% confidence interval ranging from 0.49 to 0.051. Test result was t(168) = -2.44 and p-value was 0.016. The result is not significant at p \< .05. The Eta squared statistic (0.034) indicated a small effect size
+
+</blockquote>
 
 I would have expected a significant difference here since we are paying for extra classes. But perhaps we started paying for classes before the first Grade G1. Also there are other things which could have contributed to the difference or lack of difference between these grades.
 
@@ -2035,7 +2254,12 @@ We need a z-score for this. We can use qnorm() to get it from the p-value. The z
 Rosenthal’s r is then -0.0169994
 
 Reporting:
-"Health levels for students who had an Urban address(Mdn = 4 IQR = 2) did not differ significantly from those who had an Rural address(Mdn=4 IQR=2). Rosenthal’s r indicates a small effect. (U = 12473, z = 0.33, p = .74, r = 0.17)
+
+<blockquote class="blockquote">
+
+Health levels for students who had an Urban address(Mdn = 4 IQR = 2) did not differ significantly from those who had an Rural address(Mdn=4 IQR=2). Rosenthal’s r indicates a small effect. (U = 12473, z = 0.33, p = .74, r = 0.17)
+
+</blockquote>
 
 My Analysis is that this should have been quite clear from the box plot and was only worth going this far to demonstrate a Mann-Whitney test.
 
@@ -2224,35 +2448,6 @@ If the variances in the groups were not equal we would use Games-Howell
 userfriendlyscience::oneway(reasondf$reason,y=reasondf$g3.y,posthoc='Tukey')
 ```
 
-    ## Registered S3 methods overwritten by 'lme4':
-    ##   method                          from
-    ##   cooks.distance.influence.merMod car 
-    ##   influence.merMod                car 
-    ##   dfbeta.influence.merMod         car 
-    ##   dfbetas.influence.merMod        car
-
-    ## Registered S3 methods overwritten by 'ufs':
-    ##   method                     from               
-    ##   grid.draw.ggProportionPlot userfriendlyscience
-    ##   pander.associationMatrix   userfriendlyscience
-    ##   pander.dataShape           userfriendlyscience
-    ##   pander.descr               userfriendlyscience
-    ##   pander.normalityAssessment userfriendlyscience
-    ##   print.CramersV             userfriendlyscience
-    ##   print.associationMatrix    userfriendlyscience
-    ##   print.confIntOmegaSq       userfriendlyscience
-    ##   print.confIntV             userfriendlyscience
-    ##   print.dataShape            userfriendlyscience
-    ##   print.descr                userfriendlyscience
-    ##   print.ggProportionPlot     userfriendlyscience
-    ##   print.meanConfInt          userfriendlyscience
-    ##   print.multiVarFreq         userfriendlyscience
-    ##   print.normalityAssessment  userfriendlyscience
-    ##   print.regrInfluential      userfriendlyscience
-    ##   print.scaleDiagnosis       userfriendlyscience
-    ##   print.scaleStructure       userfriendlyscience
-    ##   print.scatterMatrix        userfriendlyscience
-
     ## ### Oneway Anova for y=g3.y and x=reason (groups: course, home, other, reputation)
     ## 
     ## Omega squared: 95% CI = [NA; .04], point estimate = .01
@@ -2297,7 +2492,12 @@ aoveta
 Checking Eta with the [Effect Table](#effect)
 
 Reporting the results with eta squared effect
+
+<blockquote class="blockquote">
+
 An one-way between-groups analysis of variance (ANOVA) was conducted to to explore the impact of the reason for attending a school the Final Grades in Portuguese. Students were divided into four groups based on their reason for attending the school (close to ‘home’, school ‘reputation’, ‘course’ preference or ‘other’). No statistically significant difference in the final grades and associated reason was found (M=12.33, SD=2.6 for reason course, M=12.75, SD=2.4 for reason home, M=12.48, SD=3.0 for reason other and M=13.16, SD=2.6 for reason reputation) , (F(3, 373) = 2.09, p = .101). A small effect size was also indicated by the eta squared value (0.017).
+
+</blockquote>
 
 ## Kruskal-Wallis (Mother’s Education and Maths G3)
 
@@ -2491,15 +2691,19 @@ rstatix::kruskal_effsize(studentdf, g3.x.all~mjob, ci = FALSE, conf.level = 0.95
 
 Reporting
 
+<blockquote class="blockquote">
+
 An Kruskal-Wallis test between groups was conducted to explore the impact of a Mother’s Job title on a student’s Final Maths results. Students were divided into four groups based on their mother’s job title(“teacher”, “health” care related, civil “services” (e.g. administrative or police), “at\_home” or “other”), the box plots of each can be seen in this [Figure](#g3mjobboxplot) (Media:10.5 for “teacher”, Median:13 for “health” , Median:11 for “services” Median:10 “at\_home”, Median:10.5 for "other). The groups were significantly different. H(4) = 18.04, p = .001. A small effect size was also indicated by the eta squared value (0.037).
 
 Focused comparisons of the mean ranks between groups showed that the Mother’s job title were only significant in two comparisons. THe first was when the mother’s job was at home, the Final grade results in Maths were lower in comparison to a mother working in the health service. The second was not as significant but still significant, when a mother’s job was at home, the final grade result was lower in comparison to a mother working in civil service. In summary, a students got better grades when their mother worked in the health or civil service sector rather than working at home.
+
+</blockquote>
 
 ## Chi Square ( male/female higher education )
 
 The Question:
 
-8.  Is there a difference between the male and females students in terms of their ambition to go to higher education?
+Is there a difference between the male and females students in terms of their ambition to go to higher education?
 
 the variables:
 
@@ -2659,7 +2863,11 @@ sjstats::cramer(mytable)
 
 Reporting:
 
+<blockquote class="blockquote">
+
 Using the Chi-square test for independence (with Yates Continuity Correction) there was a significant association between the gender of the student and their reported ambition to do higher education x<sup>2</sup>(1, n=382) = 7.94, p = .0048, phi = 0.156. The effect size is small.
+
+</blockquote>
 
 # Modelling
 
@@ -2831,7 +3039,7 @@ We can then form a simple linear regression model which should give us the same 
 
 <div class="figure" style="text-align: center">
 
-<img src="f_ratio.png" alt="F-ratio" width="10%" />
+<img src="f_ratio.png" alt="F-ratio" width="60%" />
 
 <p class="caption">
 
@@ -3117,12 +3325,14 @@ So for a male student who’s mother works doesn’t in health, the mean would b
     grade = mean + Z (std.dev)
     grade = 11.5685131 + (-0.085)(3.2821242) = 11.29
 
-Some considerations:
+*Some considerations:*
 
 *Predictors:*
 
   - the more we add predictors to our model, the more we could be over-fitting our model to suit our data.
   - It reduces our statistical power and increases the probability of Type II error(false negative). The statistical power is what allows us to distinguish an actual effect from one by chance.
+  - predictors need to have variations, can’t be constant
+  - predictors should be independent
 
 *Outliers:*
 
@@ -3150,8 +3360,6 @@ Figure 48: Cook’s D for model1
   - Collinearity occurs when two or more independent variables are giving the same information, one could be redundant.
   - To check collinearity, we examine the correlation matrix that compares the independent variables with each other.
   - If we get a correlation coefficient of above 0.8, then we may have collinearity.
-  - It is *obvious* :man\_facepalming: now that using G2 grades for Maths falls into this category
-  - below I show that each of the previous grades show a correlation coefficient of above 0.8.
 
 <!-- end list -->
 
@@ -3160,25 +3368,6 @@ studentdf %>%
   select(g1.x,g2.x,g3.x) %>%
   ggpairs() 
 ```
-
-    ## Warning in ggally_statistic(data = data, mapping = mapping, na.rm = na.rm, :
-    ## Removed 13 rows containing missing values
-
-    ## Warning in ggally_statistic(data = data, mapping = mapping, na.rm = na.rm, :
-    ## Removed 39 rows containing missing values
-
-    ## Warning: Removed 13 rows containing missing values (geom_point).
-
-    ## Warning: Removed 13 rows containing non-finite values (stat_density).
-
-    ## Warning in ggally_statistic(data = data, mapping = mapping, na.rm = na.rm, :
-    ## Removed 39 rows containing missing values
-
-    ## Warning: Removed 39 rows containing missing values (geom_point).
-    
-    ## Warning: Removed 39 rows containing missing values (geom_point).
-
-    ## Warning: Removed 39 rows containing non-finite values (stat_density).
 
 <div class="figure" style="text-align: center">
 
@@ -3192,7 +3381,6 @@ Figure 49: Matrix plot of relationships
 
 </div>
 
-  - My Model so far is NOT GOOD. I have violated one assumption. Collinearity makes it difficult as I have seen to assess individual predictors.
   - we can do a few thing to deal with collinearity:
       - remove them
       - Combine them to make a new variables mathematically based on the context and theory of the model
@@ -3230,8 +3418,210 @@ stargazer::stargazer(model5, type="text")
     ## Note:               *p<0.1; **p<0.05; ***p<0.01
 
   - vastly changes our model. Both are statistically significant.
+
   - the R squared value is poor, these two predictors only explain 2.8% of the Grade 3 results.
+
   - The F-statistic result is (F(2, 340) = 5.9, p \< .01), which is statistically significant. We can conclude that this regression model is significantly better at predicting the G3 grades than if we used the mean value of G3, but just being better than the mean is not great. That’s a low bar.
+
+  - Let’s do an analysis of the collinearity for our model4 (using g2.x as a predictor)
+
+<!-- end list -->
+
+``` r
+print("Collinearity")
+vifmodel<-car::vif(model4)
+vifmodel
+print("Tolerance:")
+1/vifmodel
+```
+
+    ## [1] "Collinearity"
+    ##        studentdf$scale_g2.x studentdf$dummy_mjob_health 
+    ##                    1.032592                    1.014245 
+    ## studentdf$dummy_gender_girl 
+    ##                    1.018496 
+    ## [1] "Tolerance:"
+    ##        studentdf$scale_g2.x studentdf$dummy_mjob_health 
+    ##                   0.9684367                   0.9859552 
+    ## studentdf$dummy_gender_girl 
+    ##                   0.9818397
+
+  - If the VIF value is greater than 2.5 or the Tolerance is less than 0.4, then you have concerns over multicollinearity.
+
+Reporting:
+
+<blockquote class="blockquote">
+
+Tests to see if the data met the assumption of collinearity indicated that multicollinearity was not a concern (scale\_g2.x, Tolerance = .97, VIF = 1.03; dummy\_mjob\_health, Tolerance = .99 VIF = 1.01, dummy\_gender\_girl Tolerance=.98, VIF=1.02).
+
+</blockquote>
+
+*Association:*
+
+  - For MLR (multi-linear regressions), we must have some proof there is an actually real link between these variables used as predictors and the outcome variable. We can use test statistics as we have seen in the previous sections for this.
+
+*Time Order:*
+
+  - making sure the predictor happens before the outcome variable, so threat it can be a cause
+
+*Non-spuriousness*
+
+  - Try to reduce spurious relationships, relationships that are just a coincidence, don’t leave out key predictors, even if they are not significant, because they may interact with the predictors.
+
+*Outcome variable*
+
+  - Must be continuous
+
+*Homocedasticity:*
+
+``` r
+plot(model4,1)
+```
+
+<div class="figure" style="text-align: center">
+
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-126-1.png" alt="Test for Homocedasticity on model4" width="100%" />
+
+<p class="caption">
+
+Figure 50: Test for Homocedasticity on model4
+
+</p>
+
+</div>
+
+*Residuals should follow a normal distribution*
+
+``` r
+plot(density(resid(model4))) 
+```
+
+<div class="figure" style="text-align: center">
+
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-127-1.png" alt="Density plot of the residuals for model4" width="100%" />
+
+<p class="caption">
+
+Figure 51: Density plot of the residuals for model4
+
+</p>
+
+</div>
+
+``` r
+car::qqPlot(model4, main="QQ Plot") #qq plot for studentized resid
+```
+
+<div class="figure" style="text-align: center">
+
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-128-1.png" alt="Q-Q plot of the residuals for model4" width="100%" />
+
+<p class="caption">
+
+Figure 52: Q-Q plot of the residuals for model4
+
+</p>
+
+</div>
+
+    ## [1]  48 185
+
+### Reporting my model:
+
+<blockquote class="blockquote">
+
+A multiple regression analysis was conducted to determine if a student’s G2 grade score, gender and Mother’s job could predict a student’s academic G3 Final grade result in Maths.
+
+In order to include the Mother’s job and the gender in the regression model it was recorded into two variables dummy\_mjob\_health (1 for health, 0 for all other jobs), and dummy\_gender\_girl (1 for Female, 0 for Male).
+Examination of the histogram, normal P-P plot of standardized residuals and the scatterplot of the dependent variable, academic satisfaction, and standardized residuals showed that the some outliers existed. However, examination of the standardized residuals showed that none could be considered to have undue influence (95% within limits of -1.96 to plus 1.96 and none with Cook’s distance \>1 as outlined in Field (2013).
+
+Examination for multicollinearity showed that the tolerance and variance influence factor measures were within acceptable levels (tolerance \>0.4, VIF \<2.5 ) as outlined in Tarling (2008). The scatterplot of standardized residuals showed that the data met the assumptions of homogeneity of variance and linearity. The data also meets the assumption of non-zero variances of the predictors.
+
+</blockquote>
+
+## What is logistic Resgression?
+
+When we want to predict a categorical outcome variable from a model, we need to use a logistic regression. The predictor variables can be continuous or categorical. We can’t use the same method as linear regression because we could violate the assumption of linearity, so we will use a probability of belonging to a outcome category.
+
+Our output variables will have binary representation
+\+ code 0 when the event does not occur
+\+ code 1 for when it does
+
+We can also do *multinomial logistic regression*, where the outcome varible is not a binary category. It is essentially a series of binary logistic regressions, where we compare all to a base category.
+
+Assumptions of logistic Regression:
+
+  - Outcome variables must be nominal/binary.
+  - Independent predictors
+  - No multicollinearity between predictors
+  - Needs to be a linear relationship between the log odds used to find the probability and the predictors.
+  - Requires a large sample. Minimum of 10 cases for the least frequency outcome for each independent variable.
+
+Question:
+
+Can a model be built to predict if a student answered “yes” to the question “Do you want to take higher education?”.?
+
+``` r
+table(studentdf$higher.x)
+```
+
+    ## 
+    ##  no yes 
+    ##  18 364
+
+  - No has a low frequency but it’s just enough to continue to build the model.
+
+We will use “dummy\_gender\_girl” from the last section to start our prediction model:
+
+``` r
+#Make sure categorical data is used as factors
+logmodel1 <- glm(higher.x ~ studentdf$dummy_gender_girl, data = studentdf, na.action = na.exclude, family = binomial(link=logit))
+#Full summary of the model
+summary(logmodel1)
+```
+
+    ## 
+    ## Call:
+    ## glm(formula = higher.x ~ studentdf$dummy_gender_girl, family = binomial(link = logit), 
+    ##     data = studentdf, na.action = na.exclude)
+    ## 
+    ## Deviance Residuals: 
+    ##     Min       1Q   Median       3Q      Max  
+    ## -2.8947   0.1747   0.1747   0.4124   0.4124  
+    ## 
+    ## Coefficients:
+    ##                             Estimate Std. Error z value             Pr(>|z|)
+    ## (Intercept)                   2.4218     0.2694   8.989 < 0.0000000000000002
+    ## studentdf$dummy_gender_girl   1.7525     0.6411   2.734              0.00627
+    ##                                
+    ## (Intercept)                 ***
+    ## studentdf$dummy_gender_girl ** 
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ## 
+    ## (Dispersion parameter for binomial family taken to be 1)
+    ## 
+    ##     Null deviance: 145.12  on 381  degrees of freedom
+    ## Residual deviance: 135.04  on 380  degrees of freedom
+    ## AIC: 139.04
+    ## 
+    ## Number of Fisher Scoring iterations: 7
+
+Chi-square plus significance:
+
+``` r
+lmtest::lrtest(logmodel1)
+```
+
+    ## Likelihood ratio test
+    ## 
+    ## Model 1: higher.x ~ studentdf$dummy_gender_girl
+    ## Model 2: higher.x ~ 1
+    ##   #Df  LogLik Df  Chisq Pr(>Chisq)   
+    ## 1   2 -67.521                        
+    ## 2   1 -72.560 -1 10.079     0.0015 **
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 # References
 
