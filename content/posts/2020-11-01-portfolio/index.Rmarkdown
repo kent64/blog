@@ -67,6 +67,7 @@ library("generalhoslem")
 library("dplyr")
 library("tidyr")
 library("regclass")
+library("factoextra")
 #download.file(url="https://archive.ics.uci.edu/ml/machine-learning-databases/00320/student.zip", destfile="student.zip")
 #unzip("student.zip",exdir = "studentdf")
 list.files("studentdf")
@@ -2029,6 +2030,239 @@ A multinomial logistic regression analysis was conducted with a student’s fami
 The data met the assumption for independent observations. Examination for multicollinearity showed that the tolerance and variance influence factor measures were within acceptable levels (tolerance >0.4, VIF <2.5 ) as outlined in Tarling (2008). The Hosmer Lemeshow goodness of fit statistic did not indicate any issues with the assumption of linearity between the independent variables and the log odds of the model. 
 </blockquote>
 
+## Dimension Reduction (Factor Analysis)
+
+Dimension Reduction is used to combine multiple measurement to a single score/measure to avoid collinearity. We don't want redundant information from two independent variables, which can cause bias by over representation. This could in turn increase the possibly of a Type I error(false positive).
+
+The goal is to get the right number of predictors for our concept. 
+
+**Principal Component Analysis (PCA)**
+
+PCA is a technique to reduce a highly correlated set of variables to a set of unrelated components arranged in descending order of importance. It's related to Factor analysis (FA), FA is based on a formal model predicting observed variables from theoretical latent factors. Latent factors are phenomena that cannot be measured directly. Manifest variables are the variables we use to indirectly measure the latent variables. We need to figure our the loading that is needed for each of these manifest variables. The loading here is the correlation, it's the same thing, anything over 0.3 is considered high, anything over 0.8 is considered too high. 
+
+Check which variables are continuous or ordinal:
+```{r, results="hold",warning=FALSE }
+studentdf %>% 
+    select_if(is.integer) %>%
+    dplyr::select(!ends_with(".y")) %>%
+    filter(!is.na(g3.x),
+           !is.na(g2.x),
+           !is.na(g1.x)) %>%
+    colnames()
+raqData <- studentdf %>% 
+    select_if(is.integer) %>%
+    dplyr::select(!ends_with(".y")) %>%
+    filter(!is.na(g3.x),
+           !is.na(g2.x),
+           !is.na(g1.x))
+#create a correlation matrix 
+raqMatrix<-cor(raqData)
+round(raqMatrix, 2)
+```
+
+**Step 1: Screen the correlation matrix**
+
+```{r, warning=FALSE , fig.width=12, fig.height=12, fig.align = "center",fig.cap="Correlation matrix for RAQ data"}
+p.mat <- ggcorrplot::cor_pmat(raqData)
+ggcorrplot::ggcorrplot(raqMatrix, title = "Correlation matrix for RAQ data")
+```
+
+```{r, warning=FALSE , fig.width=12, fig.height=12, fig.align = "center",fig.cap="Correlation matrix for RAQ data (X is shown to mark non significant corelations)"}
+#Showing Xs for non-significant correlations
+ggcorrplot::ggcorrplot(raqMatrix, title = "Correlation matrix for RAQ data", p.mat = p.mat, sig.level = .05)
+```
+
+```{r, warning=FALSE , fig.width=12, fig.height=12, fig.align = "center",fig.cap="Correlation matrix for RAQ data"}
+#Showing the co-coefficients (this will be messy given the number of variables)
+ggcorrplot::ggcorrplot(raqMatrix, lab=TRUE, title = "Correlation matrix for RAQ data",  type="lower")
+```
+
+**Step 2: Check if data is suitable - look for relevant statistics**
+
+**Bartlett test**
+```{r, results="hold",warning=FALSE }
+psych::cortest.bartlett(raqData)
+```
+
+**Kaiser-Meyer-Olkin (KMO) Test**
+```{r, results="hold",warning=FALSE }
+psych::KMO(raqData)
+```
+
+**Determinant**
+```{r, results="hold",warning=FALSE }
+det(raqMatrix)
+```
+
+**Step 3: Do the Dimension Reduction (PRINCIPAL COMPONENTS ANALYSIS)**
+```{r, results="hold",warning=FALSE }
+#pcModel<-principal(dataframe/R-matrix, nfactors = number of factors, rotate = "method of rotation", scores = TRUE)
+
+#On raw data using principal components analysis
+#For PCA we know how many factors if is possible to find
+#principal will work out our loadings of each variable onto each component, the proportion each component explained and the cumulative proportion of variance explained 
+pc1 <-  psych::principal(raqData, nfactors = 12, rotate = "none")
+pc1 <-  psych::principal(raqData, nfactors = length(raqData), rotate = "none")
+pc1#output all details of the PCA
+```
+
+**Step 4: Decide which components to retain (PRINCIPAL COMPONENTS ANALYSIS)**
+```{r, warning=FALSE, fig.align = "center",fig.cap="scree plot"}
+#Create the scree plot
+plot(pc1$values, type = "b") 
+```
+
+**Print the variance explained by each component**
+```{r, results="hold",warning=FALSE }
+#Print the variance explained by each component
+pc1$Vaccounted 
+```
+
+**Eigenvalues**
+```{r, results="hold",warning=FALSE }
+#Print the Eigenvalues
+pc1$values
+```
+
+```{r, results="hold",warning=FALSE }
+#Another way to look at eigen values plus variance explained (need to use princomp function of PCA to get right class for use with factoextra functions)
+pcf=princomp(raqData)
+factoextra::get_eigenvalue(pcf)
+```
+
+```{r, warning=FALSE, fig.align = "center",fig.cap="Visualising Eigenvalues"}
+factoextra::fviz_eig(pcf, addlabels = TRUE, ylim = c(0, 50))#Visualize the Eigenvalues
+```
+
+```{r, warning=FALSE, fig.align = "center",fig.cap="More Visualising Eigenvalues"}
+factoextra::fviz_pca_var(pcf, col.var = "cos2",
+             gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"), 
+             repel = TRUE # Avoid text overlapping
+             )
+```
+
+**Print the loadings above the level of 0.3**
+```{r, results="hold",warning=FALSE }
+psych::print.psych(pc1, cut = 0.3, sort = TRUE)
+```
+```{r, warning=FALSE, fig.align = "center",fig.cap="FA Diagram"}
+#create a diagram showing the components and how the manifest variables load
+fa.diagram(pc1) 
+```
+
+**Show the loadings of variables on to components**
+```{r, results="hold",warning=FALSE }
+fa.sort(pc1$loading)
+```
+
+**Output the communalities of variables across components (will be one for PCA since all the variance is used)**
+```{r, results="hold",warning=FALSE }
+pc1$communality 
+```
+
+```{r, warning=FALSE, fig.align = "center",fig.cap="Visualize contribution of variables to each component"}
+var <- factoextra::get_pca_var(pcf)
+corrplot::corrplot(var$contrib, is.corr=FALSE) 
+```
+
+
+```{r, warning=FALSE, fig.align = "center",fig.cap="Contributions of variables to PC1"}
+factoextra::fviz_contrib(pcf, choice = "var", axes = 1, top = 10)
+```
+
+```{r, warning=FALSE, fig.align = "center",fig.cap="Contributions of variables to PC2"}
+factoextra::fviz_contrib(pcf, choice = "var", axes = 2, top = 10)
+```
+
+**Step 5: Apply rotation**]
+
+Note : we don't have to do rotation, but it can align the factors better. 
+
+```{r, results="hold",warning=FALSE }
+print("Apply rotation to try to refine the component structure")
+pc2 <-  principal(raqData, nfactors = 4, rotate = "varimax")#Extracting 4 factors
+print("output the components:")
+psych::print.psych(pc2, cut = 0.3, sort = TRUE)
+```
+**output the communalities**
+```{r, results="hold",warning=FALSE }
+pc2$communality
+```
+
+
+**Doing FACTOR ANALYSIS**
+**Step 3: Do the dimension reduction and Step 4: Decide which factors/components to retain (FACTOR ANALYSIS)**
+```{r, results="hold",warning=FALSE,  fig.align = "center",fig.cap="scree plot"}
+#Factor Analysis - the default here is principal axis factoring fm=pa
+#If we know our data going in is normally distributed we use maximum likelihood
+facsol <- psych::fa(raqMatrix, nfactors=4, obs=NA, n.iter=1, rotate="varimax", fm="pa")
+
+#Create your scree plot
+plot(facsol$values, type = "b") #scree plot
+```
+**Print the Variance accounted for by each factor/component**
+```{r, results="hold",warning=FALSE }
+facsol$Vaccounted
+```
+
+**Output the Eigenvalues**
+```{r, results="hold",warning=FALSE }
+facsol$values 
+```
+
+
+**Print the components with loadings**
+```{r, results="hold",warning=FALSE }
+psych::print.psych(facsol,cut=0.3, sort=TRUE)
+```
+**Print sorted list of loadings**
+```{r, results="hold",warning=FALSE }
+fa.sort(facsol$loading)
+```
+
+```{r, results="hold",warning=FALSE,  fig.align = "center",fig.cap="diagram showing the factors and how the manifest variables load"}
+fa.diagram(facsol)
+```
+
+**Step 5: Apply rotation (FOR FACTOR ANALYSIS)**
+```{r, results="hold",warning=FALSE }
+#Apply rotation to try to refine the component structure
+facsolrot <-  principal(raqMatrix, rotate = "varimax")
+#output the components
+psych::print.psych(facsolrot, cut = 0.3, sort = TRUE)
+```
+
+**output the communalities**
+```{r, results="hold",warning=FALSE }
+facsolrot$communality
+```
+
+
+**Step 6: Reliability Analysis**
+```{r, results="hold",warning=FALSE }
+#If you know that variables are grouped, test each group as a separate scale
+academic_life_score <- raqData[,c("g1.x", "g2.x","g3.x","failures.x")]
+social_animal_score <- raqData[,c("walc.x", "dalc.x","goout.x")]
+```
+
+**Output our Cronbach Alpha values for pa1 group**
+```{r, results="hold",warning=FALSE }
+psych::alpha(academic_life_score, check.keys=TRUE)
+```
+* Cronbach Alpha of 0.8 or 0.9 means we probably have one factor. 
+* 0 is terrible and 1 is great. 
+
+**Output our Cronbach Alpha values for pa2 group**
+```{r, results="hold",warning=FALSE }
+psych::alpha(social_animal_score, check.keys=TRUE)
+```
+
+<blockquote class="blockquote">
+A principal component analysis (PCA) was conducted on the 12 items with orthogonal rotation (varimax). Bartlett’s test of sphericity, Χ2(66) = 2023.298, p< .001, indicated that correlations between items were sufficiently large for PCA. An initial analysis was run to obtain eigenvalues for each component in the data.  Four components had eigenvalues over Kaiser’s criterion of 1 and in combination explained 94.12% of the variance.  The scree plot was slightly ambiguous and showed inflexions that would justify retaining either 2 or 4 factors.  
+Given the large sample size, and the convergence of the scree plot and Kaiser’s criterion on four components, four components were retained in the final analysis.  Component 1 represents an academic life score, component 2 a social life score.
+The academic life score, and social life score subscales of the RAQ all had high reliabilities, at  Cronbach’s α = 88 and 71 respectively. 
+</blockquote>
 
 
 # References
+

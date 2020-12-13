@@ -183,6 +183,7 @@ if (!doNotTrack) {
 <span style="color:#06b;font-weight:bold">library</span>(<span style="background-color:#fff0f0">&#34;dplyr&#34;</span>)
 <span style="color:#06b;font-weight:bold">library</span>(<span style="background-color:#fff0f0">&#34;tidyr&#34;</span>)
 <span style="color:#06b;font-weight:bold">library</span>(<span style="background-color:#fff0f0">&#34;regclass&#34;</span>)
+<span style="color:#06b;font-weight:bold">library</span>(<span style="background-color:#fff0f0">&#34;factoextra&#34;</span>)
 <span style="color:#888">#download.file(url=&#34;https://archive.ics.uci.edu/ml/machine-learning-databases/00320/student.zip&#34;, destfile=&#34;student.zip&#34;)</span>
 <span style="color:#888">#unzip(&#34;student.zip&#34;,exdir = &#34;studentdf&#34;)</span>
 <span style="color:#06b;font-weight:bold">list.files</span>(<span style="background-color:#fff0f0">&#34;studentdf&#34;</span>)
@@ -217,18 +218,20 @@ studentdf<span style="color:#333">=</span><span style="color:#06b;font-weight:bo
 <p>let’s us pick a random student:</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">studentdf <span style="color:#333">%&gt;%</span> 
   <span style="color:#06b;font-weight:bold">sample_n</span>(<span style="color:#60e;font-weight:bold">1</span>) 
-</code></pre></div><pre><code>##   school sex age address famsize pstatus medu fedu    mjob  fjob reason nursery
-## 1     GP   F  18       R     GT3       T    1    1 at_home other course      no
-##   internet guardian.x traveltime.x studytime.x failures.x schoolsup.x famsup.x
-## 1       no     mother            3           1          3          no      yes
-##   paid.x activities.x higher.x romantic.x famrel.x freetime.x goout.x dalc.x
-## 1     no          yes      yes         no        5          2       5      1
-##   walc.x health.x absences.x g1.x g2.x g3.x guardian.y traveltime.y studytime.y
-## 1      5        4          6    9    8   10     mother            3           1
-##   failures.y schoolsup.y famsup.y paid.y activities.y higher.y romantic.y
-## 1          3          no      yes     no          yes      yes         no
-##   famrel.y freetime.y goout.y dalc.y walc.y health.y absences.y g1.y g2.y g3.y
-## 1        5          2       5      1      5        4          6   11   10   11
+</code></pre></div><pre><code>##   school sex age address famsize pstatus medu fedu     mjob  fjob reason
+## 1     GP   M  16       U     GT3       T    3    3 services other   home
+##   nursery internet guardian.x traveltime.x studytime.x failures.x schoolsup.x
+## 1     yes      yes     mother            1           2          0          no
+##   famsup.x paid.x activities.x higher.x romantic.x famrel.x freetime.x goout.x
+## 1       no    yes          yes      yes        yes        4          2       3
+##   dalc.x walc.x health.x absences.x g1.x g2.x g3.x guardian.y traveltime.y
+## 1      1      2        3          2   12   13   12     father            1
+##   studytime.y failures.y schoolsup.y famsup.y paid.y activities.y higher.y
+## 1           3          0          no      yes     no          yes      yes
+##   romantic.y famrel.y freetime.y goout.y dalc.y walc.y health.y absences.y g1.y
+## 1         no        5          3       3      1      1        5          4   13
+##   g2.y g3.y
+## 1   14   14
 </code></pre>
 <h2 id="population-vs-sample">Population vs Sample</h2>
 <p>We are interested in finding results for the entire population of students that have completed exams in maths and Portuguese in Portugal, but we know that is not possible, so what we have is a sample. We will use this sample to infer things about the population as a whole.</p>
@@ -3072,6 +3075,633 @@ arm<span style="color:#333">::</span><span style="color:#06b;font-weight:bold">i
 <p>A multinomial logistic regression analysis was conducted with a student’s family size as the outcome variable (Under or equal to 3, greater than 3) with study time and family support being the predictors.
 The data met the assumption for independent observations. Examination for multicollinearity showed that the tolerance and variance influence factor measures were within acceptable levels (tolerance &gt;0.4, VIF &lt;2.5 ) as outlined in Tarling (2008). The Hosmer Lemeshow goodness of fit statistic did not indicate any issues with the assumption of linearity between the independent variables and the log odds of the model.</p>
 </blockquote>
+<h2 id="dimension-reduction-factor-analysis">Dimension Reduction (Factor Analysis)</h2>
+<p>Dimension Reduction is used to combine multiple measurement to a single score/measure to avoid collinearity. We don’t want redundant information from two independent variables, which can cause bias by over representation. This could in turn increase the possibly of a Type I error(false positive).</p>
+<p>The goal is to get the right number of predictors for our concept.</p>
+<p><strong>Principal Component Analysis (PCA)</strong></p>
+<p>PCA is a technique to reduce a highly correlated set of variables to a set of unrelated components arranged in descending order of importance. It’s related to Factor analysis (FA), FA is based on a formal model predicting observed variables from theoretical latent factors. Latent factors are phenomena that cannot be measured directly. Manifest variables are the variables we use to indirectly measure the latent variables. We need to figure our the loading that is needed for each of these manifest variables. The loading here is the correlation, it’s the same thing, anything over 0.3 is considered high, anything over 0.8 is considered too high.</p>
+<p>Check which variables are continuous or ordinal:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">studentdf <span style="color:#333">%&gt;%</span> 
+    <span style="color:#06b;font-weight:bold">select_if</span>(is.integer) <span style="color:#333">%&gt;%</span>
+    dplyr<span style="color:#333">::</span><span style="color:#06b;font-weight:bold">select</span>(<span style="color:#333">!</span><span style="color:#06b;font-weight:bold">ends_with</span>(<span style="background-color:#fff0f0">&#34;.y&#34;</span>)) <span style="color:#333">%&gt;%</span>
+    <span style="color:#06b;font-weight:bold">filter</span>(<span style="color:#333">!</span><span style="color:#06b;font-weight:bold">is.na</span>(g3.x),
+           <span style="color:#333">!</span><span style="color:#06b;font-weight:bold">is.na</span>(g2.x),
+           <span style="color:#333">!</span><span style="color:#06b;font-weight:bold">is.na</span>(g1.x)) <span style="color:#333">%&gt;%</span>
+    <span style="color:#06b;font-weight:bold">colnames</span>()
+raqData <span style="color:#333">&lt;-</span> studentdf <span style="color:#333">%&gt;%</span> 
+    <span style="color:#06b;font-weight:bold">select_if</span>(is.integer) <span style="color:#333">%&gt;%</span>
+    dplyr<span style="color:#333">::</span><span style="color:#06b;font-weight:bold">select</span>(<span style="color:#333">!</span><span style="color:#06b;font-weight:bold">ends_with</span>(<span style="background-color:#fff0f0">&#34;.y&#34;</span>)) <span style="color:#333">%&gt;%</span>
+    <span style="color:#06b;font-weight:bold">filter</span>(<span style="color:#333">!</span><span style="color:#06b;font-weight:bold">is.na</span>(g3.x),
+           <span style="color:#333">!</span><span style="color:#06b;font-weight:bold">is.na</span>(g2.x),
+           <span style="color:#333">!</span><span style="color:#06b;font-weight:bold">is.na</span>(g1.x))
+<span style="color:#888">#create a correlation matrix </span>
+raqMatrix<span style="color:#333">&lt;-</span><span style="color:#06b;font-weight:bold">cor</span>(raqData)
+<span style="color:#06b;font-weight:bold">round</span>(raqMatrix, <span style="color:#60e;font-weight:bold">2</span>)
+</code></pre></div><pre><code>##  [1] &quot;age&quot;        &quot;failures.x&quot; &quot;famrel.x&quot;   &quot;freetime.x&quot; &quot;goout.x&quot;   
+##  [6] &quot;dalc.x&quot;     &quot;walc.x&quot;     &quot;health.x&quot;   &quot;absences.x&quot; &quot;g1.x&quot;      
+## [11] &quot;g2.x&quot;       &quot;g3.x&quot;      
+##              age failures.x famrel.x freetime.x goout.x dalc.x walc.x health.x
+## age         1.00       0.15     0.04      -0.01    0.17   0.14   0.16    -0.05
+## failures.x  0.15       1.00    -0.05       0.10    0.12   0.17   0.19     0.06
+## famrel.x    0.04      -0.05     1.00       0.13    0.02  -0.09  -0.15     0.12
+## freetime.x -0.01       0.10     0.13       1.00    0.28   0.20   0.12     0.09
+## goout.x     0.17       0.12     0.02       0.28    1.00   0.28   0.44    -0.03
+## dalc.x      0.14       0.17    -0.09       0.20    0.28   1.00   0.65     0.07
+## walc.x      0.16       0.19    -0.15       0.12    0.44   0.65   1.00     0.10
+## health.x   -0.05       0.06     0.12       0.09   -0.03   0.07   0.10     1.00
+## absences.x  0.17       0.11    -0.08      -0.06    0.09   0.14   0.19    -0.01
+## g1.x       -0.08      -0.34     0.01       0.00   -0.14  -0.12  -0.16    -0.06
+## g2.x       -0.18      -0.31     0.00      -0.02   -0.16  -0.12  -0.18    -0.06
+## g3.x       -0.15      -0.29     0.05      -0.02   -0.17  -0.13  -0.19    -0.08
+##            absences.x  g1.x  g2.x  g3.x
+## age              0.17 -0.08 -0.18 -0.15
+## failures.x       0.11 -0.34 -0.31 -0.29
+## famrel.x        -0.08  0.01  0.00  0.05
+## freetime.x      -0.06  0.00 -0.02 -0.02
+## goout.x          0.09 -0.14 -0.16 -0.17
+## dalc.x           0.14 -0.12 -0.12 -0.13
+## walc.x           0.19 -0.16 -0.18 -0.19
+## health.x        -0.01 -0.06 -0.06 -0.08
+## absences.x       1.00 -0.15 -0.21 -0.23
+## g1.x            -0.15  1.00  0.91  0.90
+## g2.x            -0.21  0.91  1.00  0.97
+## g3.x            -0.23  0.90  0.97  1.00
+</code></pre>
+<p><strong>Step 1: Screen the correlation matrix</strong></p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">p.mat <span style="color:#333">&lt;-</span> ggcorrplot<span style="color:#333">::</span><span style="color:#06b;font-weight:bold">cor_pmat</span>(raqData)
+ggcorrplot<span style="color:#333">::</span><span style="color:#06b;font-weight:bold">ggcorrplot</span>(raqMatrix, title <span style="color:#333">=</span> <span style="background-color:#fff0f0">&#34;Correlation matrix for RAQ data&#34;</span>)
+</code></pre></div><div class="figure" style="text-align: center">
+<p><img src="/blog/posts/studentperf/index_files/figure-html/unnamed-chunk-148-1.png" alt="Correlation matrix for RAQ data" width="1152" /></p>
+<p class="caption">
+<p>Figure 55: Correlation matrix for RAQ data</p>
+</p>
+</div>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#888">#Showing Xs for non-significant correlations</span>
+ggcorrplot<span style="color:#333">::</span><span style="color:#06b;font-weight:bold">ggcorrplot</span>(raqMatrix, title <span style="color:#333">=</span> <span style="background-color:#fff0f0">&#34;Correlation matrix for RAQ data&#34;</span>, p.mat <span style="color:#333">=</span> p.mat, sig.level <span style="color:#333">=</span> <span style="color:#60e;font-weight:bold">.05</span>)
+</code></pre></div><div class="figure" style="text-align: center">
+<p><img src="/blog/posts/studentperf/index_files/figure-html/unnamed-chunk-149-1.png" alt="Correlation matrix for RAQ data (X is shown to mark non significant corelations)" width="1152" /></p>
+<p class="caption">
+<p>Figure 56: Correlation matrix for RAQ data (X is shown to mark non significant corelations)</p>
+</p>
+</div>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#888">#Showing the co-coefficients (this will be messy given the number of variables)</span>
+ggcorrplot<span style="color:#333">::</span><span style="color:#06b;font-weight:bold">ggcorrplot</span>(raqMatrix, lab<span style="color:#333">=</span><span style="color:#080;font-weight:bold">TRUE</span>, title <span style="color:#333">=</span> <span style="background-color:#fff0f0">&#34;Correlation matrix for RAQ data&#34;</span>,  type<span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;lower&#34;</span>)
+</code></pre></div><div class="figure" style="text-align: center">
+<p><img src="/blog/posts/studentperf/index_files/figure-html/unnamed-chunk-150-1.png" alt="Correlation matrix for RAQ data" width="1152" /></p>
+<p class="caption">
+<p>Figure 57: Correlation matrix for RAQ data</p>
+</p>
+</div>
+<p><strong>Step 2: Check if data is suitable - look for relevant statistics</strong></p>
+<p><strong>Bartlett test</strong></p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">psych<span style="color:#333">::</span><span style="color:#06b;font-weight:bold">cortest.bartlett</span>(raqData)
+</code></pre></div><pre><code>## R was not square, finding R from data
+
+## $chisq
+## [1] 2023.298
+## 
+## $p.value
+## [1] 0
+## 
+## $df
+## [1] 66
+</code></pre>
+<p><strong>Kaiser-Meyer-Olkin (KMO) Test</strong></p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">psych<span style="color:#333">::</span><span style="color:#06b;font-weight:bold">KMO</span>(raqData)
+</code></pre></div><pre><code>## Kaiser-Meyer-Olkin factor adequacy
+## Call: psych::KMO(r = raqData)
+## Overall MSA =  0.71
+## MSA for each item = 
+##        age failures.x   famrel.x freetime.x    goout.x     dalc.x     walc.x 
+##       0.61       0.85       0.34       0.52       0.65       0.63       0.61 
+##   health.x absences.x       g1.x       g2.x       g3.x 
+##       0.39       0.83       0.88       0.69       0.72
+</code></pre>
+<p><strong>Determinant</strong></p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#06b;font-weight:bold">det</span>(raqMatrix)
+</code></pre></div><pre><code>## [1] 0.002476561
+</code></pre>
+<p><strong>Step 3: Do the Dimension Reduction (PRINCIPAL COMPONENTS ANALYSIS)</strong></p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#888">#pcModel&lt;-principal(dataframe/R-matrix, nfactors = number of factors, rotate = &#34;method of rotation&#34;, scores = TRUE)</span>
+
+<span style="color:#888">#On raw data using principal components analysis</span>
+<span style="color:#888">#For PCA we know how many factors if is possible to find</span>
+<span style="color:#888">#principal will work out our loadings of each variable onto each component, the proportion each component explained and the cumulative proportion of variance explained </span>
+pc1 <span style="color:#333">&lt;-</span>  psych<span style="color:#333">::</span><span style="color:#06b;font-weight:bold">principal</span>(raqData, nfactors <span style="color:#333">=</span> <span style="color:#60e;font-weight:bold">12</span>, rotate <span style="color:#333">=</span> <span style="background-color:#fff0f0">&#34;none&#34;</span>)
+pc1 <span style="color:#333">&lt;-</span>  psych<span style="color:#333">::</span><span style="color:#06b;font-weight:bold">principal</span>(raqData, nfactors <span style="color:#333">=</span> <span style="color:#06b;font-weight:bold">length</span>(raqData), rotate <span style="color:#333">=</span> <span style="background-color:#fff0f0">&#34;none&#34;</span>)
+pc1<span style="color:#888">#output all details of the PCA</span>
+</code></pre></div><pre><code>## Principal Components Analysis
+## Call: psych::principal(r = raqData, nfactors = length(raqData), rotate = &quot;none&quot;)
+## Standardized loadings (pattern matrix) based upon correlation matrix
+##              PC1   PC2   PC3   PC4   PC5   PC6   PC7   PC8   PC9  PC10  PC11
+## age        -0.29  0.19 -0.21  0.69  0.23  0.26 -0.30 -0.33 -0.20 -0.01  0.03
+## failures.x -0.49  0.05  0.04 -0.02  0.03  0.78  0.22  0.24  0.22  0.01 -0.02
+## famrel.x    0.07 -0.09  0.64  0.50  0.23 -0.18 -0.07  0.47  0.04 -0.04 -0.01
+## freetime.x -0.13  0.39  0.60  0.05 -0.33  0.06  0.41 -0.24 -0.35 -0.09  0.01
+## goout.x    -0.39  0.54  0.15  0.22 -0.31 -0.20 -0.03 -0.19  0.54  0.16  0.00
+## dalc.x     -0.40  0.69 -0.07 -0.20  0.08 -0.04 -0.15  0.28 -0.33  0.32 -0.01
+## walc.x     -0.48  0.69 -0.14 -0.19  0.08 -0.11 -0.17  0.14  0.06 -0.40  0.00
+## health.x   -0.11  0.05  0.48 -0.37  0.70  0.03 -0.05 -0.33  0.12  0.05  0.01
+## absences.x -0.34  0.09 -0.42  0.22  0.40 -0.27  0.64  0.04  0.03  0.02  0.02
+## g1.x        0.86  0.39 -0.07  0.09  0.09  0.06  0.06 -0.04  0.02 -0.01 -0.27
+## g2.x        0.90  0.38 -0.05  0.00  0.06  0.09  0.05  0.03  0.07  0.02  0.11
+## g3.x        0.90  0.36 -0.03  0.04  0.06  0.12  0.04  0.06  0.05 -0.01  0.15
+##             PC12 h2                   u2 com
+## age         0.00  1 -0.00000000000000044 3.7
+## failures.x  0.00  1  0.00000000000000044 2.3
+## famrel.x    0.01  1  0.00000000000000033 3.5
+## freetime.x  0.00  1 -0.00000000000000067 4.7
+## goout.x     0.00  1  0.00000000000000011 4.8
+## dalc.x      0.00  1  0.00000000000000122 3.6
+## walc.x      0.00  1  0.00000000000000067 3.2
+## health.x    0.00  1 -0.00000000000000133 3.1
+## absences.x  0.00  1 -0.00000000000000133 4.0
+## g1.x       -0.01  1  0.00000000000000155 1.7
+## g2.x        0.13  1  0.00000000000000089 1.5
+## g3.x       -0.12  1  0.00000000000000100 1.5
+## 
+##                        PC1  PC2  PC3  PC4  PC5  PC6  PC7  PC8  PC9 PC10 PC11
+## SS loadings           3.37 1.88 1.29 1.06 0.99 0.86 0.79 0.69 0.64 0.30 0.11
+## Proportion Var        0.28 0.16 0.11 0.09 0.08 0.07 0.07 0.06 0.05 0.03 0.01
+## Cumulative Var        0.28 0.44 0.54 0.63 0.72 0.79 0.85 0.91 0.96 0.99 1.00
+## Proportion Explained  0.28 0.16 0.11 0.09 0.08 0.07 0.07 0.06 0.05 0.03 0.01
+## Cumulative Proportion 0.28 0.44 0.54 0.63 0.72 0.79 0.85 0.91 0.96 0.99 1.00
+##                       PC12
+## SS loadings           0.03
+## Proportion Var        0.00
+## Cumulative Var        1.00
+## Proportion Explained  0.00
+## Cumulative Proportion 1.00
+## 
+## Mean item complexity =  3.1
+## Test of the hypothesis that 12 components are sufficient.
+## 
+## The root mean square of the residuals (RMSR) is  0 
+##  with the empirical chi square  0  with prob &lt;  NA 
+## 
+## Fit based upon off diagonal values = 1
+</code></pre>
+<p><strong>Step 4: Decide which components to retain (PRINCIPAL COMPONENTS ANALYSIS)</strong></p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#888">#Create the scree plot</span>
+<span style="color:#06b;font-weight:bold">plot</span>(pc1<span style="color:#333">$</span>values, type <span style="color:#333">=</span> <span style="background-color:#fff0f0">&#34;b&#34;</span>) 
+</code></pre></div><div class="figure" style="text-align: center">
+<p><img src="/blog/posts/studentperf/index_files/figure-html/unnamed-chunk-155-1.png" alt="scree plot" width="672" /></p>
+<p class="caption">
+<p>Figure 58: scree plot</p>
+</p>
+</div>
+<p><strong>Print the variance explained by each component</strong></p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#888">#Print the variance explained by each component</span>
+pc1<span style="color:#333">$</span>Vaccounted 
+</code></pre></div><pre><code>##                             PC1       PC2       PC3        PC4        PC5
+## SS loadings           3.3728177 1.8810984 1.2858276 1.05946515 0.98896298
+## Proportion Var        0.2810681 0.1567582 0.1071523 0.08828876 0.08241358
+## Cumulative Var        0.2810681 0.4378263 0.5449786 0.63326740 0.71568098
+## Proportion Explained  0.2810681 0.1567582 0.1071523 0.08828876 0.08241358
+## Cumulative Proportion 0.2810681 0.4378263 0.5449786 0.63326740 0.71568098
+##                              PC6        PC7        PC8        PC9       PC10
+## SS loadings           0.85997616 0.78789993 0.68817948 0.63697977 0.30113481
+## Proportion Var        0.07166468 0.06565833 0.05734829 0.05308165 0.02509457
+## Cumulative Var        0.78734566 0.85300399 0.91035228 0.96343393 0.98852849
+## Proportion Explained  0.07166468 0.06565833 0.05734829 0.05308165 0.02509457
+## Cumulative Proportion 0.78734566 0.85300399 0.91035228 0.96343393 0.98852849
+##                              PC11        PC12
+## SS loadings           0.107534962 0.030123101
+## Proportion Var        0.008961247 0.002510258
+## Cumulative Var        0.997489742 1.000000000
+## Proportion Explained  0.008961247 0.002510258
+## Cumulative Proportion 0.997489742 1.000000000
+</code></pre>
+<p><strong>Eigenvalues</strong></p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#888">#Print the Eigenvalues</span>
+pc1<span style="color:#333">$</span>values
+</code></pre></div><pre><code>##  [1] 3.3728177 1.8810984 1.2858276 1.0594651 0.9889630 0.8599762 0.7878999
+##  [8] 0.6881795 0.6369798 0.3011348 0.1075350 0.0301231
+</code></pre>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#888">#Another way to look at eigen values plus variance explained (need to use princomp function of PCA to get right class for use with factoextra functions)</span>
+pcf<span style="color:#333">=</span><span style="color:#06b;font-weight:bold">princomp</span>(raqData)
+factoextra<span style="color:#333">::</span><span style="color:#06b;font-weight:bold">get_eigenvalue</span>(pcf)
+</code></pre></div><pre><code>##        eigenvalue variance.percent cumulative.variance.percent
+## Dim.1  63.5087167       62.3426528                    62.34265
+## Dim.2  27.8529361       27.3415369                    89.68419
+## Dim.3   2.5216112        2.4753127                    92.15950
+## Dim.4   2.0014628        1.9647145                    94.12422
+## Dim.5   1.4361938        1.4098243                    95.53404
+## Dim.6   1.1148713        1.0944015                    96.62844
+## Dim.7   1.0580927        1.0386654                    97.66711
+## Dim.8   0.7235307        0.7102462                    98.37735
+## Dim.9   0.6702838        0.6579769                    99.03533
+## Dim.10  0.3644779        0.3577858                    99.39312
+## Dim.11  0.3300578        0.3239977                    99.71711
+## Dim.12  0.2881763        0.2828852                   100.00000
+</code></pre>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">factoextra<span style="color:#333">::</span><span style="color:#06b;font-weight:bold">fviz_eig</span>(pcf, addlabels <span style="color:#333">=</span> <span style="color:#080;font-weight:bold">TRUE</span>, ylim <span style="color:#333">=</span> <span style="color:#06b;font-weight:bold">c</span>(<span style="color:#60e;font-weight:bold">0</span>, <span style="color:#60e;font-weight:bold">50</span>))<span style="color:#888">#Visualize the Eigenvalues</span>
+</code></pre></div><div class="figure" style="text-align: center">
+<p><img src="/blog/posts/studentperf/index_files/figure-html/unnamed-chunk-159-1.png" alt="Visualising Eigenvalues" width="672" /></p>
+<p class="caption">
+<p>Figure 59: Visualising Eigenvalues</p>
+</p>
+</div>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">factoextra<span style="color:#333">::</span><span style="color:#06b;font-weight:bold">fviz_pca_var</span>(pcf, col.var <span style="color:#333">=</span> <span style="background-color:#fff0f0">&#34;cos2&#34;</span>,
+             gradient.cols <span style="color:#333">=</span> <span style="color:#06b;font-weight:bold">c</span>(<span style="background-color:#fff0f0">&#34;#00AFBB&#34;</span>, <span style="background-color:#fff0f0">&#34;#E7B800&#34;</span>, <span style="background-color:#fff0f0">&#34;#FC4E07&#34;</span>), 
+             repel <span style="color:#333">=</span> <span style="color:#080;font-weight:bold">TRUE</span> <span style="color:#888"># Avoid text overlapping</span>
+             )
+</code></pre></div><div class="figure" style="text-align: center">
+<p><img src="/blog/posts/studentperf/index_files/figure-html/unnamed-chunk-160-1.png" alt="More Visualising Eigenvalues" width="672" /></p>
+<p class="caption">
+<p>Figure 60: More Visualising Eigenvalues</p>
+</p>
+</div>
+<p><strong>Print the loadings above the level of 0.3</strong></p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">psych<span style="color:#333">::</span><span style="color:#06b;font-weight:bold">print.psych</span>(pc1, cut <span style="color:#333">=</span> <span style="color:#60e;font-weight:bold">0.3</span>, sort <span style="color:#333">=</span> <span style="color:#080;font-weight:bold">TRUE</span>)
+</code></pre></div><pre><code>## Principal Components Analysis
+## Call: psych::principal(r = raqData, nfactors = length(raqData), rotate = &quot;none&quot;)
+## Standardized loadings (pattern matrix) based upon correlation matrix
+##            item   PC1   PC2   PC3   PC4   PC5   PC6   PC7   PC8   PC9  PC10
+## g2.x         11  0.90  0.38                                                
+## g3.x         12  0.90  0.36                                                
+## g1.x         10  0.86  0.39                                                
+## walc.x        7 -0.48  0.69                                           -0.40
+## dalc.x        6 -0.40  0.69                                     -0.33  0.32
+## goout.x       5 -0.39  0.54             -0.31                    0.54      
+## famrel.x      3              0.64  0.50                    0.47            
+## freetime.x    4        0.39  0.60       -0.33        0.41       -0.35      
+## age           1                    0.69                   -0.33            
+## health.x      8              0.48 -0.37  0.70             -0.33            
+## failures.x    2 -0.49                          0.78                        
+## absences.x    9 -0.34       -0.42        0.40        0.64                  
+##             PC11  PC12 h2                   u2 com
+## g2.x                    1  0.00000000000000089 1.5
+## g3.x                    1  0.00000000000000100 1.5
+## g1.x                    1  0.00000000000000155 1.7
+## walc.x                  1  0.00000000000000067 3.2
+## dalc.x                  1  0.00000000000000122 3.6
+## goout.x                 1  0.00000000000000011 4.8
+## famrel.x                1  0.00000000000000033 3.5
+## freetime.x              1 -0.00000000000000067 4.7
+## age                     1 -0.00000000000000044 3.7
+## health.x                1 -0.00000000000000133 3.1
+## failures.x              1  0.00000000000000044 2.3
+## absences.x              1 -0.00000000000000133 4.0
+## 
+##                        PC1  PC2  PC3  PC4  PC5  PC6  PC7  PC8  PC9 PC10 PC11
+## SS loadings           3.37 1.88 1.29 1.06 0.99 0.86 0.79 0.69 0.64 0.30 0.11
+## Proportion Var        0.28 0.16 0.11 0.09 0.08 0.07 0.07 0.06 0.05 0.03 0.01
+## Cumulative Var        0.28 0.44 0.54 0.63 0.72 0.79 0.85 0.91 0.96 0.99 1.00
+## Proportion Explained  0.28 0.16 0.11 0.09 0.08 0.07 0.07 0.06 0.05 0.03 0.01
+## Cumulative Proportion 0.28 0.44 0.54 0.63 0.72 0.79 0.85 0.91 0.96 0.99 1.00
+##                       PC12
+## SS loadings           0.03
+## Proportion Var        0.00
+## Cumulative Var        1.00
+## Proportion Explained  0.00
+## Cumulative Proportion 1.00
+## 
+## Mean item complexity =  3.1
+## Test of the hypothesis that 12 components are sufficient.
+## 
+## The root mean square of the residuals (RMSR) is  0 
+##  with the empirical chi square  0  with prob &lt;  NA 
+## 
+## Fit based upon off diagonal values = 1
+</code></pre>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#888">#create a diagram showing the components and how the manifest variables load</span>
+<span style="color:#06b;font-weight:bold">fa.diagram</span>(pc1) 
+</code></pre></div><div class="figure" style="text-align: center">
+<p><img src="/blog/posts/studentperf/index_files/figure-html/unnamed-chunk-162-1.png" alt="FA Diagram" width="672" /></p>
+<p class="caption">
+<p>Figure 61: FA Diagram</p>
+</p>
+</div>
+<p><strong>Show the loadings of variables on to components</strong></p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#06b;font-weight:bold">fa.sort</span>(pc1<span style="color:#333">$</span>loading)
+</code></pre></div><pre><code>## 
+## Loadings:
+##            PC1    PC2    PC3    PC4    PC5    PC6    PC7    PC8    PC9   
+## g2.x        0.898  0.376                                                 
+## g3.x        0.898  0.360                       0.118                     
+## g1.x        0.863  0.390                                                 
+## walc.x     -0.480  0.694 -0.140 -0.190        -0.107 -0.173  0.137       
+## dalc.x     -0.404  0.687        -0.204               -0.145  0.278 -0.331
+## goout.x    -0.385  0.542  0.149  0.220 -0.310 -0.200        -0.186  0.537
+## famrel.x                  0.644  0.504  0.234 -0.184         0.471       
+## freetime.x -0.131  0.388  0.600        -0.328         0.413 -0.239 -0.351
+## age        -0.290  0.192 -0.210  0.692  0.231  0.259 -0.300 -0.326 -0.198
+## health.x   -0.106         0.482 -0.371  0.699               -0.327  0.122
+## failures.x -0.487                              0.777  0.216  0.240  0.221
+## absences.x -0.343        -0.422  0.225  0.398 -0.268  0.642              
+##            PC10   PC11   PC12  
+## g2.x               0.113  0.128
+## g3.x               0.149 -0.117
+## g1.x              -0.267       
+## walc.x     -0.401              
+## dalc.x      0.318              
+## goout.x     0.162              
+## famrel.x                       
+## freetime.x                     
+## age                            
+## health.x                       
+## failures.x                     
+## absences.x                     
+## 
+##                  PC1   PC2   PC3   PC4   PC5   PC6   PC7   PC8   PC9  PC10
+## SS loadings    3.373 1.881 1.286 1.059 0.989 0.860 0.788 0.688 0.637 0.301
+## Proportion Var 0.281 0.157 0.107 0.088 0.082 0.072 0.066 0.057 0.053 0.025
+## Cumulative Var 0.281 0.438 0.545 0.633 0.716 0.787 0.853 0.910 0.963 0.989
+##                 PC11  PC12
+## SS loadings    0.108 0.030
+## Proportion Var 0.009 0.003
+## Cumulative Var 0.997 1.000
+</code></pre>
+<p><strong>Output the communalities of variables across components (will be one for PCA since all the variance is used)</strong></p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">pc1<span style="color:#333">$</span>communality 
+</code></pre></div><pre><code>##        age failures.x   famrel.x freetime.x    goout.x     dalc.x     walc.x 
+##          1          1          1          1          1          1          1 
+##   health.x absences.x       g1.x       g2.x       g3.x 
+##          1          1          1          1          1
+</code></pre>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">var <span style="color:#333">&lt;-</span> factoextra<span style="color:#333">::</span><span style="color:#06b;font-weight:bold">get_pca_var</span>(pcf)
+corrplot<span style="color:#333">::</span><span style="color:#06b;font-weight:bold">corrplot</span>(var<span style="color:#333">$</span>contrib, is.corr<span style="color:#333">=</span><span style="color:#080;font-weight:bold">FALSE</span>) 
+</code></pre></div><div class="figure" style="text-align: center">
+<p><img src="/blog/posts/studentperf/index_files/figure-html/unnamed-chunk-165-1.png" alt="Visualize contribution of variables to each component" width="672" /></p>
+<p class="caption">
+<p>Figure 62: Visualize contribution of variables to each component</p>
+</p>
+</div>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">factoextra<span style="color:#333">::</span><span style="color:#06b;font-weight:bold">fviz_contrib</span>(pcf, choice <span style="color:#333">=</span> <span style="background-color:#fff0f0">&#34;var&#34;</span>, axes <span style="color:#333">=</span> <span style="color:#60e;font-weight:bold">1</span>, top <span style="color:#333">=</span> <span style="color:#60e;font-weight:bold">10</span>)
+</code></pre></div><div class="figure" style="text-align: center">
+<p><img src="/blog/posts/studentperf/index_files/figure-html/unnamed-chunk-166-1.png" alt="Contributions of variables to PC1" width="672" /></p>
+<p class="caption">
+<p>Figure 63: Contributions of variables to PC1</p>
+</p>
+</div>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">factoextra<span style="color:#333">::</span><span style="color:#06b;font-weight:bold">fviz_contrib</span>(pcf, choice <span style="color:#333">=</span> <span style="background-color:#fff0f0">&#34;var&#34;</span>, axes <span style="color:#333">=</span> <span style="color:#60e;font-weight:bold">2</span>, top <span style="color:#333">=</span> <span style="color:#60e;font-weight:bold">10</span>)
+</code></pre></div><div class="figure" style="text-align: center">
+<p><img src="/blog/posts/studentperf/index_files/figure-html/unnamed-chunk-167-1.png" alt="Contributions of variables to PC2" width="672" /></p>
+<p class="caption">
+<p>Figure 64: Contributions of variables to PC2</p>
+</p>
+</div>
+<p><strong>Step 5: Apply rotation</strong>]</p>
+<p>Note : we don’t have to do rotation, but it can align the factors better.</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#06b;font-weight:bold">print</span>(<span style="background-color:#fff0f0">&#34;Apply rotation to try to refine the component structure&#34;</span>)
+pc2 <span style="color:#333">&lt;-</span>  <span style="color:#06b;font-weight:bold">principal</span>(raqData, nfactors <span style="color:#333">=</span> <span style="color:#60e;font-weight:bold">4</span>, rotate <span style="color:#333">=</span> <span style="background-color:#fff0f0">&#34;varimax&#34;</span>)<span style="color:#888">#Extracting 4 factors</span>
+<span style="color:#06b;font-weight:bold">print</span>(<span style="background-color:#fff0f0">&#34;output the components:&#34;</span>)
+psych<span style="color:#333">::</span><span style="color:#06b;font-weight:bold">print.psych</span>(pc2, cut <span style="color:#333">=</span> <span style="color:#60e;font-weight:bold">0.3</span>, sort <span style="color:#333">=</span> <span style="color:#080;font-weight:bold">TRUE</span>)
+</code></pre></div><pre><code>## [1] &quot;Apply rotation to try to refine the component structure&quot;
+## [1] &quot;output the components:&quot;
+## Principal Components Analysis
+## Call: principal(r = raqData, nfactors = 4, rotate = &quot;varimax&quot;)
+## Standardized loadings (pattern matrix) based upon correlation matrix
+##            item   RC1   RC2   RC3   RC4   h2    u2 com
+## g2.x         11  0.97                   0.95 0.049 1.0
+## g3.x         12  0.96                   0.94 0.061 1.0
+## g1.x         10  0.95                   0.91 0.090 1.0
+## failures.x    2 -0.42                   0.24 0.758 1.7
+## walc.x        7        0.86             0.77 0.231 1.1
+## dalc.x        6        0.82             0.68 0.318 1.0
+## goout.x       5        0.61  0.32       0.51 0.487 1.8
+## famrel.x      3              0.80       0.68 0.318 1.1
+## freetime.x    4        0.39  0.56       0.53 0.470 2.3
+## age           1                    0.73 0.64 0.357 1.4
+## health.x      8                   -0.56 0.38 0.615 1.5
+## absences.x    9                    0.48 0.35 0.646 2.1
+## 
+##                        RC1  RC2  RC3  RC4
+## SS loadings           3.06 2.12 1.22 1.19
+## Proportion Var        0.26 0.18 0.10 0.10
+## Cumulative Var        0.26 0.43 0.53 0.63
+## Proportion Explained  0.40 0.28 0.16 0.16
+## Cumulative Proportion 0.40 0.68 0.84 1.00
+## 
+## Mean item complexity =  1.4
+## Test of the hypothesis that 4 components are sufficient.
+## 
+## The root mean square of the residuals (RMSR) is  0.09 
+##  with the empirical chi square  375.84  with prob &lt;  0.000000000000000000000000000000000000000000000000000000000000000067 
+## 
+## Fit based upon off diagonal values = 0.88
+</code></pre>
+<p><strong>output the communalities</strong></p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">pc2<span style="color:#333">$</span>communality
+</code></pre></div><pre><code>##        age failures.x   famrel.x freetime.x    goout.x     dalc.x     walc.x 
+##  0.6430979  0.2424501  0.6818163  0.5299585  0.5131109  0.6817859  0.7685219 
+##   health.x absences.x       g1.x       g2.x       g3.x 
+##  0.3846795  0.3543305  0.9101341  0.9507104  0.9386129
+</code></pre>
+<p><strong>Doing FACTOR ANALYSIS</strong>
+<strong>Step 3: Do the dimension reduction and Step 4: Decide which factors/components to retain (FACTOR ANALYSIS)</strong></p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#888">#Factor Analysis - the default here is principal axis factoring fm=pa</span>
+<span style="color:#888">#If we know our data going in is normally distributed we use maximum likelihood</span>
+facsol <span style="color:#333">&lt;-</span> psych<span style="color:#333">::</span><span style="color:#06b;font-weight:bold">fa</span>(raqMatrix, nfactors<span style="color:#333">=</span><span style="color:#60e;font-weight:bold">4</span>, obs<span style="color:#333">=</span><span style="color:#080;font-weight:bold">NA</span>, n.iter<span style="color:#333">=</span><span style="color:#60e;font-weight:bold">1</span>, rotate<span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;varimax&#34;</span>, fm<span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;pa&#34;</span>)
+</code></pre></div><pre><code>## maximum iteration exceeded
+</code></pre>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#888">#Create your scree plot</span>
+<span style="color:#06b;font-weight:bold">plot</span>(facsol<span style="color:#333">$</span>values, type <span style="color:#333">=</span> <span style="background-color:#fff0f0">&#34;b&#34;</span>) <span style="color:#888">#scree plot</span>
+</code></pre></div><div class="figure" style="text-align: center">
+<p><img src="/blog/posts/studentperf/index_files/figure-html/unnamed-chunk-170-1.png" alt="scree plot" width="672" /></p>
+<p class="caption">
+<p>Figure 65: scree plot</p>
+</p>
+</div>
+<p><strong>Print the Variance accounted for by each factor/component</strong></p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">facsol<span style="color:#333">$</span>Vaccounted
+</code></pre></div><pre><code>##                             PA1       PA2        PA3        PA4
+## SS loadings           2.9429573 1.7905581 0.67065887 0.60951629
+## Proportion Var        0.2452464 0.1492132 0.05588824 0.05079302
+## Cumulative Var        0.2452464 0.3944596 0.45034785 0.50114088
+## Proportion Explained  0.4893762 0.2977470 0.11152201 0.10135478
+## Cumulative Proportion 0.4893762 0.7871232 0.89864522 1.00000000
+</code></pre>
+<p><strong>Output the Eigenvalues</strong></p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">facsol<span style="color:#333">$</span>values 
+</code></pre></div><pre><code>##  [1]  3.189437171  1.603514991  0.682963244  0.537775112  0.147188887
+##  [6]  0.101326389  0.055810858 -0.003882906 -0.021583080 -0.031469802
+## [11] -0.081483753 -0.170885792
+</code></pre>
+<p><strong>Print the components with loadings</strong></p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">psych<span style="color:#333">::</span><span style="color:#06b;font-weight:bold">print.psych</span>(facsol,cut<span style="color:#333">=</span><span style="color:#60e;font-weight:bold">0.3</span>, sort<span style="color:#333">=</span><span style="color:#080;font-weight:bold">TRUE</span>)
+</code></pre></div><pre><code>## Factor Analysis using method =  pa
+## Call: psych::fa(r = raqMatrix, nfactors = 4, n.iter = 1, rotate = &quot;varimax&quot;, 
+##     fm = &quot;pa&quot;, obs = NA)
+## Standardized loadings (pattern matrix) based upon correlation matrix
+##            item   PA1   PA2   PA3   PA4    h2     u2 com
+## g2.x         11  0.98                   0.975  0.025 1.0
+## g3.x         12  0.97                   0.945  0.055 1.0
+## g1.x         10  0.93                   0.868  0.132 1.0
+## failures.x    2 -0.31                   0.148  0.852 2.0
+## walc.x        7        0.99             1.021 -0.021 1.1
+## dalc.x        6        0.65             0.433  0.567 1.0
+## goout.x       5        0.44             0.280  0.720 1.9
+## freetime.x    4              0.70       0.569  0.431 1.3
+## famrel.x      3                         0.082  0.918 1.4
+## age           1                    0.71 0.543  0.457 1.1
+## absences.x    9                         0.118  0.882 3.7
+## health.x      8                         0.031  0.969 3.6
+## 
+##                        PA1  PA2  PA3  PA4
+## SS loadings           2.94 1.79 0.67 0.61
+## Proportion Var        0.25 0.15 0.06 0.05
+## Cumulative Var        0.25 0.39 0.45 0.50
+## Proportion Explained  0.49 0.30 0.11 0.10
+## Cumulative Proportion 0.49 0.79 0.90 1.00
+## 
+## Mean item complexity =  1.7
+## Test of the hypothesis that 4 factors are sufficient.
+## 
+## The degrees of freedom for the null model are  66  and the objective function was  6
+## The degrees of freedom for the model are 24  and the objective function was  0.2 
+## 
+## The root mean square of the residuals (RMSR) is  0.02 
+## The df corrected root mean square of the residuals is  0.04 
+## 
+## Fit based upon off diagonal values = 0.99
+</code></pre>
+<p><strong>Print sorted list of loadings</strong></p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#06b;font-weight:bold">fa.sort</span>(facsol<span style="color:#333">$</span>loading)
+</code></pre></div><pre><code>## 
+## Loadings:
+##            PA1    PA2    PA3    PA4   
+## g2.x        0.982                     
+## g3.x        0.967                     
+## g1.x        0.928                     
+## failures.x -0.314  0.188              
+## walc.x     -0.104  0.988 -0.183       
+## dalc.x             0.651              
+## goout.x    -0.121  0.445  0.225  0.128
+## freetime.x         0.269  0.697 -0.108
+## famrel.x          -0.118  0.259       
+## age        -0.111  0.144         0.712
+## absences.x -0.189  0.163 -0.133  0.196
+## health.x                        -0.107
+## 
+##                  PA1   PA2   PA3   PA4
+## SS loadings    2.943 1.791 0.671 0.610
+## Proportion Var 0.245 0.149 0.056 0.051
+## Cumulative Var 0.245 0.394 0.450 0.501
+</code></pre>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#06b;font-weight:bold">fa.diagram</span>(facsol)
+</code></pre></div><div class="figure" style="text-align: center">
+<p><img src="/blog/posts/studentperf/index_files/figure-html/unnamed-chunk-175-1.png" alt="diagram showing the factors and how the manifest variables load" width="672" /></p>
+<p class="caption">
+<p>Figure 66: diagram showing the factors and how the manifest variables load</p>
+</p>
+</div>
+<p><strong>Step 5: Apply rotation (FOR FACTOR ANALYSIS)</strong></p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#888">#Apply rotation to try to refine the component structure</span>
+facsolrot <span style="color:#333">&lt;-</span>  <span style="color:#06b;font-weight:bold">principal</span>(raqMatrix, rotate <span style="color:#333">=</span> <span style="background-color:#fff0f0">&#34;varimax&#34;</span>)
+<span style="color:#888">#output the components</span>
+psych<span style="color:#333">::</span><span style="color:#06b;font-weight:bold">print.psych</span>(facsolrot, cut <span style="color:#333">=</span> <span style="color:#60e;font-weight:bold">0.3</span>, sort <span style="color:#333">=</span> <span style="color:#080;font-weight:bold">TRUE</span>)
+</code></pre></div><pre><code>## Principal Components Analysis
+## Call: principal(r = raqMatrix, rotate = &quot;varimax&quot;)
+## Standardized loadings (pattern matrix) based upon correlation matrix
+##             V   PC1     h2   u2 com
+## g2.x       11  0.90 0.8069 0.19   1
+## g3.x       12  0.90 0.8068 0.19   1
+## g1.x       10  0.86 0.7446 0.26   1
+## failures.x  2 -0.49 0.2373 0.76   1
+## walc.x      7 -0.48 0.2306 0.77   1
+## dalc.x      6 -0.40 0.1633 0.84   1
+## goout.x     5 -0.39 0.1486 0.85   1
+## absences.x  9 -0.34 0.1175 0.88   1
+## age         1       0.0841 0.92   1
+## freetime.x  4       0.0172 0.98   1
+## health.x    8       0.0112 0.99   1
+## famrel.x    3       0.0047 1.00   1
+## 
+##                 PC1
+## SS loadings    3.37
+## Proportion Var 0.28
+## 
+## Mean item complexity =  1
+## Test of the hypothesis that 1 component is sufficient.
+## 
+## The root mean square of the residuals (RMSR) is  0.13 
+## 
+## Fit based upon off diagonal values = 0.74
+</code></pre>
+<p><strong>output the communalities</strong></p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">facsolrot<span style="color:#333">$</span>communality
+</code></pre></div><pre><code>##         age  failures.x    famrel.x  freetime.x     goout.x      dalc.x 
+## 0.084078002 0.237306542 0.004680888 0.017211541 0.148597514 0.163310574 
+##      walc.x    health.x  absences.x        g1.x        g2.x        g3.x 
+## 0.230641312 0.011212047 0.117470228 0.744564732 0.806941959 0.806802319
+</code></pre>
+<p><strong>Step 6: Reliability Analysis</strong></p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#888">#If you know that variables are grouped, test each group as a separate scale</span>
+academic_life_score <span style="color:#333">&lt;-</span> raqData[,<span style="color:#06b;font-weight:bold">c</span>(<span style="background-color:#fff0f0">&#34;g1.x&#34;</span>, <span style="background-color:#fff0f0">&#34;g2.x&#34;</span>,<span style="background-color:#fff0f0">&#34;g3.x&#34;</span>,<span style="background-color:#fff0f0">&#34;failures.x&#34;</span>)]
+social_animal_score <span style="color:#333">&lt;-</span> raqData[,<span style="color:#06b;font-weight:bold">c</span>(<span style="background-color:#fff0f0">&#34;walc.x&#34;</span>, <span style="background-color:#fff0f0">&#34;dalc.x&#34;</span>,<span style="background-color:#fff0f0">&#34;goout.x&#34;</span>)]
+</code></pre></div><p><strong>Output our Cronbach Alpha values for pa1 group</strong></p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">psych<span style="color:#333">::</span><span style="color:#06b;font-weight:bold">alpha</span>(academic_life_score, check.keys<span style="color:#333">=</span><span style="color:#080;font-weight:bold">TRUE</span>)
+</code></pre></div><pre><code>## Number of categories should be increased  in order to count frequencies.
+
+## 
+## Reliability analysis   
+## Call: psych::alpha(x = academic_life_score, check.keys = TRUE)
+## 
+##   raw_alpha std.alpha G6(smc) average_r S/N    ase mean  sd median_r
+##       0.88      0.87     0.9      0.62 6.5 0.0038   13 2.4     0.62
+## 
+##  lower alpha upper     95% confidence boundaries
+## 0.87 0.88 0.89 
+## 
+##  Reliability if an item is dropped:
+##             raw_alpha std.alpha G6(smc) average_r  S/N alpha se  var.r med.r
+## g1.x             0.77      0.77    0.83      0.53  3.3   0.0069 0.1462  0.31
+## g2.x             0.75      0.76    0.79      0.51  3.1   0.0082 0.1120  0.34
+## g3.x             0.76      0.77    0.80      0.52  3.3   0.0079 0.1123  0.34
+## failures.x-      0.97      0.97    0.97      0.92 36.4   0.0026 0.0014  0.91
+## 
+##  Item statistics 
+##               n raw.r std.r r.cor r.drop mean   sd
+## g1.x        343  0.96  0.93  0.93   0.91   11 3.26
+## g2.x        343  0.98  0.94  0.98   0.96   11 3.21
+## g3.x        343  0.98  0.93  0.97   0.95   12 3.28
+## failures.x- 343  0.38  0.58  0.33   0.33   20 0.64
+## 
+## Non missing response frequency for each item
+##      0 1 2 3 miss
+## [1,] 0 1 0 0    1
+</code></pre>
+<ul>
+<li>Cronbach Alpha of 0.8 or 0.9 means we probably have one factor.</li>
+<li>0 is terrible and 1 is great.</li>
+</ul>
+<p><strong>Output our Cronbach Alpha values for pa2 group</strong></p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">psych<span style="color:#333">::</span><span style="color:#06b;font-weight:bold">alpha</span>(social_animal_score, check.keys<span style="color:#333">=</span><span style="color:#080;font-weight:bold">TRUE</span>)
+</code></pre></div><pre><code>## 
+## Reliability analysis   
+## Call: psych::alpha(x = social_animal_score, check.keys = TRUE)
+## 
+##   raw_alpha std.alpha G6(smc) average_r S/N   ase mean   sd median_r
+##       0.71      0.72    0.67      0.46 2.5 0.026  2.3 0.89     0.44
+## 
+##  lower alpha upper     95% confidence boundaries
+## 0.66 0.71 0.76 
+## 
+##  Reliability if an item is dropped:
+##         raw_alpha std.alpha G6(smc) average_r  S/N alpha se var.r med.r
+## walc.x       0.43      0.44    0.28      0.28 0.78    0.060    NA  0.28
+## dalc.x       0.61      0.61    0.44      0.44 1.57    0.042    NA  0.44
+## goout.x      0.76      0.79    0.65      0.65 3.67    0.024    NA  0.65
+## 
+##  Item statistics 
+##           n raw.r std.r r.cor r.drop mean   sd
+## walc.x  343  0.89  0.87  0.81   0.67  2.3 1.29
+## dalc.x  343  0.78  0.81  0.69   0.56  1.5 0.92
+## goout.x 343  0.73  0.72  0.47   0.41  3.1 1.10
+## 
+## Non missing response frequency for each item
+##            1    2    3    4    5 miss
+## walc.x  0.37 0.21 0.21 0.13 0.07    0
+## dalc.x  0.70 0.18 0.07 0.02 0.03    0
+## goout.x 0.06 0.26 0.34 0.22 0.13    0
+</code></pre>
+<blockquote class="blockquote">
+<p>A principal component analysis (PCA) was conducted on the 12 items with orthogonal rotation (varimax). Bartlett’s test of sphericity, Χ2(66) = 2023.298, p&lt; .001, indicated that correlations between items were sufficiently large for PCA. An initial analysis was run to obtain eigenvalues for each component in the data. Four components had eigenvalues over Kaiser’s criterion of 1 and in combination explained 94.12% of the variance. The scree plot was slightly ambiguous and showed inflexions that would justify retaining either 2 or 4 factors.<br>
+Given the large sample size, and the convergence of the scree plot and Kaiser’s criterion on four components, four components were retained in the final analysis. Component 1 represents an academic life score, component 2 a social life score.
+The academic life score, and social life score subscales of the RAQ all had high reliabilities, at Cronbach’s α = 88 and 71 respectively.</p>
+</blockquote>
 <h1 id="references">References</h1>
 <div id="refs" class="references">
 <div id="ref-cortez2008using">
@@ -3175,6 +3805,7 @@ The data met the assumption for independent observations. Examination for multic
           </ol>
         </li>
         <li><a href="#what-is-logistic-resgression">What is logistic Resgression?</a></li>
+        <li><a href="#dimension-reduction-factor-analysis">Dimension Reduction (Factor Analysis)</a></li>
       </ol>
     </li>
     <li><a href="#references">References</a></li>

@@ -63,6 +63,7 @@ library("generalhoslem")
 library("dplyr")
 library("tidyr")
 library("regclass")
+library("factoextra")
 #download.file(url="https://archive.ics.uci.edu/ml/machine-learning-databases/00320/student.zip", destfile="student.zip")
 #unzip("student.zip",exdir = "studentdf")
 list.files("studentdf")
@@ -114,18 +115,20 @@ studentdf %>%
   sample_n(1) 
 ```
 
-    ##   school sex age address famsize pstatus medu fedu    mjob  fjob reason nursery
-    ## 1     GP   F  18       R     GT3       T    1    1 at_home other course      no
-    ##   internet guardian.x traveltime.x studytime.x failures.x schoolsup.x famsup.x
-    ## 1       no     mother            3           1          3          no      yes
-    ##   paid.x activities.x higher.x romantic.x famrel.x freetime.x goout.x dalc.x
-    ## 1     no          yes      yes         no        5          2       5      1
-    ##   walc.x health.x absences.x g1.x g2.x g3.x guardian.y traveltime.y studytime.y
-    ## 1      5        4          6    9    8   10     mother            3           1
-    ##   failures.y schoolsup.y famsup.y paid.y activities.y higher.y romantic.y
-    ## 1          3          no      yes     no          yes      yes         no
-    ##   famrel.y freetime.y goout.y dalc.y walc.y health.y absences.y g1.y g2.y g3.y
-    ## 1        5          2       5      1      5        4          6   11   10   11
+    ##   school sex age address famsize pstatus medu fedu     mjob  fjob reason
+    ## 1     GP   M  16       U     GT3       T    3    3 services other   home
+    ##   nursery internet guardian.x traveltime.x studytime.x failures.x schoolsup.x
+    ## 1     yes      yes     mother            1           2          0          no
+    ##   famsup.x paid.x activities.x higher.x romantic.x famrel.x freetime.x goout.x
+    ## 1       no    yes          yes      yes        yes        4          2       3
+    ##   dalc.x walc.x health.x absences.x g1.x g2.x g3.x guardian.y traveltime.y
+    ## 1      1      2        3          2   12   13   12     father            1
+    ##   studytime.y failures.y schoolsup.y famsup.y paid.y activities.y higher.y
+    ## 1           3          0          no      yes     no          yes      yes
+    ##   romantic.y famrel.y freetime.y goout.y dalc.y walc.y health.y absences.y g1.y
+    ## 1         no        5          3       3      1      1        5          4   13
+    ##   g2.y g3.y
+    ## 1   14   14
 
 ## Population vs Sample
 
@@ -3780,6 +3783,843 @@ Reporting:
 
 A multinomial logistic regression analysis was conducted with a student’s family size as the outcome variable (Under or equal to 3, greater than 3) with study time and family support being the predictors.
 The data met the assumption for independent observations. Examination for multicollinearity showed that the tolerance and variance influence factor measures were within acceptable levels (tolerance \>0.4, VIF \<2.5 ) as outlined in Tarling (2008). The Hosmer Lemeshow goodness of fit statistic did not indicate any issues with the assumption of linearity between the independent variables and the log odds of the model.
+
+</blockquote>
+
+## Dimension Reduction (Factor Analysis)
+
+Dimension Reduction is used to combine multiple measurement to a single score/measure to avoid collinearity. We don’t want redundant information from two independent variables, which can cause bias by over representation. This could in turn increase the possibly of a Type I error(false positive).
+
+The goal is to get the right number of predictors for our concept.
+
+**Principal Component Analysis (PCA)**
+
+PCA is a technique to reduce a highly correlated set of variables to a set of unrelated components arranged in descending order of importance. It’s related to Factor analysis (FA), FA is based on a formal model predicting observed variables from theoretical latent factors. Latent factors are phenomena that cannot be measured directly. Manifest variables are the variables we use to indirectly measure the latent variables. We need to figure our the loading that is needed for each of these manifest variables. The loading here is the correlation, it’s the same thing, anything over 0.3 is considered high, anything over 0.8 is considered too high.
+
+Check which variables are continuous or ordinal:
+
+``` r
+studentdf %>% 
+    select_if(is.integer) %>%
+    dplyr::select(!ends_with(".y")) %>%
+    filter(!is.na(g3.x),
+           !is.na(g2.x),
+           !is.na(g1.x)) %>%
+    colnames()
+raqData <- studentdf %>% 
+    select_if(is.integer) %>%
+    dplyr::select(!ends_with(".y")) %>%
+    filter(!is.na(g3.x),
+           !is.na(g2.x),
+           !is.na(g1.x))
+#create a correlation matrix 
+raqMatrix<-cor(raqData)
+round(raqMatrix, 2)
+```
+
+    ##  [1] "age"        "failures.x" "famrel.x"   "freetime.x" "goout.x"   
+    ##  [6] "dalc.x"     "walc.x"     "health.x"   "absences.x" "g1.x"      
+    ## [11] "g2.x"       "g3.x"      
+    ##              age failures.x famrel.x freetime.x goout.x dalc.x walc.x health.x
+    ## age         1.00       0.15     0.04      -0.01    0.17   0.14   0.16    -0.05
+    ## failures.x  0.15       1.00    -0.05       0.10    0.12   0.17   0.19     0.06
+    ## famrel.x    0.04      -0.05     1.00       0.13    0.02  -0.09  -0.15     0.12
+    ## freetime.x -0.01       0.10     0.13       1.00    0.28   0.20   0.12     0.09
+    ## goout.x     0.17       0.12     0.02       0.28    1.00   0.28   0.44    -0.03
+    ## dalc.x      0.14       0.17    -0.09       0.20    0.28   1.00   0.65     0.07
+    ## walc.x      0.16       0.19    -0.15       0.12    0.44   0.65   1.00     0.10
+    ## health.x   -0.05       0.06     0.12       0.09   -0.03   0.07   0.10     1.00
+    ## absences.x  0.17       0.11    -0.08      -0.06    0.09   0.14   0.19    -0.01
+    ## g1.x       -0.08      -0.34     0.01       0.00   -0.14  -0.12  -0.16    -0.06
+    ## g2.x       -0.18      -0.31     0.00      -0.02   -0.16  -0.12  -0.18    -0.06
+    ## g3.x       -0.15      -0.29     0.05      -0.02   -0.17  -0.13  -0.19    -0.08
+    ##            absences.x  g1.x  g2.x  g3.x
+    ## age              0.17 -0.08 -0.18 -0.15
+    ## failures.x       0.11 -0.34 -0.31 -0.29
+    ## famrel.x        -0.08  0.01  0.00  0.05
+    ## freetime.x      -0.06  0.00 -0.02 -0.02
+    ## goout.x          0.09 -0.14 -0.16 -0.17
+    ## dalc.x           0.14 -0.12 -0.12 -0.13
+    ## walc.x           0.19 -0.16 -0.18 -0.19
+    ## health.x        -0.01 -0.06 -0.06 -0.08
+    ## absences.x       1.00 -0.15 -0.21 -0.23
+    ## g1.x            -0.15  1.00  0.91  0.90
+    ## g2.x            -0.21  0.91  1.00  0.97
+    ## g3.x            -0.23  0.90  0.97  1.00
+
+**Step 1: Screen the correlation matrix**
+
+``` r
+p.mat <- ggcorrplot::cor_pmat(raqData)
+ggcorrplot::ggcorrplot(raqMatrix, title = "Correlation matrix for RAQ data")
+```
+
+<div class="figure" style="text-align: center">
+
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-148-1.png" alt="Correlation matrix for RAQ data" width="1152" />
+
+<p class="caption">
+
+Figure 55: Correlation matrix for RAQ data
+
+</p>
+
+</div>
+
+``` r
+#Showing Xs for non-significant correlations
+ggcorrplot::ggcorrplot(raqMatrix, title = "Correlation matrix for RAQ data", p.mat = p.mat, sig.level = .05)
+```
+
+<div class="figure" style="text-align: center">
+
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-149-1.png" alt="Correlation matrix for RAQ data (X is shown to mark non significant corelations)" width="1152" />
+
+<p class="caption">
+
+Figure 56: Correlation matrix for RAQ data (X is shown to mark non significant corelations)
+
+</p>
+
+</div>
+
+``` r
+#Showing the co-coefficients (this will be messy given the number of variables)
+ggcorrplot::ggcorrplot(raqMatrix, lab=TRUE, title = "Correlation matrix for RAQ data",  type="lower")
+```
+
+<div class="figure" style="text-align: center">
+
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-150-1.png" alt="Correlation matrix for RAQ data" width="1152" />
+
+<p class="caption">
+
+Figure 57: Correlation matrix for RAQ data
+
+</p>
+
+</div>
+
+**Step 2: Check if data is suitable - look for relevant statistics**
+
+**Bartlett test**
+
+``` r
+psych::cortest.bartlett(raqData)
+```
+
+    ## R was not square, finding R from data
+
+    ## $chisq
+    ## [1] 2023.298
+    ## 
+    ## $p.value
+    ## [1] 0
+    ## 
+    ## $df
+    ## [1] 66
+
+**Kaiser-Meyer-Olkin (KMO) Test**
+
+``` r
+psych::KMO(raqData)
+```
+
+    ## Kaiser-Meyer-Olkin factor adequacy
+    ## Call: psych::KMO(r = raqData)
+    ## Overall MSA =  0.71
+    ## MSA for each item = 
+    ##        age failures.x   famrel.x freetime.x    goout.x     dalc.x     walc.x 
+    ##       0.61       0.85       0.34       0.52       0.65       0.63       0.61 
+    ##   health.x absences.x       g1.x       g2.x       g3.x 
+    ##       0.39       0.83       0.88       0.69       0.72
+
+**Determinant**
+
+``` r
+det(raqMatrix)
+```
+
+    ## [1] 0.002476561
+
+**Step 3: Do the Dimension Reduction (PRINCIPAL COMPONENTS ANALYSIS)**
+
+``` r
+#pcModel<-principal(dataframe/R-matrix, nfactors = number of factors, rotate = "method of rotation", scores = TRUE)
+
+#On raw data using principal components analysis
+#For PCA we know how many factors if is possible to find
+#principal will work out our loadings of each variable onto each component, the proportion each component explained and the cumulative proportion of variance explained 
+pc1 <-  psych::principal(raqData, nfactors = 12, rotate = "none")
+pc1 <-  psych::principal(raqData, nfactors = length(raqData), rotate = "none")
+pc1#output all details of the PCA
+```
+
+    ## Principal Components Analysis
+    ## Call: psych::principal(r = raqData, nfactors = length(raqData), rotate = "none")
+    ## Standardized loadings (pattern matrix) based upon correlation matrix
+    ##              PC1   PC2   PC3   PC4   PC5   PC6   PC7   PC8   PC9  PC10  PC11
+    ## age        -0.29  0.19 -0.21  0.69  0.23  0.26 -0.30 -0.33 -0.20 -0.01  0.03
+    ## failures.x -0.49  0.05  0.04 -0.02  0.03  0.78  0.22  0.24  0.22  0.01 -0.02
+    ## famrel.x    0.07 -0.09  0.64  0.50  0.23 -0.18 -0.07  0.47  0.04 -0.04 -0.01
+    ## freetime.x -0.13  0.39  0.60  0.05 -0.33  0.06  0.41 -0.24 -0.35 -0.09  0.01
+    ## goout.x    -0.39  0.54  0.15  0.22 -0.31 -0.20 -0.03 -0.19  0.54  0.16  0.00
+    ## dalc.x     -0.40  0.69 -0.07 -0.20  0.08 -0.04 -0.15  0.28 -0.33  0.32 -0.01
+    ## walc.x     -0.48  0.69 -0.14 -0.19  0.08 -0.11 -0.17  0.14  0.06 -0.40  0.00
+    ## health.x   -0.11  0.05  0.48 -0.37  0.70  0.03 -0.05 -0.33  0.12  0.05  0.01
+    ## absences.x -0.34  0.09 -0.42  0.22  0.40 -0.27  0.64  0.04  0.03  0.02  0.02
+    ## g1.x        0.86  0.39 -0.07  0.09  0.09  0.06  0.06 -0.04  0.02 -0.01 -0.27
+    ## g2.x        0.90  0.38 -0.05  0.00  0.06  0.09  0.05  0.03  0.07  0.02  0.11
+    ## g3.x        0.90  0.36 -0.03  0.04  0.06  0.12  0.04  0.06  0.05 -0.01  0.15
+    ##             PC12 h2                   u2 com
+    ## age         0.00  1 -0.00000000000000044 3.7
+    ## failures.x  0.00  1  0.00000000000000044 2.3
+    ## famrel.x    0.01  1  0.00000000000000033 3.5
+    ## freetime.x  0.00  1 -0.00000000000000067 4.7
+    ## goout.x     0.00  1  0.00000000000000011 4.8
+    ## dalc.x      0.00  1  0.00000000000000122 3.6
+    ## walc.x      0.00  1  0.00000000000000067 3.2
+    ## health.x    0.00  1 -0.00000000000000133 3.1
+    ## absences.x  0.00  1 -0.00000000000000133 4.0
+    ## g1.x       -0.01  1  0.00000000000000155 1.7
+    ## g2.x        0.13  1  0.00000000000000089 1.5
+    ## g3.x       -0.12  1  0.00000000000000100 1.5
+    ## 
+    ##                        PC1  PC2  PC3  PC4  PC5  PC6  PC7  PC8  PC9 PC10 PC11
+    ## SS loadings           3.37 1.88 1.29 1.06 0.99 0.86 0.79 0.69 0.64 0.30 0.11
+    ## Proportion Var        0.28 0.16 0.11 0.09 0.08 0.07 0.07 0.06 0.05 0.03 0.01
+    ## Cumulative Var        0.28 0.44 0.54 0.63 0.72 0.79 0.85 0.91 0.96 0.99 1.00
+    ## Proportion Explained  0.28 0.16 0.11 0.09 0.08 0.07 0.07 0.06 0.05 0.03 0.01
+    ## Cumulative Proportion 0.28 0.44 0.54 0.63 0.72 0.79 0.85 0.91 0.96 0.99 1.00
+    ##                       PC12
+    ## SS loadings           0.03
+    ## Proportion Var        0.00
+    ## Cumulative Var        1.00
+    ## Proportion Explained  0.00
+    ## Cumulative Proportion 1.00
+    ## 
+    ## Mean item complexity =  3.1
+    ## Test of the hypothesis that 12 components are sufficient.
+    ## 
+    ## The root mean square of the residuals (RMSR) is  0 
+    ##  with the empirical chi square  0  with prob <  NA 
+    ## 
+    ## Fit based upon off diagonal values = 1
+
+**Step 4: Decide which components to retain (PRINCIPAL COMPONENTS ANALYSIS)**
+
+``` r
+#Create the scree plot
+plot(pc1$values, type = "b") 
+```
+
+<div class="figure" style="text-align: center">
+
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-155-1.png" alt="scree plot" width="672" />
+
+<p class="caption">
+
+Figure 58: scree plot
+
+</p>
+
+</div>
+
+**Print the variance explained by each component**
+
+``` r
+#Print the variance explained by each component
+pc1$Vaccounted 
+```
+
+    ##                             PC1       PC2       PC3        PC4        PC5
+    ## SS loadings           3.3728177 1.8810984 1.2858276 1.05946515 0.98896298
+    ## Proportion Var        0.2810681 0.1567582 0.1071523 0.08828876 0.08241358
+    ## Cumulative Var        0.2810681 0.4378263 0.5449786 0.63326740 0.71568098
+    ## Proportion Explained  0.2810681 0.1567582 0.1071523 0.08828876 0.08241358
+    ## Cumulative Proportion 0.2810681 0.4378263 0.5449786 0.63326740 0.71568098
+    ##                              PC6        PC7        PC8        PC9       PC10
+    ## SS loadings           0.85997616 0.78789993 0.68817948 0.63697977 0.30113481
+    ## Proportion Var        0.07166468 0.06565833 0.05734829 0.05308165 0.02509457
+    ## Cumulative Var        0.78734566 0.85300399 0.91035228 0.96343393 0.98852849
+    ## Proportion Explained  0.07166468 0.06565833 0.05734829 0.05308165 0.02509457
+    ## Cumulative Proportion 0.78734566 0.85300399 0.91035228 0.96343393 0.98852849
+    ##                              PC11        PC12
+    ## SS loadings           0.107534962 0.030123101
+    ## Proportion Var        0.008961247 0.002510258
+    ## Cumulative Var        0.997489742 1.000000000
+    ## Proportion Explained  0.008961247 0.002510258
+    ## Cumulative Proportion 0.997489742 1.000000000
+
+**Eigenvalues**
+
+``` r
+#Print the Eigenvalues
+pc1$values
+```
+
+    ##  [1] 3.3728177 1.8810984 1.2858276 1.0594651 0.9889630 0.8599762 0.7878999
+    ##  [8] 0.6881795 0.6369798 0.3011348 0.1075350 0.0301231
+
+``` r
+#Another way to look at eigen values plus variance explained (need to use princomp function of PCA to get right class for use with factoextra functions)
+pcf=princomp(raqData)
+factoextra::get_eigenvalue(pcf)
+```
+
+    ##        eigenvalue variance.percent cumulative.variance.percent
+    ## Dim.1  63.5087167       62.3426528                    62.34265
+    ## Dim.2  27.8529361       27.3415369                    89.68419
+    ## Dim.3   2.5216112        2.4753127                    92.15950
+    ## Dim.4   2.0014628        1.9647145                    94.12422
+    ## Dim.5   1.4361938        1.4098243                    95.53404
+    ## Dim.6   1.1148713        1.0944015                    96.62844
+    ## Dim.7   1.0580927        1.0386654                    97.66711
+    ## Dim.8   0.7235307        0.7102462                    98.37735
+    ## Dim.9   0.6702838        0.6579769                    99.03533
+    ## Dim.10  0.3644779        0.3577858                    99.39312
+    ## Dim.11  0.3300578        0.3239977                    99.71711
+    ## Dim.12  0.2881763        0.2828852                   100.00000
+
+``` r
+factoextra::fviz_eig(pcf, addlabels = TRUE, ylim = c(0, 50))#Visualize the Eigenvalues
+```
+
+<div class="figure" style="text-align: center">
+
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-159-1.png" alt="Visualising Eigenvalues" width="672" />
+
+<p class="caption">
+
+Figure 59: Visualising Eigenvalues
+
+</p>
+
+</div>
+
+``` r
+factoextra::fviz_pca_var(pcf, col.var = "cos2",
+             gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"), 
+             repel = TRUE # Avoid text overlapping
+             )
+```
+
+<div class="figure" style="text-align: center">
+
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-160-1.png" alt="More Visualising Eigenvalues" width="672" />
+
+<p class="caption">
+
+Figure 60: More Visualising Eigenvalues
+
+</p>
+
+</div>
+
+**Print the loadings above the level of 0.3**
+
+``` r
+psych::print.psych(pc1, cut = 0.3, sort = TRUE)
+```
+
+    ## Principal Components Analysis
+    ## Call: psych::principal(r = raqData, nfactors = length(raqData), rotate = "none")
+    ## Standardized loadings (pattern matrix) based upon correlation matrix
+    ##            item   PC1   PC2   PC3   PC4   PC5   PC6   PC7   PC8   PC9  PC10
+    ## g2.x         11  0.90  0.38                                                
+    ## g3.x         12  0.90  0.36                                                
+    ## g1.x         10  0.86  0.39                                                
+    ## walc.x        7 -0.48  0.69                                           -0.40
+    ## dalc.x        6 -0.40  0.69                                     -0.33  0.32
+    ## goout.x       5 -0.39  0.54             -0.31                    0.54      
+    ## famrel.x      3              0.64  0.50                    0.47            
+    ## freetime.x    4        0.39  0.60       -0.33        0.41       -0.35      
+    ## age           1                    0.69                   -0.33            
+    ## health.x      8              0.48 -0.37  0.70             -0.33            
+    ## failures.x    2 -0.49                          0.78                        
+    ## absences.x    9 -0.34       -0.42        0.40        0.64                  
+    ##             PC11  PC12 h2                   u2 com
+    ## g2.x                    1  0.00000000000000089 1.5
+    ## g3.x                    1  0.00000000000000100 1.5
+    ## g1.x                    1  0.00000000000000155 1.7
+    ## walc.x                  1  0.00000000000000067 3.2
+    ## dalc.x                  1  0.00000000000000122 3.6
+    ## goout.x                 1  0.00000000000000011 4.8
+    ## famrel.x                1  0.00000000000000033 3.5
+    ## freetime.x              1 -0.00000000000000067 4.7
+    ## age                     1 -0.00000000000000044 3.7
+    ## health.x                1 -0.00000000000000133 3.1
+    ## failures.x              1  0.00000000000000044 2.3
+    ## absences.x              1 -0.00000000000000133 4.0
+    ## 
+    ##                        PC1  PC2  PC3  PC4  PC5  PC6  PC7  PC8  PC9 PC10 PC11
+    ## SS loadings           3.37 1.88 1.29 1.06 0.99 0.86 0.79 0.69 0.64 0.30 0.11
+    ## Proportion Var        0.28 0.16 0.11 0.09 0.08 0.07 0.07 0.06 0.05 0.03 0.01
+    ## Cumulative Var        0.28 0.44 0.54 0.63 0.72 0.79 0.85 0.91 0.96 0.99 1.00
+    ## Proportion Explained  0.28 0.16 0.11 0.09 0.08 0.07 0.07 0.06 0.05 0.03 0.01
+    ## Cumulative Proportion 0.28 0.44 0.54 0.63 0.72 0.79 0.85 0.91 0.96 0.99 1.00
+    ##                       PC12
+    ## SS loadings           0.03
+    ## Proportion Var        0.00
+    ## Cumulative Var        1.00
+    ## Proportion Explained  0.00
+    ## Cumulative Proportion 1.00
+    ## 
+    ## Mean item complexity =  3.1
+    ## Test of the hypothesis that 12 components are sufficient.
+    ## 
+    ## The root mean square of the residuals (RMSR) is  0 
+    ##  with the empirical chi square  0  with prob <  NA 
+    ## 
+    ## Fit based upon off diagonal values = 1
+
+``` r
+#create a diagram showing the components and how the manifest variables load
+fa.diagram(pc1) 
+```
+
+<div class="figure" style="text-align: center">
+
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-162-1.png" alt="FA Diagram" width="672" />
+
+<p class="caption">
+
+Figure 61: FA Diagram
+
+</p>
+
+</div>
+
+**Show the loadings of variables on to components**
+
+``` r
+fa.sort(pc1$loading)
+```
+
+    ## 
+    ## Loadings:
+    ##            PC1    PC2    PC3    PC4    PC5    PC6    PC7    PC8    PC9   
+    ## g2.x        0.898  0.376                                                 
+    ## g3.x        0.898  0.360                       0.118                     
+    ## g1.x        0.863  0.390                                                 
+    ## walc.x     -0.480  0.694 -0.140 -0.190        -0.107 -0.173  0.137       
+    ## dalc.x     -0.404  0.687        -0.204               -0.145  0.278 -0.331
+    ## goout.x    -0.385  0.542  0.149  0.220 -0.310 -0.200        -0.186  0.537
+    ## famrel.x                  0.644  0.504  0.234 -0.184         0.471       
+    ## freetime.x -0.131  0.388  0.600        -0.328         0.413 -0.239 -0.351
+    ## age        -0.290  0.192 -0.210  0.692  0.231  0.259 -0.300 -0.326 -0.198
+    ## health.x   -0.106         0.482 -0.371  0.699               -0.327  0.122
+    ## failures.x -0.487                              0.777  0.216  0.240  0.221
+    ## absences.x -0.343        -0.422  0.225  0.398 -0.268  0.642              
+    ##            PC10   PC11   PC12  
+    ## g2.x               0.113  0.128
+    ## g3.x               0.149 -0.117
+    ## g1.x              -0.267       
+    ## walc.x     -0.401              
+    ## dalc.x      0.318              
+    ## goout.x     0.162              
+    ## famrel.x                       
+    ## freetime.x                     
+    ## age                            
+    ## health.x                       
+    ## failures.x                     
+    ## absences.x                     
+    ## 
+    ##                  PC1   PC2   PC3   PC4   PC5   PC6   PC7   PC8   PC9  PC10
+    ## SS loadings    3.373 1.881 1.286 1.059 0.989 0.860 0.788 0.688 0.637 0.301
+    ## Proportion Var 0.281 0.157 0.107 0.088 0.082 0.072 0.066 0.057 0.053 0.025
+    ## Cumulative Var 0.281 0.438 0.545 0.633 0.716 0.787 0.853 0.910 0.963 0.989
+    ##                 PC11  PC12
+    ## SS loadings    0.108 0.030
+    ## Proportion Var 0.009 0.003
+    ## Cumulative Var 0.997 1.000
+
+**Output the communalities of variables across components (will be one for PCA since all the variance is used)**
+
+``` r
+pc1$communality 
+```
+
+    ##        age failures.x   famrel.x freetime.x    goout.x     dalc.x     walc.x 
+    ##          1          1          1          1          1          1          1 
+    ##   health.x absences.x       g1.x       g2.x       g3.x 
+    ##          1          1          1          1          1
+
+``` r
+var <- factoextra::get_pca_var(pcf)
+corrplot::corrplot(var$contrib, is.corr=FALSE) 
+```
+
+<div class="figure" style="text-align: center">
+
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-165-1.png" alt="Visualize contribution of variables to each component" width="672" />
+
+<p class="caption">
+
+Figure 62: Visualize contribution of variables to each component
+
+</p>
+
+</div>
+
+``` r
+factoextra::fviz_contrib(pcf, choice = "var", axes = 1, top = 10)
+```
+
+<div class="figure" style="text-align: center">
+
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-166-1.png" alt="Contributions of variables to PC1" width="672" />
+
+<p class="caption">
+
+Figure 63: Contributions of variables to PC1
+
+</p>
+
+</div>
+
+``` r
+factoextra::fviz_contrib(pcf, choice = "var", axes = 2, top = 10)
+```
+
+<div class="figure" style="text-align: center">
+
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-167-1.png" alt="Contributions of variables to PC2" width="672" />
+
+<p class="caption">
+
+Figure 64: Contributions of variables to PC2
+
+</p>
+
+</div>
+
+**Step 5: Apply rotation**\]
+
+Note : we don’t have to do rotation, but it can align the factors better.
+
+``` r
+print("Apply rotation to try to refine the component structure")
+pc2 <-  principal(raqData, nfactors = 4, rotate = "varimax")#Extracting 4 factors
+print("output the components:")
+psych::print.psych(pc2, cut = 0.3, sort = TRUE)
+```
+
+    ## [1] "Apply rotation to try to refine the component structure"
+    ## [1] "output the components:"
+    ## Principal Components Analysis
+    ## Call: principal(r = raqData, nfactors = 4, rotate = "varimax")
+    ## Standardized loadings (pattern matrix) based upon correlation matrix
+    ##            item   RC1   RC2   RC3   RC4   h2    u2 com
+    ## g2.x         11  0.97                   0.95 0.049 1.0
+    ## g3.x         12  0.96                   0.94 0.061 1.0
+    ## g1.x         10  0.95                   0.91 0.090 1.0
+    ## failures.x    2 -0.42                   0.24 0.758 1.7
+    ## walc.x        7        0.86             0.77 0.231 1.1
+    ## dalc.x        6        0.82             0.68 0.318 1.0
+    ## goout.x       5        0.61  0.32       0.51 0.487 1.8
+    ## famrel.x      3              0.80       0.68 0.318 1.1
+    ## freetime.x    4        0.39  0.56       0.53 0.470 2.3
+    ## age           1                    0.73 0.64 0.357 1.4
+    ## health.x      8                   -0.56 0.38 0.615 1.5
+    ## absences.x    9                    0.48 0.35 0.646 2.1
+    ## 
+    ##                        RC1  RC2  RC3  RC4
+    ## SS loadings           3.06 2.12 1.22 1.19
+    ## Proportion Var        0.26 0.18 0.10 0.10
+    ## Cumulative Var        0.26 0.43 0.53 0.63
+    ## Proportion Explained  0.40 0.28 0.16 0.16
+    ## Cumulative Proportion 0.40 0.68 0.84 1.00
+    ## 
+    ## Mean item complexity =  1.4
+    ## Test of the hypothesis that 4 components are sufficient.
+    ## 
+    ## The root mean square of the residuals (RMSR) is  0.09 
+    ##  with the empirical chi square  375.84  with prob <  0.000000000000000000000000000000000000000000000000000000000000000067 
+    ## 
+    ## Fit based upon off diagonal values = 0.88
+
+**output the communalities**
+
+``` r
+pc2$communality
+```
+
+    ##        age failures.x   famrel.x freetime.x    goout.x     dalc.x     walc.x 
+    ##  0.6430979  0.2424501  0.6818163  0.5299585  0.5131109  0.6817859  0.7685219 
+    ##   health.x absences.x       g1.x       g2.x       g3.x 
+    ##  0.3846795  0.3543305  0.9101341  0.9507104  0.9386129
+
+**Doing FACTOR ANALYSIS**
+**Step 3: Do the dimension reduction and Step 4: Decide which factors/components to retain (FACTOR ANALYSIS)**
+
+``` r
+#Factor Analysis - the default here is principal axis factoring fm=pa
+#If we know our data going in is normally distributed we use maximum likelihood
+facsol <- psych::fa(raqMatrix, nfactors=4, obs=NA, n.iter=1, rotate="varimax", fm="pa")
+```
+
+    ## maximum iteration exceeded
+
+``` r
+#Create your scree plot
+plot(facsol$values, type = "b") #scree plot
+```
+
+<div class="figure" style="text-align: center">
+
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-170-1.png" alt="scree plot" width="672" />
+
+<p class="caption">
+
+Figure 65: scree plot
+
+</p>
+
+</div>
+
+**Print the Variance accounted for by each factor/component**
+
+``` r
+facsol$Vaccounted
+```
+
+    ##                             PA1       PA2        PA3        PA4
+    ## SS loadings           2.9429573 1.7905581 0.67065887 0.60951629
+    ## Proportion Var        0.2452464 0.1492132 0.05588824 0.05079302
+    ## Cumulative Var        0.2452464 0.3944596 0.45034785 0.50114088
+    ## Proportion Explained  0.4893762 0.2977470 0.11152201 0.10135478
+    ## Cumulative Proportion 0.4893762 0.7871232 0.89864522 1.00000000
+
+**Output the Eigenvalues**
+
+``` r
+facsol$values 
+```
+
+    ##  [1]  3.189437171  1.603514991  0.682963244  0.537775112  0.147188887
+    ##  [6]  0.101326389  0.055810858 -0.003882906 -0.021583080 -0.031469802
+    ## [11] -0.081483753 -0.170885792
+
+**Print the components with loadings**
+
+``` r
+psych::print.psych(facsol,cut=0.3, sort=TRUE)
+```
+
+    ## Factor Analysis using method =  pa
+    ## Call: psych::fa(r = raqMatrix, nfactors = 4, n.iter = 1, rotate = "varimax", 
+    ##     fm = "pa", obs = NA)
+    ## Standardized loadings (pattern matrix) based upon correlation matrix
+    ##            item   PA1   PA2   PA3   PA4    h2     u2 com
+    ## g2.x         11  0.98                   0.975  0.025 1.0
+    ## g3.x         12  0.97                   0.945  0.055 1.0
+    ## g1.x         10  0.93                   0.868  0.132 1.0
+    ## failures.x    2 -0.31                   0.148  0.852 2.0
+    ## walc.x        7        0.99             1.021 -0.021 1.1
+    ## dalc.x        6        0.65             0.433  0.567 1.0
+    ## goout.x       5        0.44             0.280  0.720 1.9
+    ## freetime.x    4              0.70       0.569  0.431 1.3
+    ## famrel.x      3                         0.082  0.918 1.4
+    ## age           1                    0.71 0.543  0.457 1.1
+    ## absences.x    9                         0.118  0.882 3.7
+    ## health.x      8                         0.031  0.969 3.6
+    ## 
+    ##                        PA1  PA2  PA3  PA4
+    ## SS loadings           2.94 1.79 0.67 0.61
+    ## Proportion Var        0.25 0.15 0.06 0.05
+    ## Cumulative Var        0.25 0.39 0.45 0.50
+    ## Proportion Explained  0.49 0.30 0.11 0.10
+    ## Cumulative Proportion 0.49 0.79 0.90 1.00
+    ## 
+    ## Mean item complexity =  1.7
+    ## Test of the hypothesis that 4 factors are sufficient.
+    ## 
+    ## The degrees of freedom for the null model are  66  and the objective function was  6
+    ## The degrees of freedom for the model are 24  and the objective function was  0.2 
+    ## 
+    ## The root mean square of the residuals (RMSR) is  0.02 
+    ## The df corrected root mean square of the residuals is  0.04 
+    ## 
+    ## Fit based upon off diagonal values = 0.99
+
+**Print sorted list of loadings**
+
+``` r
+fa.sort(facsol$loading)
+```
+
+    ## 
+    ## Loadings:
+    ##            PA1    PA2    PA3    PA4   
+    ## g2.x        0.982                     
+    ## g3.x        0.967                     
+    ## g1.x        0.928                     
+    ## failures.x -0.314  0.188              
+    ## walc.x     -0.104  0.988 -0.183       
+    ## dalc.x             0.651              
+    ## goout.x    -0.121  0.445  0.225  0.128
+    ## freetime.x         0.269  0.697 -0.108
+    ## famrel.x          -0.118  0.259       
+    ## age        -0.111  0.144         0.712
+    ## absences.x -0.189  0.163 -0.133  0.196
+    ## health.x                        -0.107
+    ## 
+    ##                  PA1   PA2   PA3   PA4
+    ## SS loadings    2.943 1.791 0.671 0.610
+    ## Proportion Var 0.245 0.149 0.056 0.051
+    ## Cumulative Var 0.245 0.394 0.450 0.501
+
+``` r
+fa.diagram(facsol)
+```
+
+<div class="figure" style="text-align: center">
+
+<img src="{{< relref "posts/2020-11-01-portfolio/index.markdown" >}}index_files/figure-html/unnamed-chunk-175-1.png" alt="diagram showing the factors and how the manifest variables load" width="672" />
+
+<p class="caption">
+
+Figure 66: diagram showing the factors and how the manifest variables load
+
+</p>
+
+</div>
+
+**Step 5: Apply rotation (FOR FACTOR ANALYSIS)**
+
+``` r
+#Apply rotation to try to refine the component structure
+facsolrot <-  principal(raqMatrix, rotate = "varimax")
+#output the components
+psych::print.psych(facsolrot, cut = 0.3, sort = TRUE)
+```
+
+    ## Principal Components Analysis
+    ## Call: principal(r = raqMatrix, rotate = "varimax")
+    ## Standardized loadings (pattern matrix) based upon correlation matrix
+    ##             V   PC1     h2   u2 com
+    ## g2.x       11  0.90 0.8069 0.19   1
+    ## g3.x       12  0.90 0.8068 0.19   1
+    ## g1.x       10  0.86 0.7446 0.26   1
+    ## failures.x  2 -0.49 0.2373 0.76   1
+    ## walc.x      7 -0.48 0.2306 0.77   1
+    ## dalc.x      6 -0.40 0.1633 0.84   1
+    ## goout.x     5 -0.39 0.1486 0.85   1
+    ## absences.x  9 -0.34 0.1175 0.88   1
+    ## age         1       0.0841 0.92   1
+    ## freetime.x  4       0.0172 0.98   1
+    ## health.x    8       0.0112 0.99   1
+    ## famrel.x    3       0.0047 1.00   1
+    ## 
+    ##                 PC1
+    ## SS loadings    3.37
+    ## Proportion Var 0.28
+    ## 
+    ## Mean item complexity =  1
+    ## Test of the hypothesis that 1 component is sufficient.
+    ## 
+    ## The root mean square of the residuals (RMSR) is  0.13 
+    ## 
+    ## Fit based upon off diagonal values = 0.74
+
+**output the communalities**
+
+``` r
+facsolrot$communality
+```
+
+    ##         age  failures.x    famrel.x  freetime.x     goout.x      dalc.x 
+    ## 0.084078002 0.237306542 0.004680888 0.017211541 0.148597514 0.163310574 
+    ##      walc.x    health.x  absences.x        g1.x        g2.x        g3.x 
+    ## 0.230641312 0.011212047 0.117470228 0.744564732 0.806941959 0.806802319
+
+**Step 6: Reliability Analysis**
+
+``` r
+#If you know that variables are grouped, test each group as a separate scale
+academic_life_score <- raqData[,c("g1.x", "g2.x","g3.x","failures.x")]
+social_animal_score <- raqData[,c("walc.x", "dalc.x","goout.x")]
+```
+
+**Output our Cronbach Alpha values for pa1 group**
+
+``` r
+psych::alpha(academic_life_score, check.keys=TRUE)
+```
+
+    ## Number of categories should be increased  in order to count frequencies.
+
+    ## 
+    ## Reliability analysis   
+    ## Call: psych::alpha(x = academic_life_score, check.keys = TRUE)
+    ## 
+    ##   raw_alpha std.alpha G6(smc) average_r S/N    ase mean  sd median_r
+    ##       0.88      0.87     0.9      0.62 6.5 0.0038   13 2.4     0.62
+    ## 
+    ##  lower alpha upper     95% confidence boundaries
+    ## 0.87 0.88 0.89 
+    ## 
+    ##  Reliability if an item is dropped:
+    ##             raw_alpha std.alpha G6(smc) average_r  S/N alpha se  var.r med.r
+    ## g1.x             0.77      0.77    0.83      0.53  3.3   0.0069 0.1462  0.31
+    ## g2.x             0.75      0.76    0.79      0.51  3.1   0.0082 0.1120  0.34
+    ## g3.x             0.76      0.77    0.80      0.52  3.3   0.0079 0.1123  0.34
+    ## failures.x-      0.97      0.97    0.97      0.92 36.4   0.0026 0.0014  0.91
+    ## 
+    ##  Item statistics 
+    ##               n raw.r std.r r.cor r.drop mean   sd
+    ## g1.x        343  0.96  0.93  0.93   0.91   11 3.26
+    ## g2.x        343  0.98  0.94  0.98   0.96   11 3.21
+    ## g3.x        343  0.98  0.93  0.97   0.95   12 3.28
+    ## failures.x- 343  0.38  0.58  0.33   0.33   20 0.64
+    ## 
+    ## Non missing response frequency for each item
+    ##      0 1 2 3 miss
+    ## [1,] 0 1 0 0    1
+
+  - Cronbach Alpha of 0.8 or 0.9 means we probably have one factor.
+  - 0 is terrible and 1 is great.
+
+**Output our Cronbach Alpha values for pa2 group**
+
+``` r
+psych::alpha(social_animal_score, check.keys=TRUE)
+```
+
+    ## 
+    ## Reliability analysis   
+    ## Call: psych::alpha(x = social_animal_score, check.keys = TRUE)
+    ## 
+    ##   raw_alpha std.alpha G6(smc) average_r S/N   ase mean   sd median_r
+    ##       0.71      0.72    0.67      0.46 2.5 0.026  2.3 0.89     0.44
+    ## 
+    ##  lower alpha upper     95% confidence boundaries
+    ## 0.66 0.71 0.76 
+    ## 
+    ##  Reliability if an item is dropped:
+    ##         raw_alpha std.alpha G6(smc) average_r  S/N alpha se var.r med.r
+    ## walc.x       0.43      0.44    0.28      0.28 0.78    0.060    NA  0.28
+    ## dalc.x       0.61      0.61    0.44      0.44 1.57    0.042    NA  0.44
+    ## goout.x      0.76      0.79    0.65      0.65 3.67    0.024    NA  0.65
+    ## 
+    ##  Item statistics 
+    ##           n raw.r std.r r.cor r.drop mean   sd
+    ## walc.x  343  0.89  0.87  0.81   0.67  2.3 1.29
+    ## dalc.x  343  0.78  0.81  0.69   0.56  1.5 0.92
+    ## goout.x 343  0.73  0.72  0.47   0.41  3.1 1.10
+    ## 
+    ## Non missing response frequency for each item
+    ##            1    2    3    4    5 miss
+    ## walc.x  0.37 0.21 0.21 0.13 0.07    0
+    ## dalc.x  0.70 0.18 0.07 0.02 0.03    0
+    ## goout.x 0.06 0.26 0.34 0.22 0.13    0
+
+<blockquote class="blockquote">
+
+A principal component analysis (PCA) was conducted on the 12 items with orthogonal rotation (varimax). Bartlett’s test of sphericity, Χ2(66) = 2023.298, p\< .001, indicated that correlations between items were sufficiently large for PCA. An initial analysis was run to obtain eigenvalues for each component in the data. Four components had eigenvalues over Kaiser’s criterion of 1 and in combination explained 94.12% of the variance. The scree plot was slightly ambiguous and showed inflexions that would justify retaining either 2 or 4 factors.  
+Given the large sample size, and the convergence of the scree plot and Kaiser’s criterion on four components, four components were retained in the final analysis. Component 1 represents an academic life score, component 2 a social life score.
+The academic life score, and social life score subscales of the RAQ all had high reliabilities, at Cronbach’s α = 88 and 71 respectively.
 
 </blockquote>
 
