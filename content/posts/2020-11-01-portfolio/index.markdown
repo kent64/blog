@@ -16,13 +16,13 @@ link-citations: true
 
 I am writing this blog as part of an assignment. My Details:
 
-|                 |                                                           |
-| --------------- | --------------------------------------------------------- |
-| Student Name:   | Brendan Kent                                              |
-| Student Number: | C08861692                                                 |
-| Programme Code: | TU060                                                     |
-| Version R:      | R version 4.0.3 (2020-10-10)                              |
-| R packages:     | Listed in <a href="#getting-started">Getting startedr</a> |
+|                 |                                                          |
+| --------------- | -------------------------------------------------------- |
+| Student Name:   | Brendan Kent                                             |
+| Student Number: | C08861692                                                |
+| Programme Code: | TU060                                                    |
+| Version R:      | R version 4.0.3 (2020-10-10)                             |
+| R packages:     | Listed in <a href="#getting-started">Getting started</a> |
 
 # Getting started
 
@@ -114,20 +114,18 @@ studentdf %>%
   sample_n(1) 
 ```
 
-    ##   school sex age address famsize pstatus medu fedu     mjob    fjob reason
-    ## 1     GP   M  15       U     GT3       T    4    4 services teacher course
-    ##   nursery internet guardian.x traveltime.x studytime.x failures.x schoolsup.x
-    ## 1     yes      yes     father            1           2          0          no
-    ##   famsup.x paid.x activities.x higher.x romantic.x famrel.x freetime.x goout.x
-    ## 1      yes     no          yes      yes         no        4          3       3
-    ##   dalc.x walc.x health.x absences.x g1.x g2.x g3.x guardian.y traveltime.y
-    ## 1      1      1        5          2   19   18   18     father            1
-    ##   studytime.y failures.y schoolsup.y famsup.y paid.y activities.y higher.y
-    ## 1           2          0          no      yes     no          yes      yes
-    ##   romantic.y famrel.y freetime.y goout.y dalc.y walc.y health.y absences.y g1.y
-    ## 1         no        4          3       3      1      1        5          0   14
-    ##   g2.y g3.y
-    ## 1   15   15
+    ##   school sex age address famsize pstatus medu fedu    mjob  fjob reason nursery
+    ## 1     GP   M  16       R     LE3       T    3    3 teacher other   home     yes
+    ##   internet guardian.x traveltime.x studytime.x failures.x schoolsup.x famsup.x
+    ## 1      yes     father            3           1          0          no      yes
+    ##   paid.x activities.x higher.x romantic.x famrel.x freetime.x goout.x dalc.x
+    ## 1    yes          yes      yes         no        3          3       4      3
+    ##   walc.x health.x absences.x g1.x g2.x g3.x guardian.y traveltime.y studytime.y
+    ## 1      5        3          8    9    9   10     father            3           1
+    ##   failures.y schoolsup.y famsup.y paid.y activities.y higher.y romantic.y
+    ## 1          0          no      yes     no          yes      yes         no
+    ##   famrel.y freetime.y goout.y dalc.y walc.y health.y absences.y g1.y g2.y g3.y
+    ## 1        3          3       4      3      5        3         16   10   11   12
 
 ## Population vs Sample
 
@@ -3781,7 +3779,7 @@ Reporting:
 <blockquote class="blockquote">
 
 A multinomial logistic regression analysis was conducted with a student’s family size as the outcome variable (Under or equal to 3, greater than 3) with study time and family support being the predictors.
-The data met the assumption for independent observations. Examination for multicollinearity showed that the tolerance and variance influence factor measures were within acceptable levels (tolerance \>0.4, VIF \<2.5 ) as outlined in Tarling (2008). The Hosmer Lemeshow goodness of fit statistic did not indicate any issues with the assumption of linearity between the independent variables and the log odds of the model .
+The data met the assumption for independent observations. Examination for multicollinearity showed that the tolerance and variance influence factor measures were within acceptable levels (tolerance \>0.4, VIF \<2.5 ) as outlined in Tarling (2008). The Hosmer Lemeshow goodness of fit statistic did not indicate any issues with the assumption of linearity between the independent variables and the log odds of the model.
 
 </blockquote>
 
