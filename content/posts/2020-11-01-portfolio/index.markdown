@@ -114,18 +114,20 @@ studentdf %>%
   sample_n(1) 
 ```
 
-    ##   school sex age address famsize pstatus medu fedu  mjob  fjob reason nursery
-    ## 1     GP   M  15       U     LE3       T    3    3 other other course      no
-    ##   internet guardian.x traveltime.x studytime.x failures.x schoolsup.x famsup.x
-    ## 1      yes     mother            1           2          0          no       no
-    ##   paid.x activities.x higher.x romantic.x famrel.x freetime.x goout.x dalc.x
-    ## 1     no          yes      yes         no        5          3       2      1
-    ##   walc.x health.x absences.x g1.x g2.x g3.x guardian.y traveltime.y studytime.y
-    ## 1      1        2          0    8   10   12     mother            1           2
-    ##   failures.y schoolsup.y famsup.y paid.y activities.y higher.y romantic.y
-    ## 1          0          no       no     no          yes      yes         no
-    ##   famrel.y freetime.y goout.y dalc.y walc.y health.y absences.y g1.y g2.y g3.y
-    ## 1        5          3       2      1      1        2          0   13   12   12
+    ##   school sex age address famsize pstatus medu fedu     mjob    fjob reason
+    ## 1     GP   M  15       U     GT3       T    4    4 services teacher course
+    ##   nursery internet guardian.x traveltime.x studytime.x failures.x schoolsup.x
+    ## 1     yes      yes     father            1           2          0          no
+    ##   famsup.x paid.x activities.x higher.x romantic.x famrel.x freetime.x goout.x
+    ## 1      yes     no          yes      yes         no        4          3       3
+    ##   dalc.x walc.x health.x absences.x g1.x g2.x g3.x guardian.y traveltime.y
+    ## 1      1      1        5          2   19   18   18     father            1
+    ##   studytime.y failures.y schoolsup.y famsup.y paid.y activities.y higher.y
+    ## 1           2          0          no      yes     no          yes      yes
+    ##   romantic.y famrel.y freetime.y goout.y dalc.y walc.y health.y absences.y g1.y
+    ## 1         no        4          3       3      1      1        5          0   14
+    ##   g2.y g3.y
+    ## 1   15   15
 
 ## Population vs Sample
 
@@ -3370,24 +3372,24 @@ We will use the study time to start our prediction model (the idea being a large
 
 ``` r
 #Make sure categorical data is used as factors
-logmodel1 <- glm(famsize ~ dummy_studytime_grt5hrs, data = logregressiondf, na.action = na.exclude, family = binomial(link=logit))
+logmodel1 <- glm(dummy_famsize ~ dummy_studytime_grt5hrs, data = logregressiondf, na.action = na.exclude, family = binomial(link=logit))
 #Full summary of the model
 summary(logmodel1)
 ```
 
     ## 
     ## Call:
-    ## glm(formula = famsize ~ dummy_studytime_grt5hrs, family = binomial(link = logit), 
+    ## glm(formula = dummy_famsize ~ dummy_studytime_grt5hrs, family = binomial(link = logit), 
     ##     data = logregressiondf, na.action = na.exclude)
     ## 
     ## Deviance Residuals: 
     ##     Min       1Q   Median       3Q      Max  
-    ## -0.8452  -0.8452  -0.8452   1.5510   1.8526  
+    ## -1.8526  -1.5510   0.8452   0.8452   0.8452  
     ## 
     ## Coefficients:
     ##                         Estimate Std. Error z value        Pr(>|z|)    
-    ## (Intercept)              -0.8457     0.1274  -6.636 0.0000000000323 ***
-    ## dummy_studytime_grt5hrs  -0.6722     0.3040  -2.211           0.027 *  
+    ## (Intercept)               0.8457     0.1274   6.636 0.0000000000323 ***
+    ## dummy_studytime_grt5hrs   0.6722     0.3040   2.211           0.027 *  
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## 
@@ -3410,8 +3412,8 @@ lmtest::lrtest(logmodel1)
 
     ## Likelihood ratio test
     ## 
-    ## Model 1: famsize ~ dummy_studytime_grt5hrs
-    ## Model 2: famsize ~ 1
+    ## Model 1: dummy_famsize ~ dummy_studytime_grt5hrs
+    ## Model 2: dummy_famsize ~ 1
     ##   #Df  LogLik Df  Chisq Pr(>Chisq)  
     ## 1   2 -220.99                       
     ## 2   1 -223.66 -1 5.3276    0.02099 *
@@ -3444,7 +3446,7 @@ cat("chisq.prob: ", chisq.prob, "\n")
 
 ``` r
 #Output the sensitivity, specificity, and ROC plot
-Epi::ROC(form=logregressiondf$famsize ~ logregressiondf$dummy_studytime_grt5hrs, plot="ROC")
+Epi::ROC(form=logregressiondf$dummy_famsize ~ logregressiondf$dummy_studytime_grt5hrs, plot="ROC")
 ```
 
 <div class="figure" style="text-align: center">
@@ -3459,7 +3461,7 @@ Figure 53: Sensitivity, specificity, and ROC plot
 
 </div>
 
-  - the area in the triangle would suggest this is a good model to predict higher education. AUC = 0.554.
+  - the area in the triangle would suggest this is a good model to predict higher education. AUC = 0.554. (rule of thumb 0.5 is weak and 0.8 is strong)
 
 <!-- end list -->
 
@@ -3481,12 +3483,12 @@ stargazer(logmodel1, type="text")
     ## ===================================================
     ##                             Dependent variable:    
     ##                         ---------------------------
-    ##                                   famsize          
+    ##                                dummy_famsize       
     ## ---------------------------------------------------
-    ## dummy_studytime_grt5hrs          -0.672**          
+    ## dummy_studytime_grt5hrs           0.672**          
     ##                                   (0.304)          
     ##                                                    
-    ## Constant                         -0.846***         
+    ## Constant                         0.846***          
     ##                                   (0.127)          
     ##                                                    
     ## ---------------------------------------------------
@@ -3508,17 +3510,15 @@ OR=round(exp(coef(logmodel1)),4))
 
     ## [1] "Exponentiate the co-efficients:"
     ##             (Intercept) dummy_studytime_grt5hrs 
-    ##               0.4292683               0.5105853 
+    ##                2.329545                1.958537 
     ## [1] "odds ratios and 95% CI:"
     ##                         Estimate     OR
-    ## (Intercept)              -0.8457 0.4293
-    ## dummy_studytime_grt5hrs  -0.6722 0.5106
+    ## (Intercept)               0.8457 2.3295
+    ## dummy_studytime_grt5hrs   0.6722 1.9585
 
   - The odds ratio for dummy\_studytime\_grt5hrs can be calculated from the coefficients by applying the exp() function
-
   - 0.5105853 odds ratio, a value less than 1 indicates that as the predictor increases, the odds of the family size being greater than 3 decreases.
 
-  - 
 <!-- end list -->
 
 ``` r
@@ -3556,21 +3556,21 @@ print("Probability of having a family size grt 3 if you study greater than 5 hrs
 arm::invlogit(coef(logmodel1)[1]+ coef(logmodel1)[2]*1)
 print("Check the assumption of linearity of independent variables and log odds using a Hosmer-Lemeshow test, if this is not statistically significant we are ok
 . Won't give a p-value here because only one predictor")
-generalhoslem::logitgof(logregressiondf$famsize, fitted(logmodel1))
+generalhoslem::logitgof(logregressiondf$dummy_famsize, fitted(logmodel1))
 ```
 
     ## [1] "Probability of having a family size grt 3 if you study less than 5 hrs:"
     ## (Intercept) 
-    ##   0.3003413 
+    ##   0.6996587 
     ## [1] "Probability of having a family size grt 3 if you study greater than 5 hrs:"
     ## (Intercept) 
-    ##   0.1797753 
+    ##   0.8202247 
     ## [1] "Check the assumption of linearity of independent variables and log odds using a Hosmer-Lemeshow test, if this is not statistically significant we are ok\n. Won't give a p-value here because only one predictor"
     ## 
     ##  Hosmer and Lemeshow test (binary model)
     ## 
-    ## data:  logregressiondf$famsize, fitted(logmodel1)
-    ## X-squared = 0.000000000000000000000067173, df = -1, p-value = NA
+    ## data:  logregressiondf$dummy_famsize, fitted(logmodel1)
+    ## X-squared = 0.00000000000000000000006726, df = -1, p-value = NA
 
   - again makes sense that a greater probability is for having a family size greater than 3 and studying less than 5 hrs.
 
@@ -3588,7 +3588,7 @@ logregressiondf <- logregressiondf %>%
 Run the model with the extra predictor (famsize)
 
 ``` r
-logmodel2 <- glm(famsize ~ dummy_studytime_grt5hrs + dummy_famsup, data = logregressiondf, na.action = na.exclude, family = binomial(link=logit))
+logmodel2 <- glm(dummy_famsize ~ dummy_studytime_grt5hrs + dummy_famsup, data = logregressiondf, na.action = na.exclude, family = binomial(link=logit))
 
 print(" ---- Full summary of the model ---- ")
 summary(logmodel2)
@@ -3607,19 +3607,19 @@ stargazer(logmodel2, type="text")
     ## [1] " ---- Full summary of the model ---- "
     ## 
     ## Call:
-    ## glm(formula = famsize ~ dummy_studytime_grt5hrs + dummy_famsup, 
+    ## glm(formula = dummy_famsize ~ dummy_studytime_grt5hrs + dummy_famsup, 
     ##     family = binomial(link = logit), data = logregressiondf, 
     ##     na.action = na.exclude)
     ## 
     ## Deviance Residuals: 
     ##     Min       1Q   Median       3Q      Max  
-    ## -0.9254  -0.7891  -0.7891   1.4524   1.9039  
+    ## -1.9039  -1.4524   0.7891   0.7891   0.9254  
     ## 
     ## Coefficients:
     ##                         Estimate Std. Error z value Pr(>|z|)    
-    ## (Intercept)              -0.6265     0.1836  -3.413 0.000643 ***
-    ## dummy_studytime_grt5hrs  -0.6271     0.3060  -2.050 0.040409 *  
-    ## dummy_famsup             -0.3806     0.2359  -1.613 0.106697    
+    ## (Intercept)               0.6265     0.1836   3.413 0.000643 ***
+    ## dummy_studytime_grt5hrs   0.6271     0.3060   2.050 0.040409 *  
+    ## dummy_famsup              0.3806     0.2359   1.613 0.106697    
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## 
@@ -3634,8 +3634,8 @@ stargazer(logmodel2, type="text")
     ## [1] " ---- Chi-square plus significance ---- "
     ## Likelihood ratio test
     ## 
-    ## Model 1: famsize ~ dummy_studytime_grt5hrs + dummy_famsup
-    ## Model 2: famsize ~ 1
+    ## Model 1: dummy_famsize ~ dummy_studytime_grt5hrs + dummy_famsup
+    ## Model 2: dummy_famsize ~ 1
     ##   #Df  LogLik Df  Chisq Pr(>Chisq)  
     ## 1   3 -219.70                       
     ## 2   1 -223.66 -2 7.9137    0.01912 *
@@ -3651,15 +3651,15 @@ stargazer(logmodel2, type="text")
     ## ===================================================
     ##                             Dependent variable:    
     ##                         ---------------------------
-    ##                                   famsize          
+    ##                                dummy_famsize       
     ## ---------------------------------------------------
-    ## dummy_studytime_grt5hrs          -0.627**          
+    ## dummy_studytime_grt5hrs           0.627**          
     ##                                   (0.306)          
     ##                                                    
-    ## dummy_famsup                      -0.381           
+    ## dummy_famsup                       0.381           
     ##                                   (0.236)          
     ##                                                    
-    ## Constant                         -0.627***         
+    ## Constant                         0.627***          
     ##                                   (0.184)          
     ##                                                    
     ## ---------------------------------------------------
@@ -3691,7 +3691,7 @@ Figure 54: Sensitivity, specificity, and ROC plot
 
 </div>
 
-  - AUC = 0.548
+  - AUC = 0.548 (rule of thumb 0.5 is weak and 0.8 is strong)
 
 Our equation will look like:
 
@@ -3705,15 +3705,22 @@ OR=round(exp(coef(logmodel2)),4))
 
     ## [1] "Exponentiate the co-efficients"
     ##             (Intercept) dummy_studytime_grt5hrs            dummy_famsup 
-    ##               0.5344556               0.5341414               0.6834281 
+    ##                1.871063                1.872163                1.463212 
     ## [1] "odds ratios "
     ##                         Estimate     OR
-    ## (Intercept)              -0.6265 0.5345
-    ## dummy_studytime_grt5hrs  -0.6271 0.5341
-    ## dummy_famsup             -0.3806 0.6834
+    ## (Intercept)               0.6265 1.8711
+    ## dummy_studytime_grt5hrs   0.6271 1.8722
+    ## dummy_famsup              0.3806 1.4632
+
+  - again we have a negative relationship, if we have family support it reduces the chance we have a large family.
+
+<!-- end list -->
 
 ``` r
-#Check the assumption of linearity of independent variables and log odds using a Hosmer-Lemeshow test, if this is not statistically significant we are ok
+print("Check the assumption of linearity of independent variables and log odds using a Hosmer-Lemeshow test, if this is not statistically significant we are ok")
+generalhoslem::logitgof(logregressiondf$dummy_famsize, fitted(logmodel2))
+print("Pseudo Rsquared:")
+DescTools::PseudoR2(logmodel2, which="CoxSnell")
 DescTools::PseudoR2(logmodel2, which="Nagelkerke")
 print("Collinearity:")
 vifmodel<-car::vif(logmodel2)#You can ignore the warning messages, GVIF^(1/(2*Df)) is the value of interest
@@ -3722,6 +3729,16 @@ print("Tolerance:")
 1/vifmodel
 ```
 
+    ## [1] "Check the assumption of linearity of independent variables and log odds using a Hosmer-Lemeshow test, if this is not statistically significant we are ok"
+    ## 
+    ##  Hosmer and Lemeshow test (binary model)
+    ## 
+    ## data:  logregressiondf$dummy_famsize, fitted(logmodel2)
+    ## X-squared = 0.10538, df = 1, p-value = 0.7455
+    ## 
+    ## [1] "Pseudo Rsquared:"
+    ##  CoxSnell 
+    ## 0.0205034 
     ## Nagelkerke 
     ## 0.02971791 
     ## [1] "Collinearity:"
@@ -3731,8 +3748,8 @@ print("Tolerance:")
     ## dummy_studytime_grt5hrs            dummy_famsup 
     ##               0.9926261               0.9926261
 
-  - Nagelkerke is statistically signifacntly whihc is not good.
-  - If the VIF value is greater than 2.5 or the Tolerance is less than 0.4, then you have concerns over multicollinearity. No concerns. :heavy\_check\_mark:
+  - Nagelkerke is saying we have explained 2.9 % with logmodel2
+  - If the VIF value is greater than 2.5 or the Tolerance is less than 0.4, then you have concerns over multicollinearity. No concerns.
 
 <!-- end list -->
 
@@ -3741,9 +3758,32 @@ regclass::confusion_matrix(logmodel2)
 ```
 
     ## Predicted levels same as naive model (majority level)
-    ##            Predicted GT3
-    ## Actual GT3           278
-    ## Actual LE3           104
+    ##          Predicted 1
+    ## Actual 0         104
+    ## Actual 1         278
+
+``` r
+print("Probability of having a family size grt 3 if you study less than 5 hrs and have family support:")
+arm::invlogit(coef(logmodel2)[1]+ coef(logmodel2)[2]*0 +coef(logmodel2)[3]*1)
+print("Probability of having a family size grt 3 if you study greater than 5 hrs and don't have family support:")
+arm::invlogit(coef(logmodel2)[1]+ coef(logmodel2)[2]*1 +coef(logmodel2)[3]*0)
+```
+
+    ## [1] "Probability of having a family size grt 3 if you study less than 5 hrs and have family support:"
+    ## (Intercept) 
+    ##   0.7324601 
+    ## [1] "Probability of having a family size grt 3 if you study greater than 5 hrs and don't have family support:"
+    ## (Intercept) 
+    ##   0.7779226
+
+Reporting:
+
+<blockquote class="blockquote">
+
+A multinomial logistic regression analysis was conducted with a student’s family size as the outcome variable (Under or equal to 3, greater than 3) with study time and family support being the predictors.
+The data met the assumption for independent observations. Examination for multicollinearity showed that the tolerance and variance influence factor measures were within acceptable levels (tolerance \>0.4, VIF \<2.5 ) as outlined in Tarling (2008). The Hosmer Lemeshow goodness of fit statistic did not indicate any issues with the assumption of linearity between the independent variables and the log odds of the model .
+
+</blockquote>
 
 # References
 

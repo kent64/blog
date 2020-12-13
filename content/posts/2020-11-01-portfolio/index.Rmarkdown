@@ -1862,7 +1862,7 @@ We will be comparing our model against a baseline model which is using the categ
 We will use the study time to start our prediction model (the idea being a large family is distracting):
 ```{r, results="hold",warning=FALSE}
 #Make sure categorical data is used as factors
-logmodel1 <- glm(famsize ~ dummy_studytime_grt5hrs, data = logregressiondf, na.action = na.exclude, family = binomial(link=logit))
+logmodel1 <- glm(dummy_famsize ~ dummy_studytime_grt5hrs, data = logregressiondf, na.action = na.exclude, family = binomial(link=logit))
 #Full summary of the model
 summary(logmodel1)
 ```
@@ -1894,10 +1894,10 @@ cat("chisq.prob: ", chisq.prob, "\n")
 
 ```{r,warning=FALSE, out.width = '100%', fig.align = "center",fig.cap="Sensitivity, specificity, and ROC plot"}
 #Output the sensitivity, specificity, and ROC plot
-Epi::ROC(form=logregressiondf$famsize ~ logregressiondf$dummy_studytime_grt5hrs, plot="ROC")
+Epi::ROC(form=logregressiondf$dummy_famsize ~ logregressiondf$dummy_studytime_grt5hrs, plot="ROC")
 ```
 
-* the area in the triangle would suggest this is a good model to predict higher education. AUC = 0.554. 
+* the area in the triangle would suggest this is a good model to predict higher education. AUC = 0.554. (rule of thumb 0.5 is weak and 0.8 is strong)
 
 ```{r, results="hold",warning=FALSE}
 print("Pseudo Rsquared:") 
@@ -1919,7 +1919,7 @@ OR=round(exp(coef(logmodel1)),4))
 
 * The odds ratio for dummy_studytime_grt5hrs can be calculated from the coefficients by applying the exp() function
 * 0.5105853 odds ratio, a value less than 1 indicates that as the predictor increases, the odds of the family size being greater than 3 decreases.
-* 
+
 
 ```{r, results="hold", error=TRUE}
 print("Collinearity:")
@@ -1937,7 +1937,7 @@ print("Probability of having a family size grt 3 if you study greater than 5 hrs
 arm::invlogit(coef(logmodel1)[1]+ coef(logmodel1)[2]*1)
 print("Check the assumption of linearity of independent variables and log odds using a Hosmer-Lemeshow test, if this is not statistically significant we are ok
 . Won't give a p-value here because only one predictor")
-generalhoslem::logitgof(logregressiondf$famsize, fitted(logmodel1))
+generalhoslem::logitgof(logregressiondf$dummy_famsize, fitted(logmodel1))
 ```
 
 * again makes sense that a greater probability is for having a family size greater than 3 and studying less than 5 hrs. 
@@ -1957,7 +1957,7 @@ logregressiondf <- logregressiondf %>%
 
 Run the model with the extra predictor (famsize)
 ```{r, results="hold",warning=FALSE }
-logmodel2 <- glm(famsize ~ dummy_studytime_grt5hrs + dummy_famsup, data = logregressiondf, na.action = na.exclude, family = binomial(link=logit))
+logmodel2 <- glm(dummy_famsize ~ dummy_studytime_grt5hrs + dummy_famsup, data = logregressiondf, na.action = na.exclude, family = binomial(link=logit))
 
 print(" ---- Full summary of the model ---- ")
 summary(logmodel2)
@@ -1981,7 +1981,7 @@ stargazer(logmodel2, type="text")
 Epi::ROC(form=logregressiondf$dummy_famsup ~ logregressiondf$dummy_studytime_grt5hrs + logregressiondf$dummy_famsup, plot="ROC")
 ```
 
-* AUC = 0.548
+* AUC = 0.548 (rule of thumb 0.5 is weak and 0.8 is strong)
 
 Our equation will look like:
 ```{r, results="hold",warning=FALSE }
@@ -1993,9 +1993,13 @@ OR=round(exp(coef(logmodel2)),4))
 
 ```
 
+* again we have a negative relationship, if we have family support it reduces the chance we have a large family.
 
 ```{r, results="hold",warning=FALSE }
-#Check the assumption of linearity of independent variables and log odds using a Hosmer-Lemeshow test, if this is not statistically significant we are ok
+print("Check the assumption of linearity of independent variables and log odds using a Hosmer-Lemeshow test, if this is not statistically significant we are ok")
+generalhoslem::logitgof(logregressiondf$dummy_famsize, fitted(logmodel2))
+print("Pseudo Rsquared:")
+DescTools::PseudoR2(logmodel2, which="CoxSnell")
 DescTools::PseudoR2(logmodel2, which="Nagelkerke")
 print("Collinearity:")
 vifmodel<-car::vif(logmodel2)#You can ignore the warning messages, GVIF^(1/(2*Df)) is the value of interest
@@ -2004,11 +2008,27 @@ print("Tolerance:")
 1/vifmodel
 ```
 
-* Nagelkerke is statistically signifacntly whihc is not good. 
-* If the VIF value is greater than 2.5 or the Tolerance is less than 0.4, then you have concerns over multicollinearity. No concerns.  :heavy_check_mark: 
+* Nagelkerke is saying we have explained 2.9 % with logmodel2
+* If the VIF value is greater than 2.5 or the Tolerance is less than 0.4, then you have concerns over multicollinearity. No concerns. 
 
 ```{r, results="hold",warning=FALSE }
 regclass::confusion_matrix(logmodel2)
 ```
+
+```{r, results="hold",warning=FALSE }
+print("Probability of having a family size grt 3 if you study less than 5 hrs and have family support:")
+arm::invlogit(coef(logmodel2)[1]+ coef(logmodel2)[2]*0 +coef(logmodel2)[3]*1)
+print("Probability of having a family size grt 3 if you study greater than 5 hrs and don't have family support:")
+arm::invlogit(coef(logmodel2)[1]+ coef(logmodel2)[2]*1 +coef(logmodel2)[3]*0)
+```
+
+Reporting:
+
+<blockquote class="blockquote">
+A multinomial logistic regression analysis was conducted with a student’s family size as the outcome variable (Under or equal to 3, greater than 3) with study time and family support being the predictors. 
+The data met the assumption for independent observations. Examination for multicollinearity showed that the tolerance and variance influence factor measures were within acceptable levels (tolerance >0.4, VIF <2.5 ) as outlined in Tarling (2008). The Hosmer Lemeshow goodness of fit statistic did not indicate any issues with the assumption of linearity between the independent variables and the log odds of the model. 
+</blockquote>
+
+
 
 # References
