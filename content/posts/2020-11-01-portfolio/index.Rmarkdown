@@ -1918,7 +1918,7 @@ OR=round(exp(coef(logmodel1)),4))
 ```
 
 * The odds ratio for dummy_studytime_grt5hrs can be calculated from the coefficients by applying the exp() function
-* 0.5105853 odds ratio, a value less than 1 indicates that as the predictor increases, the odds of the family size being greater than 3 decreases.
+* 1.958537 odds ratio, a value greater than 1 indicates that as the predictor decreases, the odds of the outcome occurring increases, which was our idea. 
 
 
 ```{r, results="hold", error=TRUE}

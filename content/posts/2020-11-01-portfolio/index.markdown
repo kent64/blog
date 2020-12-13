@@ -115,17 +115,17 @@ studentdf %>%
 ```
 
     ##   school sex age address famsize pstatus medu fedu    mjob  fjob reason nursery
-    ## 1     GP   M  16       R     LE3       T    3    3 teacher other   home     yes
+    ## 1     GP   F  18       R     GT3       T    1    1 at_home other course      no
     ##   internet guardian.x traveltime.x studytime.x failures.x schoolsup.x famsup.x
-    ## 1      yes     father            3           1          0          no      yes
+    ## 1       no     mother            3           1          3          no      yes
     ##   paid.x activities.x higher.x romantic.x famrel.x freetime.x goout.x dalc.x
-    ## 1    yes          yes      yes         no        3          3       4      3
+    ## 1     no          yes      yes         no        5          2       5      1
     ##   walc.x health.x absences.x g1.x g2.x g3.x guardian.y traveltime.y studytime.y
-    ## 1      5        3          8    9    9   10     father            3           1
+    ## 1      5        4          6    9    8   10     mother            3           1
     ##   failures.y schoolsup.y famsup.y paid.y activities.y higher.y romantic.y
-    ## 1          0          no      yes     no          yes      yes         no
+    ## 1          3          no      yes     no          yes      yes         no
     ##   famrel.y freetime.y goout.y dalc.y walc.y health.y absences.y g1.y g2.y g3.y
-    ## 1        3          3       4      3      5        3         16   10   11   12
+    ## 1        5          2       5      1      5        4          6   11   10   11
 
 ## Population vs Sample
 
@@ -3515,7 +3515,7 @@ OR=round(exp(coef(logmodel1)),4))
     ## dummy_studytime_grt5hrs   0.6722 1.9585
 
   - The odds ratio for dummy\_studytime\_grt5hrs can be calculated from the coefficients by applying the exp() function
-  - 0.5105853 odds ratio, a value less than 1 indicates that as the predictor increases, the odds of the family size being greater than 3 decreases.
+  - 1.958537 odds ratio, a value greater than 1 indicates that as the predictor decreases, the odds of the outcome occurring increases, which was our idea.
 
 <!-- end list -->
 
