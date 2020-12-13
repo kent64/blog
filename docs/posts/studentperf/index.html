@@ -182,6 +182,7 @@ if (!doNotTrack) {
 <span style="color:#06b;font-weight:bold">library</span>(<span style="background-color:#fff0f0">&#34;generalhoslem&#34;</span>)
 <span style="color:#06b;font-weight:bold">library</span>(<span style="background-color:#fff0f0">&#34;dplyr&#34;</span>)
 <span style="color:#06b;font-weight:bold">library</span>(<span style="background-color:#fff0f0">&#34;tidyr&#34;</span>)
+<span style="color:#06b;font-weight:bold">library</span>(<span style="background-color:#fff0f0">&#34;regclass&#34;</span>)
 <span style="color:#888">#download.file(url=&#34;https://archive.ics.uci.edu/ml/machine-learning-databases/00320/student.zip&#34;, destfile=&#34;student.zip&#34;)</span>
 <span style="color:#888">#unzip(&#34;student.zip&#34;,exdir = &#34;studentdf&#34;)</span>
 <span style="color:#06b;font-weight:bold">list.files</span>(<span style="background-color:#fff0f0">&#34;studentdf&#34;</span>)
@@ -216,18 +217,18 @@ studentdf<span style="color:#333">=</span><span style="color:#06b;font-weight:bo
 <p>let’s us pick a random student:</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">studentdf <span style="color:#333">%&gt;%</span> 
   <span style="color:#06b;font-weight:bold">sample_n</span>(<span style="color:#60e;font-weight:bold">1</span>) 
-</code></pre></div><pre><code>##   school sex age address famsize pstatus medu fedu    mjob  fjob reason nursery
-## 1     GP   F  17       U     GT3       T    2    3 at_home other   home     yes
+</code></pre></div><pre><code>##   school sex age address famsize pstatus medu fedu  mjob  fjob reason nursery
+## 1     GP   M  15       U     LE3       T    3    3 other other course      no
 ##   internet guardian.x traveltime.x studytime.x failures.x schoolsup.x famsup.x
-## 1       no     father            2           1          0          no      yes
+## 1      yes     mother            1           2          0          no       no
 ##   paid.x activities.x higher.x romantic.x famrel.x freetime.x goout.x dalc.x
-## 1    yes           no      yes         no        3          3       3      1
+## 1     no          yes      yes         no        5          3       2      1
 ##   walc.x health.x absences.x g1.x g2.x g3.x guardian.y traveltime.y studytime.y
-## 1      4        3          3    7    7    8     father            2           1
+## 1      1        2          0    8   10   12     mother            1           2
 ##   failures.y schoolsup.y famsup.y paid.y activities.y higher.y romantic.y
-## 1          0          no      yes     no           no      yes         no
+## 1          0          no       no     no          yes      yes         no
 ##   famrel.y freetime.y goout.y dalc.y walc.y health.y absences.y g1.y g2.y g3.y
-## 1        3          3       3      1      4        3          4   12   13   13
+## 1        5          3       2      1      1        2          0   13   12   12
 </code></pre>
 <h2 id="population-vs-sample">Population vs Sample</h2>
 <p>We are interested in finding results for the entire population of students that have completed exams in maths and Portuguese in Portugal, but we know that is not possible, so what we have is a sample. We will use this sample to infer things about the population as a whole.</p>
@@ -2702,65 +2703,69 @@ Examination of the histogram, normal P-P plot of standardized residuals and the 
 <li>Requires a large sample. Minimum of 10 cases for the least frequency outcome for each independent variable.</li>
 </ul>
 <p>Question:</p>
-<p>Can a model be built to predict if a student answered “yes” to the question “Do you want to take higher education?”.?</p>
-<p>Making a dummy variables for our test and remove the NAs:</p>
+<p>Can a model be built to predict if a student has a family size less than or equal to 3 or greater than 3 ?</p>
+<p>Making a dummy variables for our test and also turning famsize into a binary variable splitting by 5 hours:</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">logregressiondf <span style="color:#333">&lt;-</span> studentdf <span style="color:#333">%&gt;%</span> 
-  <span style="color:#06b;font-weight:bold">mutate</span>(dummy_higher <span style="color:#333">=</span> <span style="color:#06b;font-weight:bold">if_else</span>(studentdf<span style="color:#333">$</span>higher.x <span style="color:#333">==</span> <span style="background-color:#fff0f0">&#34;yes&#34;</span>, <span style="color:#60e;font-weight:bold">1</span>, <span style="color:#60e;font-weight:bold">0</span>)) <span style="color:#333">%&gt;%</span>
-  <span style="color:#06b;font-weight:bold">filter</span>(<span style="color:#333">!</span><span style="color:#06b;font-weight:bold">is.na</span>(g3.x))
-</code></pre></div><div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#06b;font-weight:bold">table</span>(logregressiondf<span style="color:#333">$</span>higher.x)
-<span style="color:#06b;font-weight:bold">table</span>(logregressiondf<span style="color:#333">$</span>dummy_higher)
+  <span style="color:#06b;font-weight:bold">mutate</span>(dummy_famsize <span style="color:#333">=</span> <span style="color:#06b;font-weight:bold">if_else</span>(studentdf<span style="color:#333">$</span>famsize <span style="color:#333">==</span> <span style="background-color:#fff0f0">&#34;GT3&#34;</span>, <span style="color:#60e;font-weight:bold">1</span>, <span style="color:#60e;font-weight:bold">0</span>)) <span style="color:#333">%&gt;%</span>
+  <span style="color:#06b;font-weight:bold">mutate</span>(dummy_studytime_grt5hrs <span style="color:#333">=</span> <span style="color:#06b;font-weight:bold">if_else</span>(<span style="color:#06b;font-weight:bold">as.integer</span>(studentdf<span style="color:#333">$</span>studytime.x) <span style="color:#333">&lt;</span> <span style="color:#60e;font-weight:bold">3</span>, <span style="color:#60e;font-weight:bold">0</span>, <span style="color:#60e;font-weight:bold">1</span> )) 
+</code></pre></div><div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#06b;font-weight:bold">table</span>(logregressiondf<span style="color:#333">$</span>famsize)
+<span style="color:#06b;font-weight:bold">table</span>(logregressiondf<span style="color:#333">$</span>dummy_famsize)
 </code></pre></div><pre><code>## 
-##  no yes 
-##  11 332 
+## GT3 LE3 
+## 278 104 
 ## 
 ##   0   1 
-##  11 332
+## 104 278
 </code></pre>
-<ul>
-<li>“No” has a low frequency but it’s just enough to continue to build the model.</li>
-</ul>
-<p>WE will be comparing out model against a baseline model which is using the category of the most commonly occurred variables to predict, by comparing against that we can assess our model and see that it improves prediction.</p>
-<p>We will use G3 Results from the last section to start our prediction model:</p>
+<p>Study time greater than 5 hrs:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#06b;font-weight:bold">table</span>(logregressiondf<span style="color:#333">$</span>dummy_studytime_grt5hrs)
+</code></pre></div><pre><code>## 
+##   0   1 
+## 293  89
+</code></pre>
+<p>We will be comparing our model against a baseline model which is using the category of the most commonly occurred variables to predict, by comparing against that we can assess our model and see that it improves prediction.</p>
+<p>We will use the study time to start our prediction model (the idea being a large family is distracting):</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#888">#Make sure categorical data is used as factors</span>
-logmodel1 <span style="color:#333">&lt;-</span> <span style="color:#06b;font-weight:bold">glm</span>(dummy_higher <span style="color:#333">~</span> g3.x, data <span style="color:#333">=</span> logregressiondf, na.action <span style="color:#333">=</span> na.exclude, family <span style="color:#333">=</span> <span style="color:#06b;font-weight:bold">binomial</span>(link<span style="color:#333">=</span>logit))
+logmodel1 <span style="color:#333">&lt;-</span> <span style="color:#06b;font-weight:bold">glm</span>(famsize <span style="color:#333">~</span> dummy_studytime_grt5hrs, data <span style="color:#333">=</span> logregressiondf, na.action <span style="color:#333">=</span> na.exclude, family <span style="color:#333">=</span> <span style="color:#06b;font-weight:bold">binomial</span>(link<span style="color:#333">=</span>logit))
 <span style="color:#888">#Full summary of the model</span>
 <span style="color:#06b;font-weight:bold">summary</span>(logmodel1)
 </code></pre></div><pre><code>## 
 ## Call:
-## glm(formula = dummy_higher ~ g3.x, family = binomial(link = logit), 
+## glm(formula = famsize ~ dummy_studytime_grt5hrs, family = binomial(link = logit), 
 ##     data = logregressiondf, na.action = na.exclude)
 ## 
 ## Deviance Residuals: 
 ##     Min       1Q   Median       3Q      Max  
-## -2.8043   0.1494   0.2295   0.2646   0.6062  
+## -0.8452  -0.8452  -0.8452   1.5510   1.8526  
 ## 
 ## Coefficients:
-##             Estimate Std. Error z value Pr(&gt;|z|)  
-## (Intercept)   0.4451     1.0726   0.415   0.6781  
-## g3.x          0.2889     0.1128   2.562   0.0104 *
+##                         Estimate Std. Error z value        Pr(&gt;|z|)    
+## (Intercept)              -0.8457     0.1274  -6.636 0.0000000000323 ***
+## dummy_studytime_grt5hrs  -0.6722     0.3040  -2.211           0.027 *  
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
 ## (Dispersion parameter for binomial family taken to be 1)
 ## 
-##     Null deviance: 97.32  on 342  degrees of freedom
-## Residual deviance: 89.67  on 341  degrees of freedom
-## AIC: 93.67
+##     Null deviance: 447.31  on 381  degrees of freedom
+## Residual deviance: 441.98  on 380  degrees of freedom
+## AIC: 445.98
 ## 
-## Number of Fisher Scoring iterations: 7
+## Number of Fisher Scoring iterations: 4
 </code></pre>
 <ul>
-<li>G3 results are significantly improving our prediction with a p-value &lt;.05 and from the z-value, we see it’s having a positive effect. It contributes 0.289 to the log odds.</li>
+<li>dummy_studytime_grt5hrs is significantly improving our prediction with a p-value = 0.027 and from the z-value, we see it’s having a slightly negative effect, which we thought it would.</li>
+<li>The Estimate column with -0.6722 shows the coefficients in log-odds form. That’s how much change it contributes. We can convert these with exp() later.</li>
 </ul>
 <p>Chi-square plus significance:</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">lmtest<span style="color:#333">::</span><span style="color:#06b;font-weight:bold">lrtest</span>(logmodel1)
 </code></pre></div><pre><code>## Likelihood ratio test
 ## 
-## Model 1: dummy_higher ~ g3.x
-## Model 2: dummy_higher ~ 1
-##   #Df  LogLik Df  Chisq Pr(&gt;Chisq)   
-## 1   2 -44.835                        
-## 2   1 -48.660 -1 7.6495   0.005679 **
+## Model 1: famsize ~ dummy_studytime_grt5hrs
+## Model 2: famsize ~ 1
+##   #Df  LogLik Df  Chisq Pr(&gt;Chisq)  
+## 1   2 -220.99                       
+## 2   1 -223.66 -1 5.3276    0.02099 *
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 </code></pre>
@@ -2774,82 +2779,82 @@ chidf <span style="color:#333">&lt;-</span> logmodel1<span style="color:#333">$<
 <span style="color:#06b;font-weight:bold">cat</span>(<span style="background-color:#fff0f0">&#34;chidf: &#34;</span>, chidf, <span style="background-color:#fff0f0">&#34;\n&#34;</span>)
 chisq.prob <span style="color:#333">&lt;-</span> <span style="color:#60e;font-weight:bold">1</span> <span style="color:#333">-</span> <span style="color:#06b;font-weight:bold">pchisq</span>(modelChi, chidf)
 <span style="color:#06b;font-weight:bold">cat</span>(<span style="background-color:#fff0f0">&#34;chisq.prob: &#34;</span>, chisq.prob, <span style="background-color:#fff0f0">&#34;\n&#34;</span>)
-</code></pre></div><pre><code>## modelChi:  7.649521 
-## pseudo.R2:  0.07860192 
+</code></pre></div><pre><code>## modelChi:  5.327564 
+## pseudo.R2:  0.01191021 
 ## chidf:  1 
-## chisq.prob:  0.005678741
+## chisq.prob:  0.0209907
 </code></pre>
 <ul>
-<li>the Chi Square p-value is significant so we can reject the Null hypothesis that the model is not better than chance. The pseudo R squared value tells that 7.8% is explained by this predictor.</li>
-<li>x<sup>2</sup>(1) = 7.65, p = 0.006</li>
+<li>the Chi Square p-value is significant so we can reject the Null hypothesis that the model is not better than chance. The pseudo R squared value tells that 1.19% is explained by this predictor.</li>
+<li>x<sup>2</sup>(1) = 5.32, p = 0.021</li>
 </ul>
-<p><img src="https://latex.codecogs.com/gif.latex?x^{4}/5" title="x^{4}/5" /></p>
+<!-- end list -->
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#888">#Output the sensitivity, specificity, and ROC plot</span>
-Epi<span style="color:#333">::</span><span style="color:#06b;font-weight:bold">ROC</span>(form<span style="color:#333">=</span>logregressiondf<span style="color:#333">$</span>dummy_higher <span style="color:#333">~</span> logregressiondf<span style="color:#333">$</span>dummy_gender_girl, plot<span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;ROC&#34;</span>)
+Epi<span style="color:#333">::</span><span style="color:#06b;font-weight:bold">ROC</span>(form<span style="color:#333">=</span>logregressiondf<span style="color:#333">$</span>famsize <span style="color:#333">~</span> logregressiondf<span style="color:#333">$</span>dummy_studytime_grt5hrs, plot<span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;ROC&#34;</span>)
 </code></pre></div><div class="figure" style="text-align: center">
-<p><img src="/blog/posts/studentperf/index_files/figure-html/unnamed-chunk-134-1.png" alt="Sensitivity, specificity, and ROC plot" width="100%" /></p>
+<p><img src="/blog/posts/studentperf/index_files/figure-html/unnamed-chunk-135-1.png" alt="Sensitivity, specificity, and ROC plot" width="100%" /></p>
 <p class="caption">
 <p>Figure 53: Sensitivity, specificity, and ROC plot</p>
 </p>
 </div>
+<ul>
+<li>the area in the triangle would suggest this is a good model to predict higher education. AUC = 0.554.</li>
+</ul>
+<!-- end list -->
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#06b;font-weight:bold">print</span>(<span style="background-color:#fff0f0">&#34;Pseudo Rsquared:&#34;</span>) 
 DescTools<span style="color:#333">::</span><span style="color:#06b;font-weight:bold">PseudoR2</span>(logmodel1, which<span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;CoxSnell&#34;</span>)
 DescTools<span style="color:#333">::</span><span style="color:#06b;font-weight:bold">PseudoR2</span>(logmodel1, which<span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;Nagelkerke&#34;</span>)
 <span style="color:#06b;font-weight:bold">print</span>(<span style="background-color:#fff0f0">&#34;Summary of the model with co-efficients:&#34;</span>)
 <span style="color:#06b;font-weight:bold">stargazer</span>(logmodel1, type<span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;text&#34;</span>)
 </code></pre></div><pre><code>## [1] &quot;Pseudo Rsquared:&quot;
-##   CoxSnell 
-## 0.02205496 
+##  CoxSnell 
+## 0.0138497 
 ## Nagelkerke 
-## 0.08928017 
+## 0.02007395 
 ## [1] &quot;Summary of the model with co-efficients:&quot;
 ## 
-## =============================================
-##                       Dependent variable:    
-##                   ---------------------------
-##                          dummy_higher        
-## ---------------------------------------------
-## g3.x                        0.289**          
-##                             (0.113)          
-##                                              
-## Constant                     0.445           
-##                             (1.073)          
-##                                              
-## ---------------------------------------------
-## Observations                  343            
-## Log Likelihood              -44.835          
-## Akaike Inf. Crit.           93.670           
-## =============================================
-## Note:             *p&lt;0.1; **p&lt;0.05; ***p&lt;0.01
+## ===================================================
+##                             Dependent variable:    
+##                         ---------------------------
+##                                   famsize          
+## ---------------------------------------------------
+## dummy_studytime_grt5hrs          -0.672**          
+##                                   (0.304)          
+##                                                    
+## Constant                         -0.846***         
+##                                   (0.127)          
+##                                                    
+## ---------------------------------------------------
+## Observations                        382            
+## Log Likelihood                   -220.992          
+## Akaike Inf. Crit.                 445.983          
+## ===================================================
+## Note:                   *p&lt;0.1; **p&lt;0.05; ***p&lt;0.01
 </code></pre>
+<p>The odds ratio for the predictors in the model:</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#06b;font-weight:bold">print</span>(<span style="background-color:#fff0f0">&#34;Exponentiate the co-efficients:&#34;</span>)
 <span style="color:#06b;font-weight:bold">exp</span>(<span style="color:#06b;font-weight:bold">coefficients</span>(logmodel1))
 <span style="color:#06b;font-weight:bold">print</span>(<span style="background-color:#fff0f0">&#34;odds ratios and 95% CI:&#34;</span>)
 <span style="color:#06b;font-weight:bold">cbind</span>(Estimate<span style="color:#333">=</span><span style="color:#06b;font-weight:bold">round</span>(<span style="color:#06b;font-weight:bold">coef</span>(logmodel1),<span style="color:#60e;font-weight:bold">4</span>),
 OR<span style="color:#333">=</span><span style="color:#06b;font-weight:bold">round</span>(<span style="color:#06b;font-weight:bold">exp</span>(<span style="color:#06b;font-weight:bold">coef</span>(logmodel1)),<span style="color:#60e;font-weight:bold">4</span>))
-<span style="color:#06b;font-weight:bold">print</span>(<span style="background-color:#fff0f0">&#34;Probability of answering yes when male&#34;</span>)
-arm<span style="color:#333">::</span><span style="color:#06b;font-weight:bold">invlogit</span>(<span style="color:#06b;font-weight:bold">coef</span>(logmodel1)[1]<span style="color:#333">+</span> <span style="color:#06b;font-weight:bold">coef</span>(logmodel1)[2]<span style="color:#333">*</span><span style="color:#60e;font-weight:bold">0</span>)<span style="color:#888">#YES this is the same as just having the 1st co-efficient</span>
-<span style="color:#06b;font-weight:bold">print</span>(<span style="background-color:#fff0f0">&#34;#Probability of answering yes when female&#34;</span>)
-arm<span style="color:#333">::</span><span style="color:#06b;font-weight:bold">invlogit</span>(<span style="color:#06b;font-weight:bold">coef</span>(logmodel1)[1]<span style="color:#333">+</span> <span style="color:#06b;font-weight:bold">coef</span>(logmodel1)[2]<span style="color:#333">*</span><span style="color:#60e;font-weight:bold">1</span>)
-<span style="color:#06b;font-weight:bold">print</span>(<span style="background-color:#fff0f0">&#34;Check the assumption of linearity of independent variables and log odds using a Hosmer-Lemeshow test, if this is not statsitically significant we are ok&#34;</span>)
-DescTools<span style="color:#333">::</span><span style="color:#06b;font-weight:bold">PseudoR2</span>(logmodel1, which<span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;Nagelkerke&#34;</span>)
 </code></pre></div><pre><code>## [1] &quot;Exponentiate the co-efficients:&quot;
-## (Intercept)        g3.x 
-##    1.560701    1.334996 
+##             (Intercept) dummy_studytime_grt5hrs 
+##               0.4292683               0.5105853 
 ## [1] &quot;odds ratios and 95% CI:&quot;
-##             Estimate     OR
-## (Intercept)   0.4451 1.5607
-## g3.x          0.2889 1.3350
-## [1] &quot;Probability of answering yes when male&quot;
-## (Intercept) 
-##    0.609482 
-## [1] &quot;#Probability of answering yes when female&quot;
-## (Intercept) 
-##   0.6756963 
-## [1] &quot;Check the assumption of linearity of independent variables and log odds using a Hosmer-Lemeshow test, if this is not statsitically significant we are ok&quot;
-## Nagelkerke 
-## 0.08928017
+##                         Estimate     OR
+## (Intercept)              -0.8457 0.4293
+## dummy_studytime_grt5hrs  -0.6722 0.5106
 </code></pre>
+<ul>
+<li>
+<p>The odds ratio for dummy_studytime_grt5hrs can be calculated from the coefficients by applying the exp() function</p>
+</li>
+<li>
+<p>0.5105853 odds ratio, a value less than 1 indicates that as the predictor increases, the odds of the family size being greater than 3 decreases.</p>
+</li>
+<li></li>
+</ul>
+<!-- end list -->
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#06b;font-weight:bold">print</span>(<span style="background-color:#fff0f0">&#34;Collinearity:&#34;</span>)
 vifmodel<span style="color:#333">&lt;-</span>car<span style="color:#333">::</span><span style="color:#06b;font-weight:bold">vif</span>(logmodel1) <span style="color:#888">#You can ignore the warning messages, GVIF^(1/(2*Df)) is the value of interest</span>
 </code></pre></div><pre><code>## Error in vif.default(logmodel1): model contains fewer than 2 terms
@@ -2871,103 +2876,146 @@ vifmodel<span style="color:#333">&lt;-</span>car<span style="color:#333">::</spa
 <ul>
 <li>If the VIF value is greater than 2.5 or the Tolerance is less than 0.4, then you have concerns over multicollinearity. I have an error for car::vif because model is too small, it has only one predictor.</li>
 </ul>
-<p><em>Now extend the model with the students gender results</em></p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#888">#Make sure categorical data is used as factors</span>
-logmodel2 <span style="color:#333">&lt;-</span> <span style="color:#06b;font-weight:bold">glm</span>(dummy_higher <span style="color:#333">~</span> g3.x <span style="color:#333">+</span> dummy_gender_girl, data <span style="color:#333">=</span> logregressiondf, na.action <span style="color:#333">=</span> na.exclude, family <span style="color:#333">=</span> <span style="color:#06b;font-weight:bold">binomial</span>(link<span style="color:#333">=</span>logit))
+<!-- end list -->
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#06b;font-weight:bold">print</span>(<span style="background-color:#fff0f0">&#34;Probability of having a family size grt 3 if you study less than 5 hrs:&#34;</span>)
+arm<span style="color:#333">::</span><span style="color:#06b;font-weight:bold">invlogit</span>(<span style="color:#06b;font-weight:bold">coef</span>(logmodel1)[1]<span style="color:#333">+</span> <span style="color:#06b;font-weight:bold">coef</span>(logmodel1)[2]<span style="color:#333">*</span><span style="color:#60e;font-weight:bold">0</span>)<span style="color:#888">#YES this is the same as just having the 1st co-efficient</span>
+<span style="color:#06b;font-weight:bold">print</span>(<span style="background-color:#fff0f0">&#34;Probability of having a family size grt 3 if you study greater than 5 hrs:&#34;</span>)
+arm<span style="color:#333">::</span><span style="color:#06b;font-weight:bold">invlogit</span>(<span style="color:#06b;font-weight:bold">coef</span>(logmodel1)[1]<span style="color:#333">+</span> <span style="color:#06b;font-weight:bold">coef</span>(logmodel1)[2]<span style="color:#333">*</span><span style="color:#60e;font-weight:bold">1</span>)
+<span style="color:#06b;font-weight:bold">print</span>(<span style="background-color:#fff0f0">&#34;Check the assumption of linearity of independent variables and log odds using a Hosmer-Lemeshow test, if this is not statistically significant we are ok
+</span><span style="background-color:#fff0f0">. Won&#39;t give a p-value here because only one predictor&#34;</span>)
+generalhoslem<span style="color:#333">::</span><span style="color:#06b;font-weight:bold">logitgof</span>(logregressiondf<span style="color:#333">$</span>famsize, <span style="color:#06b;font-weight:bold">fitted</span>(logmodel1))
+</code></pre></div><pre><code>## [1] &quot;Probability of having a family size grt 3 if you study less than 5 hrs:&quot;
+## (Intercept) 
+##   0.3003413 
+## [1] &quot;Probability of having a family size grt 3 if you study greater than 5 hrs:&quot;
+## (Intercept) 
+##   0.1797753 
+## [1] &quot;Check the assumption of linearity of independent variables and log odds using a Hosmer-Lemeshow test, if this is not statistically significant we are ok\n. Won't give a p-value here because only one predictor&quot;
+## 
+##  Hosmer and Lemeshow test (binary model)
+## 
+## data:  logregressiondf$famsize, fitted(logmodel1)
+## X-squared = 0.000000000000000000000067173, df = -1, p-value = NA
+</code></pre>
+<ul>
+<li>again makes sense that a greater probability is for having a family size greater than 3 and studying less than 5 hrs.</li>
+</ul>
+<p>adding famsup to the model</p>
+<pre><code>17 famsup - family educational support (binary: yes or no)
+</code></pre>
+<p><em>Now extend the model with family educational support</em></p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">logregressiondf <span style="color:#333">&lt;-</span> logregressiondf <span style="color:#333">%&gt;%</span> 
+  <span style="color:#06b;font-weight:bold">mutate</span>(dummy_famsup <span style="color:#333">=</span> <span style="color:#06b;font-weight:bold">if_else</span>(logregressiondf<span style="color:#333">$</span>famsup.x <span style="color:#333">==</span> <span style="background-color:#fff0f0">&#34;yes&#34;</span>, <span style="color:#60e;font-weight:bold">1</span>, <span style="color:#60e;font-weight:bold">0</span>))
+</code></pre></div><p>Run the model with the extra predictor (famsize)</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">logmodel2 <span style="color:#333">&lt;-</span> <span style="color:#06b;font-weight:bold">glm</span>(famsize <span style="color:#333">~</span> dummy_studytime_grt5hrs <span style="color:#333">+</span> dummy_famsup, data <span style="color:#333">=</span> logregressiondf, na.action <span style="color:#333">=</span> na.exclude, family <span style="color:#333">=</span> <span style="color:#06b;font-weight:bold">binomial</span>(link<span style="color:#333">=</span>logit))
 
-<span style="color:#888">#Full summary of the model</span>
+<span style="color:#06b;font-weight:bold">print</span>(<span style="background-color:#fff0f0">&#34; ---- Full summary of the model ---- &#34;</span>)
 <span style="color:#06b;font-weight:bold">summary</span>(logmodel2)
 
-<span style="color:#888">#Chi-square plus significance</span>
+<span style="color:#06b;font-weight:bold">print</span>(<span style="background-color:#fff0f0">&#34; ---- Chi-square plus significance ---- &#34;</span>)
 lmtest<span style="color:#333">::</span><span style="color:#06b;font-weight:bold">lrtest</span>(logmodel2)
 
-<span style="color:#888">#Pseudo Rsquared </span>
+<span style="color:#06b;font-weight:bold">print</span>(<span style="background-color:#fff0f0">&#34; ---- Pseudo Rsquared  ---- &#34;</span>)
 DescTools<span style="color:#333">::</span><span style="color:#06b;font-weight:bold">PseudoR2</span>(logmodel2, which<span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;CoxSnell&#34;</span>)
 DescTools<span style="color:#333">::</span><span style="color:#06b;font-weight:bold">PseudoR2</span>(logmodel2, which<span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;Nagelkerke&#34;</span>)
 
-<span style="color:#888">#Summary of the model with co-efficients</span>
+<span style="color:#06b;font-weight:bold">print</span>(<span style="background-color:#fff0f0">&#34; ---- Summary of the model with co-efficients ---- &#34;</span>)
 <span style="color:#06b;font-weight:bold">stargazer</span>(logmodel2, type<span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;text&#34;</span>)
-</code></pre></div><pre><code>## 
+</code></pre></div><pre><code>## [1] &quot; ---- Full summary of the model ---- &quot;
+## 
 ## Call:
-## glm(formula = dummy_higher ~ g3.x + dummy_gender_girl, family = binomial(link = logit), 
-##     data = logregressiondf, na.action = na.exclude)
+## glm(formula = famsize ~ dummy_studytime_grt5hrs + dummy_famsup, 
+##     family = binomial(link = logit), data = logregressiondf, 
+##     na.action = na.exclude)
 ## 
 ## Deviance Residuals: 
 ##     Min       1Q   Median       3Q      Max  
-## -2.9225   0.1008   0.1578   0.2782   0.8029  
+## -0.9254  -0.7891  -0.7891   1.4524   1.9039  
 ## 
 ## Coefficients:
-##                   Estimate Std. Error z value Pr(&gt;|z|)   
-## (Intercept)        -0.7400     1.1800  -0.627  0.53062   
-## g3.x                0.3413     0.1200   2.845  0.00445 **
-## dummy_gender_girl   1.9244     0.8090   2.379  0.01737 * 
+##                         Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept)              -0.6265     0.1836  -3.413 0.000643 ***
+## dummy_studytime_grt5hrs  -0.6271     0.3060  -2.050 0.040409 *  
+## dummy_famsup             -0.3806     0.2359  -1.613 0.106697    
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
 ## (Dispersion parameter for binomial family taken to be 1)
 ## 
-##     Null deviance: 97.320  on 342  degrees of freedom
-## Residual deviance: 82.162  on 340  degrees of freedom
-## AIC: 88.162
+##     Null deviance: 447.31  on 381  degrees of freedom
+## Residual deviance: 439.40  on 379  degrees of freedom
+## AIC: 445.4
 ## 
-## Number of Fisher Scoring iterations: 7
+## Number of Fisher Scoring iterations: 4
 ## 
+## [1] &quot; ---- Chi-square plus significance ---- &quot;
 ## Likelihood ratio test
 ## 
-## Model 1: dummy_higher ~ g3.x + dummy_gender_girl
-## Model 2: dummy_higher ~ 1
-##   #Df  LogLik Df  Chisq Pr(&gt;Chisq)    
-## 1   3 -41.081                         
-## 2   1 -48.660 -2 15.157  0.0005113 ***
+## Model 1: famsize ~ dummy_studytime_grt5hrs + dummy_famsup
+## Model 2: famsize ~ 1
+##   #Df  LogLik Df  Chisq Pr(&gt;Chisq)  
+## 1   3 -219.70                       
+## 2   1 -223.66 -2 7.9137    0.01912 *
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-##   CoxSnell 
-## 0.04322818 
+## [1] &quot; ---- Pseudo Rsquared  ---- &quot;
+##  CoxSnell 
+## 0.0205034 
 ## Nagelkerke 
-##   0.174991 
+## 0.02971791 
+## [1] &quot; ---- Summary of the model with co-efficients ---- &quot;
 ## 
-## =============================================
-##                       Dependent variable:    
-##                   ---------------------------
-##                          dummy_higher        
-## ---------------------------------------------
-## g3.x                       0.341***          
-##                             (0.120)          
-##                                              
-## dummy_gender_girl           1.924**          
-##                             (0.809)          
-##                                              
-## Constant                    -0.740           
-##                             (1.180)          
-##                                              
-## ---------------------------------------------
-## Observations                  343            
-## Log Likelihood              -41.081          
-## Akaike Inf. Crit.           88.162           
-## =============================================
-## Note:             *p&lt;0.1; **p&lt;0.05; ***p&lt;0.01
+## ===================================================
+##                             Dependent variable:    
+##                         ---------------------------
+##                                   famsize          
+## ---------------------------------------------------
+## dummy_studytime_grt5hrs          -0.627**          
+##                                   (0.306)          
+##                                                    
+## dummy_famsup                      -0.381           
+##                                   (0.236)          
+##                                                    
+## Constant                         -0.627***         
+##                                   (0.184)          
+##                                                    
+## ---------------------------------------------------
+## Observations                        382            
+## Log Likelihood                   -219.698          
+## Akaike Inf. Crit.                 445.397          
+## ===================================================
+## Note:                   *p&lt;0.1; **p&lt;0.05; ***p&lt;0.01
 </code></pre>
+<ul>
+<li>adding dummy_famsup is not help the model much</li>
+<li>dummy_famsup is statistically significant using Chi square. p = 0.01912.</li>
+</ul>
+<!-- end list -->
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#888">#Output the sensitivity, specificity, and ROC plot</span>
-Epi<span style="color:#333">::</span><span style="color:#06b;font-weight:bold">ROC</span>(form<span style="color:#333">=</span>logregressiondf<span style="color:#333">$</span>dummy_higher <span style="color:#333">~</span> logregressiondf<span style="color:#333">$</span>g3.x <span style="color:#333">+</span> logregressiondf<span style="color:#333">$</span>dummy_gender_girl, plot<span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;ROC&#34;</span>)
+Epi<span style="color:#333">::</span><span style="color:#06b;font-weight:bold">ROC</span>(form<span style="color:#333">=</span>logregressiondf<span style="color:#333">$</span>dummy_famsup <span style="color:#333">~</span> logregressiondf<span style="color:#333">$</span>dummy_studytime_grt5hrs <span style="color:#333">+</span> logregressiondf<span style="color:#333">$</span>dummy_famsup, plot<span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;ROC&#34;</span>)
 </code></pre></div><div class="figure" style="text-align: center">
-<p><img src="/blog/posts/studentperf/index_files/figure-html/unnamed-chunk-139-1.png" alt="Sensitivity, specificity, and ROC plot" width="100%" /></p>
+<p><img src="/blog/posts/studentperf/index_files/figure-html/unnamed-chunk-142-1.png" alt="Sensitivity, specificity, and ROC plot" width="100%" /></p>
 <p class="caption">
 <p>Figure 54: Sensitivity, specificity, and ROC plot</p>
 </p>
 </div>
+<ul>
+<li>AUC = 0.548</li>
+</ul>
+<p>Our equation will look like:</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#06b;font-weight:bold">print</span>(<span style="background-color:#fff0f0">&#34;Exponentiate the co-efficients&#34;</span>)
 <span style="color:#06b;font-weight:bold">exp</span>(<span style="color:#06b;font-weight:bold">coefficients</span>(logmodel2))
 <span style="color:#06b;font-weight:bold">print</span>(<span style="background-color:#fff0f0">&#34;odds ratios &#34;</span>)
 <span style="color:#06b;font-weight:bold">cbind</span>(Estimate<span style="color:#333">=</span><span style="color:#06b;font-weight:bold">round</span>(<span style="color:#06b;font-weight:bold">coef</span>(logmodel2),<span style="color:#60e;font-weight:bold">4</span>),
 OR<span style="color:#333">=</span><span style="color:#06b;font-weight:bold">round</span>(<span style="color:#06b;font-weight:bold">exp</span>(<span style="color:#06b;font-weight:bold">coef</span>(logmodel2)),<span style="color:#60e;font-weight:bold">4</span>))
 </code></pre></div><pre><code>## [1] &quot;Exponentiate the co-efficients&quot;
-##       (Intercept)              g3.x dummy_gender_girl 
-##         0.4771305         1.4068330         6.8512312 
+##             (Intercept) dummy_studytime_grt5hrs            dummy_famsup 
+##               0.5344556               0.5341414               0.6834281 
 ## [1] &quot;odds ratios &quot;
-##                   Estimate     OR
-## (Intercept)        -0.7400 0.4771
-## g3.x                0.3413 1.4068
-## dummy_gender_girl   1.9244 6.8512
+##                         Estimate     OR
+## (Intercept)              -0.6265 0.5345
+## dummy_studytime_grt5hrs  -0.6271 0.5341
+## dummy_famsup             -0.3806 0.6834
 </code></pre>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#888">#Check the assumption of linearity of independent variables and log odds using a Hosmer-Lemeshow test, if this is not statistically significant we are ok</span>
 DescTools<span style="color:#333">::</span><span style="color:#06b;font-weight:bold">PseudoR2</span>(logmodel2, which<span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;Nagelkerke&#34;</span>)
@@ -2977,13 +3025,24 @@ vifmodel
 <span style="color:#06b;font-weight:bold">print</span>(<span style="background-color:#fff0f0">&#34;Tolerance:&#34;</span>)
 <span style="color:#60e;font-weight:bold">1</span><span style="color:#333">/</span>vifmodel
 </code></pre></div><pre><code>## Nagelkerke 
-##   0.174991 
+## 0.02971791 
 ## [1] &quot;Collinearity:&quot;
-##              g3.x dummy_gender_girl 
-##          1.027227          1.027227 
+## dummy_studytime_grt5hrs            dummy_famsup 
+##                1.007429                1.007429 
 ## [1] &quot;Tolerance:&quot;
-##              g3.x dummy_gender_girl 
-##         0.9734948         0.9734948
+## dummy_studytime_grt5hrs            dummy_famsup 
+##               0.9926261               0.9926261
+</code></pre>
+<ul>
+<li>Nagelkerke is statistically signifacntly whihc is not good.</li>
+<li>If the VIF value is greater than 2.5 or the Tolerance is less than 0.4, then you have concerns over multicollinearity. No concerns. :heavy_check_mark:</li>
+</ul>
+<!-- end list -->
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">regclass<span style="color:#333">::</span><span style="color:#06b;font-weight:bold">confusion_matrix</span>(logmodel2)
+</code></pre></div><pre><code>## Predicted levels same as naive model (majority level)
+##            Predicted GT3
+## Actual GT3           278
+## Actual LE3           104
 </code></pre>
 <h1 id="references">References</h1>
 <div id="refs" class="references">
