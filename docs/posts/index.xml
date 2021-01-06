@@ -6,7 +6,16 @@
     <description>Recent content in Posts on my ePortfolio</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 01 Nov 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://kent64.github.io/blog/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 06 Jan 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://kent64.github.io/blog/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Dataset of academic performance evolution</title>
+      <link>https://kent64.github.io/blog/posts/academicperf/</link>
+      <pubDate>Wed, 06 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://kent64.github.io/blog/posts/academicperf/</guid>
+      <description>Student Name Brendan Kent     Student Number C08861692   Class Prob. and Statistical Inference MATH9102   Course TU060    .toc .nav-link { font-size: 16px; line-height: 1; padding: 0; padding-left: 1; transition: all ease-out 0.3s; /* color: #1c2d41; */ } li.nav-item { font-size: 16px; } pre { background-color: #f2f2f2; border-style: ridge; }  Research Question What is the relationship between a student’s overall average score for their professional evaluation in the final year of their professional career in Engineering and their results obtained in the final year of high school using five generic high school tests amongst students of Engineering in Columbia.</description>
+    </item>
+    
     <item>
       <title>Secondary School Student Performance</title>
       <link>https://kent64.github.io/blog/posts/studentperf/</link>

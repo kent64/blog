@@ -477,6 +477,14 @@ cat ("20 influencers in CR_S11",head(df[influential, ]$CR_S11, n = 20),"\n")
 
     ## 20 influencers in CR_S11 51 47 77 39 54 54 58 62 41 61 61 71 48 50 47 74 54 57 65 56
 
+``` r
+cat ("Percentage of influencers: ", (length(influential) / nrow(df)) * 100, "% \n")
+```
+
+    ## Percentage of influencers:  4.794134 %
+
+The total number of influential observations is less than 5% of the total.
+
 Bonferonni p-value for most extreme obs - Are there any cases where the outcome variable has an unusual variable for its predictor values?
 
 ``` r
@@ -491,6 +499,8 @@ car::outlierTest(model2)
     ## 12376  5.097221 0.00000034975000000000002 0.0043407000000000003
     ## 1281   5.039005 0.00000047455000000000002 0.0058896000000000000
     ## 12069 -4.740949 0.00000215079999999999980 0.0266939999999999990
+
+  - our model2 is telling us that these values above are unusual variables with very statistically significant results
 
 <div class="figure" style="text-align: center">
 
@@ -511,6 +521,20 @@ Figure 6: leverage plots for model2
 <p class="caption">
 
 Figure 7: Assess homocedasticity for model2
+
+</p>
+
+</div>
+
+  - We can see there is absolutely no heteroscedastity, we see a completely random, equal distribution of points throughout the range of X axis and a flat red line. There is no pattern in the residuals.
+
+<div class="figure" style="text-align: center">
+
+<img src="{{< relref "posts/2021-01-04-dataset-of-academic-performance-evolution/index.markdown" >}}index_files/figure-html/unnamed-chunk-24-1.png" alt="Histogram and density plot of the residuals for model2" width="672" />
+
+<p class="caption">
+
+Figure 8: Histogram and density plot of the residuals for model2
 
 </p>
 
