@@ -115,20 +115,20 @@ studentdf %>%
   sample_n(1) 
 ```
 
-    ##   school sex age address famsize pstatus medu fedu     mjob  fjob reason
-    ## 1     GP   M  16       U     GT3       T    3    3 services other   home
+    ##   school sex age address famsize pstatus medu fedu    mjob    fjob reason
+    ## 1     GP   F  16       U     LE3       T    1    1 at_home at_home course
     ##   nursery internet guardian.x traveltime.x studytime.x failures.x schoolsup.x
-    ## 1     yes      yes     mother            1           2          0          no
+    ## 1     yes      yes     mother            1           1          0          no
     ##   famsup.x paid.x activities.x higher.x romantic.x famrel.x freetime.x goout.x
-    ## 1       no    yes          yes      yes        yes        4          2       3
+    ## 1       no     no           no      yes         no        3          4       4
     ##   dalc.x walc.x health.x absences.x g1.x g2.x g3.x guardian.y traveltime.y
-    ## 1      1      2        3          2   12   13   12     father            1
+    ## 1      3      3        1          2   14   14   13     mother            1
     ##   studytime.y failures.y schoolsup.y famsup.y paid.y activities.y higher.y
-    ## 1           3          0          no      yes     no          yes      yes
+    ## 1           1          0          no       no     no           no      yes
     ##   romantic.y famrel.y freetime.y goout.y dalc.y walc.y health.y absences.y g1.y
-    ## 1         no        5          3       3      1      1        5          4   13
+    ## 1         no        3          4       4      3      3        1          4   10
     ##   g2.y g3.y
-    ## 1   14   14
+    ## 1   11   11
 
 ## Population vs Sample
 
@@ -900,10 +900,14 @@ During the next section, mostly I am going to ignore missing data, which is one 
 Before we continue to examine relationships in our data set. We need to discuss the type of tests we can conduct. Depending on the variables types we have a choice of either parametric or non-parametric
 
   - Parametric tests are usually more powerful than non-parametric because we use all the data, they need to pass some assumptions:
-    \*\* Must be Normally distributed (skew and kurtosis… outliers)
-    \*\* Homogeneity of variance (Levenes test or Barletts test, Barletts test has better performance if we sure our data is strongly normal)
-    \*\* Interval data or Ratio
-    \*\* Independent
+
+  - Must be Normally distributed (skew and kurtosis… outliers)
+
+  - Homogeneity of variance (Levenes test or Barletts test, Barletts test has better performance if we sure our data is strongly normal)
+
+  - Interval data or Ratio
+
+  - Independent
 
   - Non-parametric tests don’t need to pass the same assumptions, variables do not need to be normally distributed. Most of these tests work on the principle of ranking.
 

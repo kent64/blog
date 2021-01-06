@@ -617,10 +617,10 @@ During the next section, mostly I am going to ignore missing data, which is one 
 Before we continue to examine relationships in our data set. We need to discuss the type of tests we can conduct. Depending on the variables types we have a choice of either parametric or non-parametric 
 
 * Parametric tests are usually more powerful than non-parametric because we use all the data, they need to pass some assumptions: 
-** Must be Normally distributed (skew and kurtosis... outliers)
-** Homogeneity of variance (Levenes test or Barletts test, Barletts test has better performance if we sure our data is strongly normal)
-** Interval data or Ratio 
-** Independent
+* Must be Normally distributed (skew and kurtosis... outliers)
+* Homogeneity of variance (Levenes test or Barletts test, Barletts test has better performance if we sure our data is strongly normal)
+* Interval data or Ratio 
+* Independent
 
 * Non-parametric tests don't need to pass the same assumptions, variables do not need to be normally distributed. Most of these tests work on the principle of ranking. 
 
@@ -1480,7 +1480,7 @@ In this section we will discuss predictive modeling. Predictive models are used 
 
 The simplest regression is linear regression. This is where we are predicting an outcome variable from a predictor variable. We do this by fitting a statistical model to the data in the form of a straight line. Then we need to gauge how well that line fits the data. The equation of the line is
 
-```{r, echo=FALSE , fig.align = "center", warning=FALSE}
+```{r, echo=FALSE , fig.align = "center", out.width = '100%', warning=FALSE}
 knitr::include_graphics("line_equ.png")
 ```
 
