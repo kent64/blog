@@ -45,7 +45,7 @@ pre {
 
 What is the relationship between a student’s overall average score for their professional evaluation in the final year of their professional career
 in Engineering and their results obtained in the final year of high
-school using two generic high school tests amongst students of Engineering in Columbia. The two tests are Mathematics (MAT\_S11) and Critical Reading (CR\_S11). Consequently can these predictors be used to predict a student’s overall average score in Engineering by linear regression and which predictors are the most influential.
+school using three generic high school tests amongst students of Engineering in Columbia. The three tests are Mathematics (MAT\_S11), Critical Reading (CR\_S11) and English (ENG\_S11). Consequently can these predictors be used to predict a student’s overall average score in Engineering by linear regression and which predictors are the most influential.
 
 </blockquote>
 
@@ -128,7 +128,9 @@ Figure 1: Five test results and overall grade in Engineering
 
 </div>
 
-Assessing them for normality and assessing other qualities if not continuous:
+  - ENG\_S11 visually looks to not follow a normal distribution and it could be an interesting variable to investigate.
+
+Next we assess them for normality and assessing other qualities if not continuous:
 
 ### Mathematics (MAT\_S11)
 
@@ -188,7 +190,7 @@ Almost zero outliers outside the 3.29 SD of mean and about 5% were outside of 1.
 
 <blockquote class="blockquote">
 
-English (ENG\_S11) scores was assessed for normality. Visual inspection of the histogram and QQ-Plot (see Figure 1) identified some issues with skewness and kurtosis. The standardised score for kurtosis (10.87) was considered unacceptable using the criteria proposed by West, Finch and Curran (1996), also the standardised score for skewness (9.74) was outside the acceptable range. However 99.4% of standardised scores for English (ENG\_S11) fall within the bounds of +/- 3.29, using the guidance of Field, Miles and Field (2013) the data can be considered to approximate a normal distribution (m=61.8, sd=14.3, n=12411).
+English (ENG\_S11) scores was assessed for normality. Visual inspection of the histogram and QQ-Plot (see Figure 1) identified some issues with skewness and kurtosis. The standardised score for kurtosis (10.87) was considered unacceptable using the criteria proposed by West, Finch and Curran (1996), also the standardised score for skewness (9.74) was outside the acceptable range. However 99.4% of standardised scores for English (ENG\_S11) fall within the bounds of +/- 3.29, using the guidance of Field, Miles and Field (2013) the data can not be considered to approximate a normal distribution however because of the visual evidence and the high skew value for this distribution(m=61.8, sd=14.3, n=12411).
 
 </blockquote>
 
@@ -1186,6 +1188,8 @@ stats::bartlett.test(G_SC~ REVENUE, data=df)
 
 ## Adding English (ENG\_S11)
 
+As we saw previously, ENG\_S11 is not exactly following a normal distribution and so we must use non-parametric tests to determine a relationship between ENG\_S11 and G\_SC.
+
 Correlation Scatter plot (ENG\_S11 and G\_SC):
 
 ``` r
@@ -1211,31 +1215,30 @@ Figure 19: Correlation Scatter plot (ENG\_S11 and G\_SC)
 </div>
 
 ``` r
-#Pearson Correlation
-cor.test(df$scale_ENG_S11, df$scale_G_SC, method='pearson')
+#Spearman Correlation
+cor.test(df$G_SC, df$ENG_S11, method = "spearman")
 ```
 
     ## 
-    ##  Pearson's product-moment correlation
+    ##  Spearman's rank correlation rho
     ## 
-    ## data:  df$scale_ENG_S11 and df$scale_G_SC
-    ## t = 98.435, df = 12409, p-value < 0.00000000000000022
-    ## alternative hypothesis: true correlation is not equal to 0
-    ## 95 percent confidence interval:
-    ##  0.6521731 0.6719345
+    ## data:  df$G_SC and df$ENG_S11
+    ## S = 103652360681, p-value < 0.00000000000000022
+    ## alternative hypothesis: true rho is not equal to 0
     ## sample estimates:
-    ##       cor 
-    ## 0.6621689
+    ##       rho 
+    ## 0.6746805
 
-The correlation coefficient is a commonly used measure of the size of an effect: values of ±.1 represent a small effect, ±.3 is a medium effect and ±.5 is a large effect
+  - The correlation coefficient is a commonly used measure of the size of an effect: values of ±.1 represent a small effect, ±.3 is a medium effect and ±.5 is a large
+  - we use Spearman’s rho this time as the our test is non-paramtric.
 
 The correlation between English (ENG\_S11) and overall score(G\_SC) is statistically significant.
 
-To report Pearson coefficient here we say:
+To report Spearman coefficient here we say:
 
 <blockquote class="blockquote">
 
-12411 English (ENG\_S11)(M=61.8, SD=14.3) high school results and a college Engineering overall score(G\_SC) (M=162.7, SD=23.1) were investigated. A positive Pearson r correlation coefficient of 0.67 was revealed. There is strong correlation between English (ENG\_S11) results and the college Engineering overall score(G\_SC) with t(12409) = 98.4 and a p-value \< 0.001. The size of the effect is large.
+12411 English (ENG\_S11)(M=61.8, SD=14.3) high school results and a college Engineering overall score(G\_SC) (M=162.7, SD=23.1) were investigated. A positive Spearman’s rho correlation coefficient of 0.67 was revealed. There is strong correlation between English (ENG\_S11) results and the college Engineering overall score(G\_SC) with t(12409) = 98.4 and a p-value \< 0.001. The size of the effect is large.
 
 </blockquote>
 
@@ -1649,9 +1652,29 @@ stargazer::stargazer(model1, model4, model5, type="text")
     ## ==========================================================================================================
     ## Note:                                                                          *p<0.1; **p<0.05; ***p<0.01
 
-  - Adding the dummy\_COMPUTER is not statisically significant
+  - Adding the dummy\_COMPUTER is not statistically significant
+  - Meaning having a computer is not a significant indicator of good G\_SC results
+  - it doesn’t change the adjusted R squared
+
+I will leave this dummy\_COMPUTER variable out of my final model.
 
 # Discussion/Conclusion
+
+The best model determined by my analysis of this data set above is a multiple linear regression model which uses the results from the Mathematics (MAT\_S11), Critical Reading (CR\_S11) and English (ENG\_S11) to predict a grade for a student’s overall College engineering score. Our model can explain almost 59% of the variance in the overall average score for their professional evaluation.
+
+Reporting the final model:
+
+<blockquote class="blockquote">
+
+A multiple regression analysis was conducted to determine if a student’s high school Mathematics (MAT\_S11) score, high school Critical Reading (CR\_S11) and English (ENG\_S11) scores could predict a student’s Overall average score (G\_SC) in Engineering in college.
+
+Examination of the histogram, normal Q-Q plots of standardized residuals and the scatterplot of the dependent variable, academic satisfaction, and standardized residuals showed that the some outliers existed. However, examination of the standardized residuals showed that none could be considered to have undue influence (95% within limits of -3.29 to plus 3.29 and less than 5% with a Cook’s distance three times the mean.
+
+In order to improve the model, the categorical variables GENDER, REVENUE, SCHOOL\_NAT (Public or Private) and dummy\_COMPUTER (whether the student has a PC) were investigated to see if they had a significant impact on the outcome variable. However all failed to pass Levene’s Test for Homogeneity of Variance and were deemed unsuitable for inclusion.
+
+Examination for multicollinearity showed that the tolerance and variance influence factor measures were within acceptable levels (tolerance \>0.4, VIF \<2.5 ) as outlined in Tarling (2008). The scatterplot of standardized residuals showed that the data met the assumptions of homogeneity of variance and linearity. The data also meets the assumption of non-zero variances of the predictors.
+
+</blockquote>
 
 # References
 

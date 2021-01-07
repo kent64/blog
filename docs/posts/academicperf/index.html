@@ -163,7 +163,7 @@ pre {
 <blockquote class="blockquote">
 <p>What is the relationship between a student’s overall average score for their professional evaluation in the final year of their professional career
 in Engineering and their results obtained in the final year of high
-school using two generic high school tests amongst students of Engineering in Columbia. The two tests are Mathematics (MAT_S11) and Critical Reading (CR_S11). Consequently can these predictors be used to predict a student’s overall average score in Engineering by linear regression and which predictors are the most influential.</p>
+school using three generic high school tests amongst students of Engineering in Columbia. The three tests are Mathematics (MAT_S11), Critical Reading (CR_S11) and English (ENG_S11). Consequently can these predictors be used to predict a student’s overall average score in Engineering by linear regression and which predictors are the most influential.</p>
 </blockquote>
 <h1 id="dataset">Dataset</h1>
 <p>The dataset contains the results in national assessments for secondary and university
@@ -219,7 +219,10 @@ df <span style="color:#333">%&gt;%</span>
 <p>Figure 1: Five test results and overall grade in Engineering</p>
 </p>
 </div>
-<p>Assessing them for normality and assessing other qualities if not continuous:</p>
+<ul>
+<li>ENG_S11 visually looks to not follow a normal distribution and it could be an interesting variable to investigate.</li>
+</ul>
+<p>Next we assess them for normality and assessing other qualities if not continuous:</p>
 <h3 id="mathematics-mat_s11">Mathematics (MAT_S11)</h3>
 <pre><code>## skew (g1) 
 ##  18.17215 
@@ -261,7 +264,7 @@ df <span style="color:#333">%&gt;%</span>
 </code></pre>
 <p>Almost zero outliers outside the 3.29 SD of mean and about 5% were outside of 1.96 SD of mean, so we can treat this variable as normal as the data set is larger than 80 (12411 records).</p>
 <blockquote class="blockquote">
-<p>English (ENG_S11) scores was assessed for normality. Visual inspection of the histogram and QQ-Plot (see Figure 1) identified some issues with skewness and kurtosis. The standardised score for kurtosis (10.87) was considered unacceptable using the criteria proposed by West, Finch and Curran (1996), also the standardised score for skewness (9.74) was outside the acceptable range. However 99.4% of standardised scores for English (ENG_S11) fall within the bounds of +/- 3.29, using the guidance of Field, Miles and Field (2013) the data can be considered to approximate a normal distribution (m=61.8, sd=14.3, n=12411).</p>
+<p>English (ENG_S11) scores was assessed for normality. Visual inspection of the histogram and QQ-Plot (see Figure 1) identified some issues with skewness and kurtosis. The standardised score for kurtosis (10.87) was considered unacceptable using the criteria proposed by West, Finch and Curran (1996), also the standardised score for skewness (9.74) was outside the acceptable range. However 99.4% of standardised scores for English (ENG_S11) fall within the bounds of +/- 3.29, using the guidance of Field, Miles and Field (2013) the data can not be considered to approximate a normal distribution however because of the visual evidence and the high skew value for this distribution(m=61.8, sd=14.3, n=12411).</p>
 </blockquote>
 <h3 id="gender-variable">Gender variable</h3>
 <p>WE need to access the GENDER variable. It is a variable of type “Nominal”. Let’s take a quick look at a visual:</p>
@@ -943,6 +946,7 @@ vifmodel
 <li>again result is statistically significant and so we reject the null hypothesis again.</li>
 </ul>
 <h2 id="adding-english-eng_s11">Adding English (ENG_S11)</h2>
+<p>As we saw previously, ENG_S11 is not exactly following a normal distribution and so we must use non-parametric tests to determine a relationship between ENG_S11 and G_SC.</p>
 <p>Correlation Scatter plot (ENG_S11 and G_SC):</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">df <span style="color:#333">%&gt;%</span>
   <span style="color:#06b;font-weight:bold">ggplot</span>(<span style="color:#06b;font-weight:bold">aes</span>(x<span style="color:#333">=</span>scale_ENG_S11, y<span style="color:#333">=</span>scale_G_SC)) <span style="color:#333">+</span>
@@ -957,25 +961,26 @@ vifmodel
 <p>Figure 19: Correlation Scatter plot (ENG_S11 and G_SC)</p>
 </p>
 </div>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#888">#Pearson Correlation</span>
-<span style="color:#06b;font-weight:bold">cor.test</span>(df<span style="color:#333">$</span>scale_ENG_S11, df<span style="color:#333">$</span>scale_G_SC, method<span style="color:#333">=</span><span style="background-color:#fff0f0">&#39;pearson&#39;</span>)
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#888">#Spearman Correlation</span>
+<span style="color:#06b;font-weight:bold">cor.test</span>(df<span style="color:#333">$</span>G_SC, df<span style="color:#333">$</span>ENG_S11, method <span style="color:#333">=</span> <span style="background-color:#fff0f0">&#34;spearman&#34;</span>)
 </code></pre></div><pre><code>## 
-##  Pearson's product-moment correlation
+##  Spearman's rank correlation rho
 ## 
-## data:  df$scale_ENG_S11 and df$scale_G_SC
-## t = 98.435, df = 12409, p-value &lt; 0.00000000000000022
-## alternative hypothesis: true correlation is not equal to 0
-## 95 percent confidence interval:
-##  0.6521731 0.6719345
+## data:  df$G_SC and df$ENG_S11
+## S = 103652360681, p-value &lt; 0.00000000000000022
+## alternative hypothesis: true rho is not equal to 0
 ## sample estimates:
-##       cor 
-## 0.6621689
+##       rho 
+## 0.6746805
 </code></pre>
-<p>The correlation coefficient is a commonly used measure of the size of an effect: values of ±.1 represent a small effect, ±.3 is a medium effect and ±.5 is a large effect</p>
+<ul>
+<li>The correlation coefficient is a commonly used measure of the size of an effect: values of ±.1 represent a small effect, ±.3 is a medium effect and ±.5 is a large</li>
+<li>we use Spearman’s rho this time as the our test is non-paramtric.</li>
+</ul>
 <p>The correlation between English (ENG_S11) and overall score(G_SC) is statistically significant.</p>
-<p>To report Pearson coefficient here we say:</p>
+<p>To report Spearman coefficient here we say:</p>
 <blockquote class="blockquote">
-<p>12411 English (ENG_S11)(M=61.8, SD=14.3) high school results and a college Engineering overall score(G_SC) (M=162.7, SD=23.1) were investigated. A positive Pearson r correlation coefficient of 0.67 was revealed. There is strong correlation between English (ENG_S11) results and the college Engineering overall score(G_SC) with t(12409) = 98.4 and a p-value &lt; 0.001. The size of the effect is large.</p>
+<p>12411 English (ENG_S11)(M=61.8, SD=14.3) high school results and a college Engineering overall score(G_SC) (M=162.7, SD=23.1) were investigated. A positive Spearman’s rho correlation coefficient of 0.67 was revealed. There is strong correlation between English (ENG_S11) results and the college Engineering overall score(G_SC) with t(12409) = 98.4 and a p-value &lt; 0.001. The size of the effect is large.</p>
 </blockquote>
 <p>Creating a new model4 with English (ENG_S11)</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">model4<span style="color:#333">&lt;-</span><span style="color:#06b;font-weight:bold">lm</span>(df<span style="color:#333">$</span>scale_G_SC<span style="color:#333">~</span>df<span style="color:#333">$</span>scale_MAT_S11<span style="color:#333">+</span>df<span style="color:#333">$</span>scale_CR_S11<span style="color:#333">+</span>df<span style="color:#333">$</span>scale_ENG_S11)
@@ -1268,9 +1273,20 @@ stargazer<span style="color:#333">::</span><span style="color:#06b;font-weight:b
 ## Note:                                                                          *p&lt;0.1; **p&lt;0.05; ***p&lt;0.01
 </code></pre>
 <ul>
-<li>Adding the dummy_COMPUTER is not statisically significant</li>
+<li>Adding the dummy_COMPUTER is not statistically significant</li>
+<li>Meaning having a computer is not a significant indicator of good G_SC results</li>
+<li>it doesn’t change the adjusted R squared</li>
 </ul>
+<p>I will leave this dummy_COMPUTER variable out of my final model.</p>
 <h1 id="discussionconclusion">Discussion/Conclusion</h1>
+<p>The best model determined by my analysis of this data set above is a multiple linear regression model which uses the results from the Mathematics (MAT_S11), Critical Reading (CR_S11) and English (ENG_S11) to predict a grade for a student’s overall College engineering score. Our model can explain almost 59% of the variance in the overall average score for their professional evaluation.</p>
+<p>Reporting the final model:</p>
+<blockquote class="blockquote">
+<p>A multiple regression analysis was conducted to determine if a student’s high school Mathematics (MAT_S11) score, high school Critical Reading (CR_S11) and English (ENG_S11) scores could predict a student’s Overall average score (G_SC) in Engineering in college.</p>
+<p>Examination of the histogram, normal Q-Q plots of standardized residuals and the scatterplot of the dependent variable, academic satisfaction, and standardized residuals showed that the some outliers existed. However, examination of the standardized residuals showed that none could be considered to have undue influence (95% within limits of -3.29 to plus 3.29 and less than 5% with a Cook’s distance three times the mean.</p>
+<p>In order to improve the model, the categorical variables GENDER, REVENUE, SCHOOL_NAT (Public or Private) and dummy_COMPUTER (whether the student has a PC) were investigated to see if they had a significant impact on the outcome variable. However all failed to pass Levene’s Test for Homogeneity of Variance and were deemed unsuitable for inclusion.</p>
+<p>Examination for multicollinearity showed that the tolerance and variance influence factor measures were within acceptable levels (tolerance &gt;0.4, VIF &lt;2.5 ) as outlined in Tarling (2008). The scatterplot of standardized residuals showed that the data met the assumptions of homogeneity of variance and linearity. The data also meets the assumption of non-zero variances of the predictors.</p>
+</blockquote>
 <h1 id="references">References</h1>
 <div id="refs" class="references">
 <div id="ref-stephanie_2018">
