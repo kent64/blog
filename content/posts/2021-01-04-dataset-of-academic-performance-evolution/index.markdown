@@ -20,7 +20,7 @@ link-citations: yes
 
 <style type="text/css">
 .toc .nav-link {
-  font-size: 16px;
+  font-size: 14px;
   line-height: 1;
   padding: 0;
   padding-left: 1;
@@ -29,7 +29,7 @@ link-citations: yes
 }
 
 li.nav-item {
-    font-size: 16px;
+    font-size: 14px;
 }
 
 pre {

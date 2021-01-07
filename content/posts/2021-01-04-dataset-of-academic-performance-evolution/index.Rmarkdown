@@ -34,7 +34,7 @@ library(psych)
 
 ```{css, echo=FALSE}
 .toc .nav-link {
-  font-size: 16px;
+  font-size: 14px;
   line-height: 1;
   padding: 0;
   padding-left: 1;
@@ -43,7 +43,7 @@ library(psych)
 }
 
 li.nav-item {
-    font-size: 16px;
+    font-size: 14px;
 }
 
 pre {
