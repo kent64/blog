@@ -71,7 +71,7 @@ A full descriptor is available at:
 
 The dataset is available for download at [https://data.mendeley.com/datasets/83tcx8psxv/1]()
 
-```{r}
+```{r, results="hold", warning=FALSE}
 df <- read_excel("data_academic_performance.xlsx", sheet = "SABER11_SABERPRO")
 df <- df %>% select(-"...10") # deselect this column
 ```
@@ -79,7 +79,7 @@ df <- df %>% select(-"...10") # deselect this column
 ## Exploring variables in research question
 
 The variable looks clean, no missing records as we can see below. The Saber 11 results are all marked to a maximum of 100 which some students have achieved. 
-```{r paged.print=FALSE,warning=FALSE}
+```{r paged.print=FALSE,warning=FALSE, results="hold"}
 # ff_glimpse(df)
 df %>%
   select(MAT_S11, CR_S11, CC_S11, BIO_S11, ENG_S11, G_SC) %>%
@@ -90,7 +90,7 @@ df %>%
 
 Since I prefer dealing with stardardized score, I will convert all these variables to z-scores. 
 
-```{r}
+```{r paged.print=FALSE,warning=FALSE, results="hold"}
 df <- df %>% mutate(scale_MAT_S11 = scale(MAT_S11),
          scale_CR_S11 = scale(CR_S11),
          scale_CC_S11 = scale(CC_S11),
