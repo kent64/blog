@@ -48,7 +48,7 @@ li.nav-item {
 
 pre {
     background-color: #f2f2f2;
-    border-style: ridge;
+#    border-style: ridge;
 }
 
 ```
@@ -160,7 +160,7 @@ p6_1 <- df %>%
 grid.arrange(p1, p1_1, p2, p2_1, p3, p3_1, p4, p4_1, p5, p5_1, p6, p6_1, nrow = 6)
 ```
 
-Assessing them for normality:
+Assessing them for normality and assessing other qualities if not continuous:
 
 ### Mathematics (MAT_S11)
 
@@ -212,6 +212,25 @@ Almost zero outliers outside the 3.29 SD of mean and about 5% were outside of 1.
 <blockquote class="blockquote">
 Critical Reading (CR_S11) scores was assessed for normality. Visual inspection of the histogram and QQ-Plot (see Figure 1) identified some issues with skewness and kurtosis. The standardised score for kurtosis (10.87) was considered unacceptable using the criteria proposed by West, Finch and Curran (1996), also the standardised score for skewness (9.74) was outside the acceptable range. However 99.6% of standardised scores for Critical Reading (CR_S11) fall within the bounds of +/- 3.29, using the guidance of Field, Miles and Field (2013) the data can be considered to approximate a normal distribution (m=60.8, sd=10.0, n=12411).
 </blockquote>
+
+### English (ENG_S11)
+
+```{r, paged.print=FALSE, echo=FALSE, results="hold", warning=FALSE}
+calc_skew_kurtosis(df$scale_ENG_S11)
+```
+
+Both skew and kurtosis are high. The cut off is +/- 1.96, anything above this is considered significant. Let's check the outliers:
+
+```{r, paged.print=FALSE, echo=FALSE, results="hold", warning=FALSE}
+outliers(df$scale_ENG_S11)
+```
+
+Almost zero outliers outside the 3.29 SD of mean and about 5% were outside of 1.96 SD of mean, so we can treat this variable as normal as the data set is larger than 80 (12411 records). 
+
+<blockquote class="blockquote">
+English (ENG_S11) scores was assessed for normality. Visual inspection of the histogram and QQ-Plot (see Figure 1) identified some issues with skewness and kurtosis. The standardised score for kurtosis (10.87) was considered unacceptable using the criteria proposed by West, Finch and Curran (1996), also the standardised score for skewness (9.74) was outside the acceptable range. However 99.4% of standardised scores for English (ENG_S11) fall within the bounds of +/- 3.29, using the guidance of Field, Miles and Field (2013) the data can be considered to approximate a normal distribution (m=61.8, sd=14.3, n=12411).
+</blockquote>
+
 
 ### Gender variable
 
@@ -268,6 +287,46 @@ Almost zero outliers outside the 3.29 SD of mean and about 5% were outside of 1.
 <blockquote class="blockquote">
 Biology (BIO_S11) scores was assessed for normality. Visual inspection of the histogram and QQ-Plot (see Figure 1) identified some issues with skewness and kurtosis. The standardised score for kurtosis (10.87) was considered unacceptable using the criteria proposed by West, Finch and Curran (1996), also the standardised score for skewness (9.74) was outside the acceptable range. However 99.6% of standardised scores for Biology (BIO_S11) fall within the bounds of +/- 3.29, using the guidance of Field, Miles and Field (2013) the data can be considered to approximate a normal distribution (m=64.0, sd=11.2, n=12411).
 </blockquote>
+
+### REVENUE variable
+
+We need to access the REVENUE variable. It is a variable of type "Ordinal". Let's take a quick look at a visual:
+
+```{r, paged.print=FALSE, results="hold", echo=FALSE, fig.align = "center", fig.width = 10, fig.cap="A boxplot with REVENUE and the Overall average score (G_SC)"}
+df %>%
+  ggplot(aes(x=REVENUE, y=G_SC, fill=REVENUE)) +
+    geom_boxplot() +
+    scale_fill_viridis(discrete = TRUE, alpha=0.6) +
+    geom_jitter(color="black", size=0.4, alpha=0.9) +
+    ylab("Overall average score (G_SC) ")
+```
+
+stats for GENDER:
+```{r paged.print=FALSE,warning=FALSE}
+psych::describeBy(df$G_SC, df$REVENUE, mat=TRUE)
+```
+
+* We can see that students with a REVENUE of zero are under-represented in this data set. 
+
+### School variable
+
+We need to access the SCHOOL_NAT variable. It is a variable of type "Nominal". Let's take a quick look at a visual:
+
+```{r}
+df %>%
+  ggplot(aes(x=SCHOOL_NAT, y=G_SC, fill=SCHOOL_NAT)) +
+    geom_boxplot() +
+    scale_fill_viridis(discrete = TRUE, alpha=0.6) +
+    geom_jitter(color="black", size=0.4, alpha=0.9) +
+    ggtitle("A boxplot with SCHOOL_NAT and the Overall average score (G_SC)") +
+    ylab("Overall average score (G_SC) ")
+```
+
+stats for SCHOOL_NAT:
+```{r paged.print=FALSE,warning=FALSE}
+psych::describeBy(df$G_SC, df$SCHOOL_NAT, mat=TRUE)
+```
+
 
 
 # Results 
@@ -698,6 +757,245 @@ Tests to see if the data met the assumption of collinearity indicated that multi
 </blockquote>
 
 Therefore BIO_S11 cannot be added to the model. We do not need any further tests.
+
+## Adding REVENUE
+
+Let's check the relationship between REVENUE and G_SC. 
+
+First, I need to test for homogeneity of variance. Using Levene’s test, our Null hypothesis is that there is no difference in variance.
+
+```{r}
+car::leveneTest(G_SC ~ REVENUE, data=df)
+```
+
+* The null hypothesis is rejected and so we can not consider the data to have homogeneity of variance and therefore cannot use it in our model. 
+
+Checking Bartlett's test for homogeneity of variance also:
+
+```{r}
+stats::bartlett.test(G_SC~ REVENUE, data=df)
+```
+
+* again result is statistically significant and so we reject the null hypothesis again. 
+
+## Adding English (ENG_S11)
+
+Correlation Scatter plot (ENG_S11 and G_SC):
+
+```{r,warning=FALSE, fig.cap="Correlation Scatter plot (ENG_S11 and G_SC)", fig.align = "center"}
+df %>%
+  ggplot(aes(x=scale_ENG_S11, y=scale_G_SC)) +
+  geom_point() + 
+  geom_smooth(method = "lm", colour = "Green", se = F) + 
+  labs(x = "English (ENG_S11)", y = "Overall average score (G_SC)") 
+```
+```{r,warning=FALSE}
+#Pearson Correlation
+cor.test(df$scale_ENG_S11, df$scale_G_SC, method='pearson')
+```
+
+The correlation coefficient is a commonly used measure of the size of an effect: values of ±.1 represent a small effect, ±.3 is a medium effect and ±.5 is a large effect
+
+The correlation between English (ENG_S11) and overall score(G_SC) is statistically significant. 
+
+To report Pearson coefficient here we say:
+
+<blockquote class="blockquote">
+`r length(df$scale_MAT_S11)` English (ENG_S11)(M=61.8, SD=14.3) high school results and a college Engineering overall score(G_SC) (M=162.7, SD=23.1) were investigated. A positive Pearson r correlation coefficient of 0.67 was revealed. There is strong correlation between English (ENG_S11) results and the college Engineering overall score(G_SC) with t(12409) = 98.4 and a p-value < 0.001. The size of the effect is large. 
+</blockquote>
+
+Creating a new model4 with English (ENG_S11)
+
+```{r}
+model4<-lm(df$scale_G_SC~df$scale_MAT_S11+df$scale_CR_S11+df$scale_ENG_S11)
+stargazer::stargazer(model1, model2, model4, type="text")
+```
+
+Some outcomes from model 4:
+
+* The Adjusted R squared has improved from 0.4145 to 0.523 and now to 0.585, meaning we can now explain more of variation in G_SC by including ENG_S11  into our model
+* ENG_S11  is statically significant to p<0.01. 
+
+One of the assumptions of a multiple linear regression model is that the residuals follow a normal distribution. We need to check this now on our model2. We can do this by finding any influential outliers by using cook's distance.
+
+
+```{r,  echo=FALSE, results="hold", warning=FALSE, fig.cap="Cook's D for model4", fig.align = "center"}
+#Influential Outliers - Cook's distance
+cooksd<-sort(cooks.distance(model4))
+# plot Cook's distance
+plot(cooksd, pch="*", cex=2, main="Influential Obs by Cooks distance")  
+abline(h = 4*mean(cooksd, na.rm=T), col="red")  # add cutoff line
+text(x=1:length(cooksd)+1, y=cooksd, labels=ifelse(cooksd>4*mean(cooksd, na.rm=T),"*",""), col="red")  # add labels
+```
+
+```{r paged.print=FALSE,warning=FALSE}
+influential <- as.numeric(names(cooksd)[(cooksd > 4*mean(cooksd, na.rm=T))])  # influential row numbers
+cat("Number of influencers:", length(influential), "\n")
+cat ("20 influencers in MAT_S11",head(df[influential, ]$MAT_S11, n = 20),"\n")
+cat ("20 influencers in CR_S11",head(df[influential, ]$CR_S11, n = 20),"\n")
+cat ("20 influencers in ENG_S11",head(df[influential, ]$ENG_S11, n = 20),"\n")
+cat ("Percentage of influencers: ", (length(influential) / nrow(df)) * 100, "% \n")
+```
+```{r,  echo=FALSE, results="hold", warning=FALSE, fig.cap="Cook's D for model4", fig.align = "center"}
+as_tibble(cooks.distance(model4)) %>%
+  ggplot(aes(x=seq_along(value), y=value)) +
+  geom_point(size=0.1) +
+  geom_hline(yintercept = 4*mean(cooks.distance(model4), na.rm=T), col="red") +
+  labs(x = "Record number", y = "Cook's distance") 
+# + 
+#  geom_text(x=1:length(cooks.distance(model2))+1, y=cooks.distance(model2), label=ifelse(cooks.distance(model2)>4*mean(cooks.distance(model2), na.rm=T),names(cooks.distance(model2)),""), col="red") 
+```
+
+
+```{r,  echo=FALSE, results="hold", warning=FALSE, fig.cap="Assess homocedasticity for model4", fig.align = "center"}
+plot(model4,1)
+```
+
+* We can see there is absolutely no heteroscedastity, we see a completely random, equal distribution of points throughout the range of X axis and a flat red line. There is no pattern in the residuals.
+
+```{r,  echo=FALSE, results="hold", warning=FALSE, fig.cap="Histogram and density plot of the residuals for model4", fig.align = "center"}
+plot(density(resid(model4))) 
+```
+
+
+```{r}
+residuals <- residuals(model3)
+resids<- abs(residuals)
+cat("Percentage greater than 1.96 SDs:", FSA::perc(as.numeric(resids), 1.96, "gt"),"% \n")
+cat("Percentage greater than 3.29 SDs:",FSA::perc(as.numeric(resids), 3.29, "gt"), "%")
+```
+
+* almost 0% outliers at 3.29 standards deviations from mean and for a data set this size. We can accept the distribution as normal. 
+
+```{r,  echo=FALSE, results="hold", warning=FALSE, fig.cap="QQ plot of the residuals for model4", fig.align = "center"}
+car::qqPlot(model4, main="QQ Plot") 
+```
+
+### Collinearity:
+
+Calculate Collinearity:
+```{r}
+vifmodel<-car::vif(model4)
+vifmodel
+```
+
+* As a rule of thumb, a VIF score over 5 is a problem. A score over 10 should be remedied and you should consider dropping the problematic variable from the regression model
+
+Calculate tolerance:
+```{r}
+1/vifmodel
+```
+
+* If the VIF value is greater than 2.5 or the Tolerance is less than 0.4, then you have concerns over multicollinearity.
+
+* Collinearity occurs when two or more independent variables are giving the same information, one could be redundant.
+* To check collinearity, we examine the correlation matrix that compares the independent variables with each other.
+* If we get a correlation coefficient of above 0.8, then we may have collinearity.
+
+```{r,  echo=FALSE, results="hold", warning=FALSE, fig.cap="correlation matrix for model4", fig.align = "center"}
+df %>%
+  dplyr::select(MAT_S11,CR_S11, ENG_S11) %>%
+  ggpairs() 
+```
+
+* the result from our correlation matrix for model4 show that these variables have a correlation less than 0.8, so we don't have collinearity.
+
+Reporting:
+
+<blockquote class="blockquote">
+Tests to see if the data met the assumption of collinearity indicated that multicollinearity was not a concern (MAT_S11, Tolerance = .63, VIF = 1.6; CR_S11, Tolerance = .63 VIF = 1.6; ENG_S11, Tolerance = .57 VIF = 1.7).
+</blockquote>
+
+### Reporting my model
+
+<blockquote class="blockquote">
+A multiple regression analysis was conducted to determine if a student’s high school Mathematics (MAT_S11) score,high school Critical Reading (CR_S11) and English (ENG_S11) scores could predict a student’s Overall average score (G_SC) in Engineering in college.
+
+Examination of the histogram, normal Q-Q plots of standardized residuals and the scatterplot of the dependent variable, academic satisfaction, and standardized residuals showed that the some outliers existed. However, examination of the standardized residuals showed that none could be considered to have undue influence (95% within limits of -3.29 to plus 3.29 and less than 5% with a Cook’s distance three times the mean.
+
+Examination for multicollinearity showed that the tolerance and variance influence factor measures were within acceptable levels (tolerance >0.4, VIF <2.5 ) as outlined in Tarling (2008). The scatterplot of standardized residuals showed that the data met the assumptions of homogeneity of variance and linearity. The data also meets the assumption of non-zero variances of the predictors.
+</blockquote>
+
+
+The z-scale standardized equation of model4 is:
+```{r, warning=FALSE}
+coef(model4)
+```
+
+```
+ G_SC = 0 + 0.26 * MAT_S11 + 0.3 * CR_S11 + 0.3 * _ENG_S11
+```
+
+* explaining 58.5% of the variation in G_SC
+
+This would mean a student who achieves a mean score for MAT_S11, CR_S11 and ENG_S11 would get a z-scaled G_SC results which is also the mean score for G_SC:
+```
+ G_SC = 0 + 0.26 * 0 + 0.3 * 0 + 0.3 * 0 = 0 
+```
+A student who achieves a score 1 standard deviation above mean for those three subjects will achieve a score which less than one stanard deviation above the mean in G_SC, thus we can see that more variables are also responsible for thhis G_SC variation:
+```
+ G_SC = 0 + 0.26 * 1 + 0.3 * 1 + 0.3 * 1 = 0.86
+```
+
+## Differential effect
+
+I tried to include the variables which were ordinal and nominal into my model however the both failed Levene's Test for Homogeneity of Variance. 
+
+I will try to include COMPUTER into my model as a differential variable. Let's check out that variable:
+
+```{r}
+df %>%
+  ggplot(aes(x=COMPUTER, y=G_SC, fill=COMPUTER)) +
+    geom_boxplot() +
+    scale_fill_viridis(discrete = TRUE, alpha=0.6) +
+    geom_jitter(color="black", size=0.4, alpha=0.9) +
+    ggtitle("A boxplot with COMPUTER and the Overall average score (G_SC)") +
+    ylab("Overall average score (G_SC) ")
+```
+
+stats for COMPUTER:
+```{r paged.print=FALSE,warning=FALSE}
+psych::describeBy(df$G_SC, df$COMPUTER, mat=TRUE)
+```
+
+Checking again for Levene's Test for Homogeneity of Variance:
+
+```{r}
+car::leveneTest(G_SC ~ COMPUTER, data=df)
+```
+
+Again this variable is failing Levene's Test for Homogeneity of Variance. 
+
+We will go ahead and include it to see if it may be useful in our model. First we need a dummy variable for COMPUTER:
+
+```{r, results="hold",warning=FALSE}
+df <- df %>%
+  mutate(dummy_COMPUTER = if_else(COMPUTER == "Yes",1, 0))
+```
+
+stats for dummy_COMPUTER:
+```{r paged.print=FALSE,warning=FALSE}
+psych::describeBy(df$G_SC, df$dummy_COMPUTER, mat=TRUE)
+```
+
+```{r paged.print=FALSE,warning=FALSE}
+userfriendlyscience::oneway(as.factor(df$dummy_COMPUTER),y=df$G_SC,posthoc='Tukey')
+```
+
+Reporting the results with eta squared effect:
+
+<blockquote class="blockquote">
+A one-way between-groups analysis of variance (ANOVA) was conducted to explore the impact of having a computer, as measured by the overall engineering scores. Participants were divided into two groups, one with a computer and one without. There was a statistically significant difference at the p < .05 level in G_SC scores for the two groups: (F(1, 12409)= 237.75, p<0.05. Despite reaching statistical significance, the actual difference in mean scores between groups was quite small. The effect size, calculated using eta squared was (0.02). Post-hoc comparisons using the Tukey HSD test indicated that the mean score for Group 1 (M=155.9, SD=21.8) was significantly different to that for Group 2 (M=164.19, SD=23.12).
+</blockquote>
+
+Creating a new model5 with dummy_COMPUTER
+
+```{r}
+model5<-lm(df$scale_G_SC~df$scale_MAT_S11+df$scale_CR_S11+df$scale_ENG_S11+df$dummy_COMPUTER)
+stargazer::stargazer(model1, model4, model5, type="text")
+```
+
+* Adding the dummy_COMPUTER is not statisically significant 
 
 # Discussion/Conclusion
 

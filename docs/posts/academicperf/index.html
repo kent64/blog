@@ -155,7 +155,7 @@ li.nav-item {
 
 pre {
     background-color: #f2f2f2;
-    border-style: ridge;
+#    border-style: ridge;
 }
 
 </style>
@@ -219,7 +219,7 @@ df <span style="color:#333">%&gt;%</span>
 <p>Figure 1: Five test results and overall grade in Engineering</p>
 </p>
 </div>
-<p>Assessing them for normality:</p>
+<p>Assessing them for normality and assessing other qualities if not continuous:</p>
 <h3 id="mathematics-mat_s11">Mathematics (MAT_S11)</h3>
 <pre><code>## skew (g1) 
 ##  18.17215 
@@ -249,6 +249,20 @@ df <span style="color:#333">%&gt;%</span>
 <blockquote class="blockquote">
 <p>Critical Reading (CR_S11) scores was assessed for normality. Visual inspection of the histogram and QQ-Plot (see Figure 1) identified some issues with skewness and kurtosis. The standardised score for kurtosis (10.87) was considered unacceptable using the criteria proposed by West, Finch and Curran (1996), also the standardised score for skewness (9.74) was outside the acceptable range. However 99.6% of standardised scores for Critical Reading (CR_S11) fall within the bounds of +/- 3.29, using the guidance of Field, Miles and Field (2013) the data can be considered to approximate a normal distribution (m=60.8, sd=10.0, n=12411).</p>
 </blockquote>
+<h3 id="english-eng_s11">English (ENG_S11)</h3>
+<pre><code>## skew (g1) 
+##  27.60265 
+## Excess Kur (g2) 
+##       -8.432497
+</code></pre>
+<p>Both skew and kurtosis are high. The cut off is +/- 1.96, anything above this is considered significant. Let’s check the outliers:</p>
+<pre><code>## Percentage greater than 1.96 SDs: 5.648215 % 
+## Percentage greater than 3.29 SDs: 0 %
+</code></pre>
+<p>Almost zero outliers outside the 3.29 SD of mean and about 5% were outside of 1.96 SD of mean, so we can treat this variable as normal as the data set is larger than 80 (12411 records).</p>
+<blockquote class="blockquote">
+<p>English (ENG_S11) scores was assessed for normality. Visual inspection of the histogram and QQ-Plot (see Figure 1) identified some issues with skewness and kurtosis. The standardised score for kurtosis (10.87) was considered unacceptable using the criteria proposed by West, Finch and Curran (1996), also the standardised score for skewness (9.74) was outside the acceptable range. However 99.4% of standardised scores for English (ENG_S11) fall within the bounds of +/- 3.29, using the guidance of Field, Miles and Field (2013) the data can be considered to approximate a normal distribution (m=61.8, sd=14.3, n=12411).</p>
+</blockquote>
 <h3 id="gender-variable">Gender variable</h3>
 <p>WE need to access the GENDER variable. It is a variable of type “Nominal”. Let’s take a quick look at a visual:</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">df <span style="color:#333">%&gt;%</span>
@@ -258,7 +272,7 @@ df <span style="color:#333">%&gt;%</span>
     <span style="color:#06b;font-weight:bold">geom_jitter</span>(color<span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;black&#34;</span>, size<span style="color:#333">=</span><span style="color:#60e;font-weight:bold">0.4</span>, alpha<span style="color:#333">=</span><span style="color:#60e;font-weight:bold">0.9</span>) <span style="color:#333">+</span>
     <span style="color:#06b;font-weight:bold">ggtitle</span>(<span style="background-color:#fff0f0">&#34;A boxplot with GENDER and the Overall average score (G_SC)&#34;</span>) <span style="color:#333">+</span>
     <span style="color:#06b;font-weight:bold">ylab</span>(<span style="background-color:#fff0f0">&#34;Overall average score (G_SC) &#34;</span>)
-</code></pre></div><p><img src="/blog/posts/academicperf/index_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+</code></pre></div><p><img src="/blog/posts/academicperf/index_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
 <p>stats for GENDER:</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">psych<span style="color:#333">::</span><span style="color:#06b;font-weight:bold">describeBy</span>(df<span style="color:#333">$</span>G_SC, df<span style="color:#333">$</span>GENDER, mat<span style="color:#333">=</span><span style="color:#080;font-weight:bold">TRUE</span>)
 </code></pre></div><pre><code>##     item group1 vars    n     mean       sd median  trimmed     mad min max
@@ -277,7 +291,7 @@ df <span style="color:#333">%&gt;%</span>
     <span style="color:#06b;font-weight:bold">geom_jitter</span>(color<span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;black&#34;</span>, size<span style="color:#333">=</span><span style="color:#60e;font-weight:bold">0.4</span>, alpha<span style="color:#333">=</span><span style="color:#60e;font-weight:bold">0.9</span>) <span style="color:#333">+</span>
     <span style="color:#06b;font-weight:bold">ggtitle</span>(<span style="background-color:#fff0f0">&#34;A boxplot with SCHOOL_NAT and the Overall average score (G_SC)&#34;</span>) <span style="color:#333">+</span>
     <span style="color:#06b;font-weight:bold">ylab</span>(<span style="background-color:#fff0f0">&#34;Overall average score (G_SC) &#34;</span>)
-</code></pre></div><p><img src="/blog/posts/academicperf/index_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+</code></pre></div><p><img src="/blog/posts/academicperf/index_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
 <p>stats for SCHOOL_NAT:</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">psych<span style="color:#333">::</span><span style="color:#06b;font-weight:bold">describeBy</span>(df<span style="color:#333">$</span>G_SC, df<span style="color:#333">$</span>SCHOOL_NAT, mat<span style="color:#333">=</span><span style="color:#080;font-weight:bold">TRUE</span>)
 </code></pre></div><pre><code>##     item  group1 vars    n     mean       sd median  trimmed     mad min max
@@ -301,6 +315,57 @@ df <span style="color:#333">%&gt;%</span>
 <blockquote class="blockquote">
 <p>Biology (BIO_S11) scores was assessed for normality. Visual inspection of the histogram and QQ-Plot (see Figure 1) identified some issues with skewness and kurtosis. The standardised score for kurtosis (10.87) was considered unacceptable using the criteria proposed by West, Finch and Curran (1996), also the standardised score for skewness (9.74) was outside the acceptable range. However 99.6% of standardised scores for Biology (BIO_S11) fall within the bounds of +/- 3.29, using the guidance of Field, Miles and Field (2013) the data can be considered to approximate a normal distribution (m=64.0, sd=11.2, n=12411).</p>
 </blockquote>
+<h3 id="revenue-variable">REVENUE variable</h3>
+<p>We need to access the REVENUE variable. It is a variable of type “Ordinal”. Let’s take a quick look at a visual:</p>
+<div class="figure" style="text-align: center">
+<p><img src="/blog/posts/academicperf/index_files/figure-html/unnamed-chunk-18-1.png" alt="A boxplot with REVENUE and the Overall average score (G_SC)" width="960" /></p>
+<p class="caption">
+<p>Figure 2: A boxplot with REVENUE and the Overall average score (G_SC)</p>
+</p>
+</div>
+<p>stats for GENDER:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">psych<span style="color:#333">::</span><span style="color:#06b;font-weight:bold">describeBy</span>(df<span style="color:#333">$</span>G_SC, df<span style="color:#333">$</span>REVENUE, mat<span style="color:#333">=</span><span style="color:#080;font-weight:bold">TRUE</span>)
+</code></pre></div><pre><code>##     item                          group1 vars    n     mean       sd median
+## X11    1                               0    1  279 169.7168 22.63700    172
+## X12    2                 10 or more LMMW    1  718 183.6727 20.72211    185
+## X13    3  Between 1 and less than 2 LMMW    1 3873 156.7705 22.04578    157
+## X14    4  Between 2 and less than 3 LMMW    1 2783 160.9429 21.63347    162
+## X15    5  Between 3 and less than 5 LMMW    1 2239 165.3363 22.07567    167
+## X16    6  Between 5 and less than 7 LMMW    1  973 170.8602 21.78682    172
+## X17    7 Between 7 and less than 10 LMMW    1  509 176.1768 19.96434    178
+## X18    8                less than 1 LMMW    1 1037 153.3144 22.01468    153
+##      trimmed     mad min max range         skew     kurtosis        se
+## X11 170.7244 22.2390  37 228   191 -0.943347983  3.641999614 1.3552419
+## X12 184.2622 19.2738 114 246   132 -0.280403866  0.326046072 0.7733424
+## X13 156.7670 22.2390  75 237   162 -0.014011136 -0.033082696 0.3542433
+## X14 161.2236 22.2390  72 247   175 -0.122777144 -0.096571942 0.4100810
+## X15 165.7959 22.2390  91 238   147 -0.170770997 -0.206646615 0.4665377
+## X16 171.5212 23.7216  76 239   163 -0.310366669  0.352605142 0.6984535
+## X17 176.9487 19.2738 118 240   122 -0.290540077  0.008686752 0.8849039
+## X18 153.2575 22.2390  81 226   145  0.003089345 -0.036601838 0.6836331
+</code></pre>
+<ul>
+<li>We can see that students with a REVENUE of zero are under-represented in this data set.</li>
+</ul>
+<h3 id="school-variable-1">School variable</h3>
+<p>We need to access the SCHOOL_NAT variable. It is a variable of type “Nominal”. Let’s take a quick look at a visual:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">df <span style="color:#333">%&gt;%</span>
+  <span style="color:#06b;font-weight:bold">ggplot</span>(<span style="color:#06b;font-weight:bold">aes</span>(x<span style="color:#333">=</span>SCHOOL_NAT, y<span style="color:#333">=</span>G_SC, fill<span style="color:#333">=</span>SCHOOL_NAT)) <span style="color:#333">+</span>
+    <span style="color:#06b;font-weight:bold">geom_boxplot</span>() <span style="color:#333">+</span>
+    <span style="color:#06b;font-weight:bold">scale_fill_viridis</span>(discrete <span style="color:#333">=</span> <span style="color:#080;font-weight:bold">TRUE</span>, alpha<span style="color:#333">=</span><span style="color:#60e;font-weight:bold">0.6</span>) <span style="color:#333">+</span>
+    <span style="color:#06b;font-weight:bold">geom_jitter</span>(color<span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;black&#34;</span>, size<span style="color:#333">=</span><span style="color:#60e;font-weight:bold">0.4</span>, alpha<span style="color:#333">=</span><span style="color:#60e;font-weight:bold">0.9</span>) <span style="color:#333">+</span>
+    <span style="color:#06b;font-weight:bold">ggtitle</span>(<span style="background-color:#fff0f0">&#34;A boxplot with SCHOOL_NAT and the Overall average score (G_SC)&#34;</span>) <span style="color:#333">+</span>
+    <span style="color:#06b;font-weight:bold">ylab</span>(<span style="background-color:#fff0f0">&#34;Overall average score (G_SC) &#34;</span>)
+</code></pre></div><p><img src="/blog/posts/academicperf/index_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
+<p>stats for SCHOOL_NAT:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">psych<span style="color:#333">::</span><span style="color:#06b;font-weight:bold">describeBy</span>(df<span style="color:#333">$</span>G_SC, df<span style="color:#333">$</span>SCHOOL_NAT, mat<span style="color:#333">=</span><span style="color:#080;font-weight:bold">TRUE</span>)
+</code></pre></div><pre><code>##     item  group1 vars    n     mean       sd median  trimmed     mad min max
+## X11    1 PRIVATE    1 6565 168.2158 22.82366    170 168.7379 23.7216  37 247
+## X12    2  PUBLIC    1 5846 156.5281 21.83817    157 156.5667 22.2390  72 228
+##     range        skew    kurtosis        se
+## X11   210 -0.20406097  0.02424670 0.2816877
+## X12   156 -0.05215938 -0.01912125 0.2856189
+</code></pre>
 <h1 id="results">Results</h1>
 <p>In this section, I will being to put together a model to predict G_SC results.</p>
 <h2 id="statistical-evidence">Statistical Evidence</h2>
@@ -319,9 +384,9 @@ df <span style="color:#333">%&gt;%</span>
 </code></pre></div><pre><code>## `geom_smooth()` using formula 'y ~ x'
 </code></pre>
 <div class="figure" style="text-align: center">
-<p><img src="/blog/posts/academicperf/index_files/figure-html/unnamed-chunk-16-1.png" alt="Correlation Scatter plot (MAT_S11 and G_SC)" width="672" /></p>
+<p><img src="/blog/posts/academicperf/index_files/figure-html/unnamed-chunk-22-1.png" alt="Correlation Scatter plot (MAT_S11 and G_SC)" width="672" /></p>
 <p class="caption">
-<p>Figure 2: Correlation Scatter plot (MAT_S11 and G_SC)</p>
+<p>Figure 3: Correlation Scatter plot (MAT_S11 and G_SC)</p>
 </p>
 </div>
 <p>Doing a Pearson Correlation since both variables are a) continuous b) paired c) independent d) homoscedasticity is present and importantly e) the variables have a normal distribution. Fromt eh plot above, homoscedasticity is ok and we know the data matches the other criteria.</p>
@@ -406,9 +471,9 @@ df <span style="color:#333">%&gt;%</span>
 </code></pre></div><pre><code>## `geom_smooth()` using formula 'y ~ x'
 </code></pre>
 <div class="figure" style="text-align: center">
-<p><img src="/blog/posts/academicperf/index_files/figure-html/unnamed-chunk-20-1.png" alt="Correlation Scatter plot (CR_S11 and G_SC)" width="672" /></p>
+<p><img src="/blog/posts/academicperf/index_files/figure-html/unnamed-chunk-26-1.png" alt="Correlation Scatter plot (CR_S11 and G_SC)" width="672" /></p>
 <p class="caption">
-<p>Figure 3: Correlation Scatter plot (CR_S11 and G_SC)</p>
+<p>Figure 4: Correlation Scatter plot (CR_S11 and G_SC)</p>
 </p>
 </div>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#888">#Pearson Correlation</span>
@@ -467,15 +532,15 @@ stargazer<span style="color:#333">::</span><span style="color:#06b;font-weight:b
 </ul>
 <p>One of the assumptions of a multiple linear regression model is that the residuals follow a normal distribution. We need to check this now on our model2. We can do this by finding any influential outliers by using cook’s distance.</p>
 <div class="figure" style="text-align: center">
-<p><img src="/blog/posts/academicperf/index_files/figure-html/unnamed-chunk-23-1.png" alt="Cook's D for model2" width="672" /></p>
+<p><img src="/blog/posts/academicperf/index_files/figure-html/unnamed-chunk-29-1.png" alt="Cook's D for model2" width="672" /></p>
 <p class="caption">
-<p>Figure 4: Cook’s D for model2</p>
+<p>Figure 5: Cook’s D for model2</p>
 </p>
 </div>
 <div class="figure" style="text-align: center">
-<p><img src="/blog/posts/academicperf/index_files/figure-html/unnamed-chunk-24-1.png" alt="Cook's D for model2" width="672" /></p>
+<p><img src="/blog/posts/academicperf/index_files/figure-html/unnamed-chunk-30-1.png" alt="Cook's D for model2" width="672" /></p>
 <p class="caption">
-<p>Figure 5: Cook’s D for model2</p>
+<p>Figure 6: Cook’s D for model2</p>
 </p>
 </div>
 <ul>
@@ -511,24 +576,24 @@ stargazer<span style="color:#333">::</span><span style="color:#06b;font-weight:b
 <li>our model2 is telling us that these values above are unusual variables with very statistically significant results</li>
 </ul>
 <div class="figure" style="text-align: center">
-<p><img src="/blog/posts/academicperf/index_files/figure-html/unnamed-chunk-27-1.png" alt="leverage plots for model2" width="672" /></p>
+<p><img src="/blog/posts/academicperf/index_files/figure-html/unnamed-chunk-33-1.png" alt="leverage plots for model2" width="672" /></p>
 <p class="caption">
-<p>Figure 6: leverage plots for model2</p>
+<p>Figure 7: leverage plots for model2</p>
 </p>
 </div>
 <div class="figure" style="text-align: center">
-<p><img src="/blog/posts/academicperf/index_files/figure-html/unnamed-chunk-28-1.png" alt="Assess homocedasticity for model2" width="672" /></p>
+<p><img src="/blog/posts/academicperf/index_files/figure-html/unnamed-chunk-34-1.png" alt="Assess homocedasticity for model2" width="672" /></p>
 <p class="caption">
-<p>Figure 7: Assess homocedasticity for model2</p>
+<p>Figure 8: Assess homocedasticity for model2</p>
 </p>
 </div>
 <ul>
 <li>We can see there is absolutely no heteroscedastity, we see a completely random, equal distribution of points throughout the range of X axis and a flat red line. There is no pattern in the residuals.</li>
 </ul>
 <div class="figure" style="text-align: center">
-<p><img src="/blog/posts/academicperf/index_files/figure-html/unnamed-chunk-29-1.png" alt="Histogram and density plot of the residuals for model2" width="672" /></p>
+<p><img src="/blog/posts/academicperf/index_files/figure-html/unnamed-chunk-35-1.png" alt="Histogram and density plot of the residuals for model2" width="672" /></p>
 <p class="caption">
-<p>Figure 8: Histogram and density plot of the residuals for model2</p>
+<p>Figure 9: Histogram and density plot of the residuals for model2</p>
 </p>
 </div>
 <ul>
@@ -547,9 +612,9 @@ resids<span style="color:#333">&lt;-</span> <span style="color:#06b;font-weight:
 <li>almost 0% outliers at 3.29 standards deviations from mean and for a data set this size. We can accept the distribution as normal.</li>
 </ul>
 <div class="figure" style="text-align: center">
-<p><img src="/blog/posts/academicperf/index_files/figure-html/unnamed-chunk-31-1.png" alt="QQ plot of the residuals for model2" width="672" /></p>
+<p><img src="/blog/posts/academicperf/index_files/figure-html/unnamed-chunk-37-1.png" alt="QQ plot of the residuals for model2" width="672" /></p>
 <p class="caption">
-<p>Figure 9: QQ plot of the residuals for model2</p>
+<p>Figure 10: QQ plot of the residuals for model2</p>
 </p>
 </div>
 <pre><code>## [1] 1336 7721
@@ -585,9 +650,9 @@ vifmodel
 </li>
 </ul>
 <div class="figure" style="text-align: center">
-<p><img src="/blog/posts/academicperf/index_files/figure-html/unnamed-chunk-34-1.png" alt="correlation matrix for model2" width="672" /></p>
+<p><img src="/blog/posts/academicperf/index_files/figure-html/unnamed-chunk-40-1.png" alt="correlation matrix for model2" width="672" /></p>
 <p class="caption">
-<p>Figure 10: correlation matrix for model2</p>
+<p>Figure 11: correlation matrix for model2</p>
 </p>
 </div>
 <ul>
@@ -684,9 +749,9 @@ Alternative hypothesis (H<sub>a</sub>): the variances are different.</p>
 </code></pre></div><pre><code>## `geom_smooth()` using formula 'y ~ x'
 </code></pre>
 <div class="figure" style="text-align: center">
-<p><img src="/blog/posts/academicperf/index_files/figure-html/unnamed-chunk-38-1.png" alt="Correlation Scatter plot (BIO_S11 and G_SC)" width="672" /></p>
+<p><img src="/blog/posts/academicperf/index_files/figure-html/unnamed-chunk-44-1.png" alt="Correlation Scatter plot (BIO_S11 and G_SC)" width="672" /></p>
 <p class="caption">
-<p>Figure 11: Correlation Scatter plot (BIO_S11 and G_SC)</p>
+<p>Figure 12: Correlation Scatter plot (BIO_S11 and G_SC)</p>
 </p>
 </div>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#888">#Pearson Correlation</span>
@@ -747,9 +812,9 @@ stargazer<span style="color:#333">::</span><span style="color:#06b;font-weight:b
 </ul>
 <p>One of the assumptions of a multiple linear regression model is that the residuals follow a normal distribution. We need to check this now on our model2. We can do this by finding any influential outliers by using cook’s distance.</p>
 <div class="figure" style="text-align: center">
-<p><img src="/blog/posts/academicperf/index_files/figure-html/unnamed-chunk-41-1.png" alt="Cook's D for model3" width="672" /></p>
+<p><img src="/blog/posts/academicperf/index_files/figure-html/unnamed-chunk-47-1.png" alt="Cook's D for model3" width="672" /></p>
 <p class="caption">
-<p>Figure 12: Cook’s D for model3</p>
+<p>Figure 13: Cook’s D for model3</p>
 </p>
 </div>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">influential <span style="color:#333">&lt;-</span> <span style="color:#06b;font-weight:bold">as.numeric</span>(<span style="color:#06b;font-weight:bold">names</span>(cooksd)<span style="color:#06b;font-weight:bold">[</span>(cooksd <span style="color:#333">&gt;</span> <span style="color:#60e;font-weight:bold">4</span><span style="color:#333">*</span><span style="color:#06b;font-weight:bold">mean</span>(cooksd, na.rm<span style="color:#333">=</span>T))])  <span style="color:#888"># influential row numbers</span>
@@ -766,24 +831,24 @@ stargazer<span style="color:#333">::</span><span style="color:#06b;font-weight:b
 </code></pre></div><pre><code>## Percentage of influencers:  4.737733 %
 </code></pre>
 <div class="figure" style="text-align: center">
-<p><img src="/blog/posts/academicperf/index_files/figure-html/unnamed-chunk-43-1.png" alt="Cook's D for model3" width="672" /></p>
+<p><img src="/blog/posts/academicperf/index_files/figure-html/unnamed-chunk-49-1.png" alt="Cook's D for model3" width="672" /></p>
 <p class="caption">
-<p>Figure 13: Cook’s D for model3</p>
+<p>Figure 14: Cook’s D for model3</p>
 </p>
 </div>
 <div class="figure" style="text-align: center">
-<p><img src="/blog/posts/academicperf/index_files/figure-html/unnamed-chunk-44-1.png" alt="Assess homocedasticity for model3" width="672" /></p>
+<p><img src="/blog/posts/academicperf/index_files/figure-html/unnamed-chunk-50-1.png" alt="Assess homocedasticity for model3" width="672" /></p>
 <p class="caption">
-<p>Figure 14: Assess homocedasticity for model3</p>
+<p>Figure 15: Assess homocedasticity for model3</p>
 </p>
 </div>
 <ul>
 <li>We can see there is absolutely no heteroscedastity, we see a completely random, equal distribution of points throughout the range of X axis and a flat red line. There is no pattern in the residuals.</li>
 </ul>
 <div class="figure" style="text-align: center">
-<p><img src="/blog/posts/academicperf/index_files/figure-html/unnamed-chunk-45-1.png" alt="Histogram and density plot of the residuals for model3" width="672" /></p>
+<p><img src="/blog/posts/academicperf/index_files/figure-html/unnamed-chunk-51-1.png" alt="Histogram and density plot of the residuals for model3" width="672" /></p>
 <p class="caption">
-<p>Figure 15: Histogram and density plot of the residuals for model3</p>
+<p>Figure 16: Histogram and density plot of the residuals for model3</p>
 </p>
 </div>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">residuals <span style="color:#333">&lt;-</span> <span style="color:#06b;font-weight:bold">residuals</span>(model3)
@@ -798,9 +863,9 @@ resids<span style="color:#333">&lt;-</span> <span style="color:#06b;font-weight:
 <li>almost 0% outliers at 3.29 standards deviations from mean and for a data set this size. We can accept the distribution as normal.</li>
 </ul>
 <div class="figure" style="text-align: center">
-<p><img src="/blog/posts/academicperf/index_files/figure-html/unnamed-chunk-47-1.png" alt="QQ plot of the residuals for model3" width="672" /></p>
+<p><img src="/blog/posts/academicperf/index_files/figure-html/unnamed-chunk-53-1.png" alt="QQ plot of the residuals for model3" width="672" /></p>
 <p class="caption">
-<p>Figure 16: QQ plot of the residuals for model3</p>
+<p>Figure 17: QQ plot of the residuals for model3</p>
 </p>
 </div>
 <pre><code>## [1]  1336 12376
@@ -836,9 +901,9 @@ vifmodel
 </li>
 </ul>
 <div class="figure" style="text-align: center">
-<p><img src="/blog/posts/academicperf/index_files/figure-html/unnamed-chunk-50-1.png" alt="correlation matrix for model3" width="672" /></p>
+<p><img src="/blog/posts/academicperf/index_files/figure-html/unnamed-chunk-56-1.png" alt="correlation matrix for model3" width="672" /></p>
 <p class="caption">
-<p>Figure 17: correlation matrix for model3</p>
+<p>Figure 18: correlation matrix for model3</p>
 </p>
 </div>
 <ul>
@@ -849,6 +914,362 @@ vifmodel
 <p>Tests to see if the data met the assumption of collinearity indicated that multicollinearity was a concern for BIO_S11 results (MAT_S11, Tolerance = .63, VIF = 1.6; CR_S11, Tolerance = .63 VIF = 1.6; BIO_S11, Tolerance = .35 VIF = 2.80).</p>
 </blockquote>
 <p>Therefore BIO_S11 cannot be added to the model. We do not need any further tests.</p>
+<h2 id="adding-revenue">Adding REVENUE</h2>
+<p>Let’s check the relationship between REVENUE and G_SC.</p>
+<p>First, I need to test for homogeneity of variance. Using Levene’s test, our Null hypothesis is that there is no difference in variance.</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">car<span style="color:#333">::</span><span style="color:#06b;font-weight:bold">leveneTest</span>(G_SC <span style="color:#333">~</span> REVENUE, data<span style="color:#333">=</span>df)
+</code></pre></div><pre><code>## Warning in leveneTest.default(y = y, group = group, ...): group coerced to
+## factor.
+
+## Levene's Test for Homogeneity of Variance (center = median)
+##          Df F value  Pr(&gt;F)   
+## group     7  2.7166 0.00817 **
+##       12403                   
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+</code></pre>
+<ul>
+<li>The null hypothesis is rejected and so we can not consider the data to have homogeneity of variance and therefore cannot use it in our model.</li>
+</ul>
+<p>Checking Bartlett’s test for homogeneity of variance also:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">stats<span style="color:#333">::</span><span style="color:#06b;font-weight:bold">bartlett.test</span>(G_SC<span style="color:#333">~</span> REVENUE, data<span style="color:#333">=</span>df)
+</code></pre></div><pre><code>## 
+##  Bartlett test of homogeneity of variances
+## 
+## data:  G_SC by REVENUE
+## Bartlett's K-squared = 14.006, df = 7, p-value = 0.05108
+</code></pre>
+<ul>
+<li>again result is statistically significant and so we reject the null hypothesis again.</li>
+</ul>
+<h2 id="adding-english-eng_s11">Adding English (ENG_S11)</h2>
+<p>Correlation Scatter plot (ENG_S11 and G_SC):</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">df <span style="color:#333">%&gt;%</span>
+  <span style="color:#06b;font-weight:bold">ggplot</span>(<span style="color:#06b;font-weight:bold">aes</span>(x<span style="color:#333">=</span>scale_ENG_S11, y<span style="color:#333">=</span>scale_G_SC)) <span style="color:#333">+</span>
+  <span style="color:#06b;font-weight:bold">geom_point</span>() <span style="color:#333">+</span> 
+  <span style="color:#06b;font-weight:bold">geom_smooth</span>(method <span style="color:#333">=</span> <span style="background-color:#fff0f0">&#34;lm&#34;</span>, colour <span style="color:#333">=</span> <span style="background-color:#fff0f0">&#34;Green&#34;</span>, se <span style="color:#333">=</span> F) <span style="color:#333">+</span> 
+  <span style="color:#06b;font-weight:bold">labs</span>(x <span style="color:#333">=</span> <span style="background-color:#fff0f0">&#34;English (ENG_S11)&#34;</span>, y <span style="color:#333">=</span> <span style="background-color:#fff0f0">&#34;Overall average score (G_SC)&#34;</span>) 
+</code></pre></div><pre><code>## `geom_smooth()` using formula 'y ~ x'
+</code></pre>
+<div class="figure" style="text-align: center">
+<p><img src="/blog/posts/academicperf/index_files/figure-html/unnamed-chunk-59-1.png" alt="Correlation Scatter plot (ENG_S11 and G_SC)" width="672" /></p>
+<p class="caption">
+<p>Figure 19: Correlation Scatter plot (ENG_S11 and G_SC)</p>
+</p>
+</div>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#888">#Pearson Correlation</span>
+<span style="color:#06b;font-weight:bold">cor.test</span>(df<span style="color:#333">$</span>scale_ENG_S11, df<span style="color:#333">$</span>scale_G_SC, method<span style="color:#333">=</span><span style="background-color:#fff0f0">&#39;pearson&#39;</span>)
+</code></pre></div><pre><code>## 
+##  Pearson's product-moment correlation
+## 
+## data:  df$scale_ENG_S11 and df$scale_G_SC
+## t = 98.435, df = 12409, p-value &lt; 0.00000000000000022
+## alternative hypothesis: true correlation is not equal to 0
+## 95 percent confidence interval:
+##  0.6521731 0.6719345
+## sample estimates:
+##       cor 
+## 0.6621689
+</code></pre>
+<p>The correlation coefficient is a commonly used measure of the size of an effect: values of ±.1 represent a small effect, ±.3 is a medium effect and ±.5 is a large effect</p>
+<p>The correlation between English (ENG_S11) and overall score(G_SC) is statistically significant.</p>
+<p>To report Pearson coefficient here we say:</p>
+<blockquote class="blockquote">
+<p>12411 English (ENG_S11)(M=61.8, SD=14.3) high school results and a college Engineering overall score(G_SC) (M=162.7, SD=23.1) were investigated. A positive Pearson r correlation coefficient of 0.67 was revealed. There is strong correlation between English (ENG_S11) results and the college Engineering overall score(G_SC) with t(12409) = 98.4 and a p-value &lt; 0.001. The size of the effect is large.</p>
+</blockquote>
+<p>Creating a new model4 with English (ENG_S11)</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">model4<span style="color:#333">&lt;-</span><span style="color:#06b;font-weight:bold">lm</span>(df<span style="color:#333">$</span>scale_G_SC<span style="color:#333">~</span>df<span style="color:#333">$</span>scale_MAT_S11<span style="color:#333">+</span>df<span style="color:#333">$</span>scale_CR_S11<span style="color:#333">+</span>df<span style="color:#333">$</span>scale_ENG_S11)
+stargazer<span style="color:#333">::</span><span style="color:#06b;font-weight:bold">stargazer</span>(model1, model2, model4, type<span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;text&#34;</span>)
+</code></pre></div><pre><code>## 
+## ==========================================================================================================
+##                                                      Dependent variable:                                  
+##                     --------------------------------------------------------------------------------------
+##                                                           scale_G_SC                                      
+##                                 (1)                          (2)                          (3)             
+## ----------------------------------------------------------------------------------------------------------
+## scale_MAT_S11                 0.644***                     0.390***                     0.264***          
+##                               (0.007)                      (0.008)                      (0.008)           
+##                                                                                                           
+## scale_CR_S11                                               0.415***                     0.301***          
+##                                                            (0.008)                      (0.008)           
+##                                                                                                           
+## scale_ENG_S11                                                                           0.331***          
+##                                                                                         (0.008)           
+##                                                                                                           
+## Constant                       0.000                        0.000                        0.000            
+##                               (0.007)                      (0.006)                      (0.006)           
+##                                                                                                           
+## ----------------------------------------------------------------------------------------------------------
+## Observations                   12,411                       12,411                       12,411           
+## R2                             0.415                        0.523                        0.585            
+## Adjusted R2                    0.414                        0.523                        0.585            
+## Residual Std. Error      0.765 (df = 12409)           0.691 (df = 12408)           0.644 (df = 12407)     
+## F Statistic         8,785.839*** (df = 1; 12409) 6,799.872*** (df = 2; 12408) 5,834.986*** (df = 3; 12407)
+## ==========================================================================================================
+## Note:                                                                          *p&lt;0.1; **p&lt;0.05; ***p&lt;0.01
+</code></pre>
+<p>Some outcomes from model 4:</p>
+<ul>
+<li>The Adjusted R squared has improved from 0.4145 to 0.523 and now to 0.585, meaning we can now explain more of variation in G_SC by including ENG_S11 into our model</li>
+<li>ENG_S11 is statically significant to p&lt;0.01.</li>
+</ul>
+<p>One of the assumptions of a multiple linear regression model is that the residuals follow a normal distribution. We need to check this now on our model2. We can do this by finding any influential outliers by using cook’s distance.</p>
+<div class="figure" style="text-align: center">
+<p><img src="/blog/posts/academicperf/index_files/figure-html/unnamed-chunk-62-1.png" alt="Cook's D for model4" width="672" /></p>
+<p class="caption">
+<p>Figure 20: Cook’s D for model4</p>
+</p>
+</div>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">influential <span style="color:#333">&lt;-</span> <span style="color:#06b;font-weight:bold">as.numeric</span>(<span style="color:#06b;font-weight:bold">names</span>(cooksd)<span style="color:#06b;font-weight:bold">[</span>(cooksd <span style="color:#333">&gt;</span> <span style="color:#60e;font-weight:bold">4</span><span style="color:#333">*</span><span style="color:#06b;font-weight:bold">mean</span>(cooksd, na.rm<span style="color:#333">=</span>T))])  <span style="color:#888"># influential row numbers</span>
+<span style="color:#06b;font-weight:bold">cat</span>(<span style="background-color:#fff0f0">&#34;Number of influencers:&#34;</span>, <span style="color:#06b;font-weight:bold">length</span>(influential), <span style="background-color:#fff0f0">&#34;\n&#34;</span>)
+</code></pre></div><pre><code>## Number of influencers: 584
+</code></pre>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#06b;font-weight:bold">cat </span>(<span style="background-color:#fff0f0">&#34;20 influencers in MAT_S11&#34;</span>,<span style="color:#06b;font-weight:bold">head</span>(df[influential, ]<span style="color:#333">$</span>MAT_S11, n <span style="color:#333">=</span> <span style="color:#60e;font-weight:bold">20</span>),<span style="background-color:#fff0f0">&#34;\n&#34;</span>)
+</code></pre></div><pre><code>## 20 influencers in MAT_S11 54 45 82 47 69 40 61 78 85 46 81 76 39 60 45 50 97 52 65 88
+</code></pre>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#06b;font-weight:bold">cat </span>(<span style="background-color:#fff0f0">&#34;20 influencers in CR_S11&#34;</span>,<span style="color:#06b;font-weight:bold">head</span>(df[influential, ]<span style="color:#333">$</span>CR_S11, n <span style="color:#333">=</span> <span style="color:#60e;font-weight:bold">20</span>),<span style="background-color:#fff0f0">&#34;\n&#34;</span>)
+</code></pre></div><pre><code>## 20 influencers in CR_S11 41 47 98 54 66 40 53 69 60 43 75 69 39 69 52 62 87 45 65 62
+</code></pre>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#06b;font-weight:bold">cat </span>(<span style="background-color:#fff0f0">&#34;20 influencers in ENG_S11&#34;</span>,<span style="color:#06b;font-weight:bold">head</span>(df[influential, ]<span style="color:#333">$</span>ENG_S11, n <span style="color:#333">=</span> <span style="color:#60e;font-weight:bold">20</span>),<span style="background-color:#fff0f0">&#34;\n&#34;</span>)
+</code></pre></div><pre><code>## 20 influencers in ENG_S11 52 54 58 46 85 53 52 67 70 53 85 90 43 67 32 76 95 46 44 48
+</code></pre>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#06b;font-weight:bold">cat </span>(<span style="background-color:#fff0f0">&#34;Percentage of influencers: &#34;</span>, (<span style="color:#06b;font-weight:bold">length</span>(influential) <span style="color:#333">/</span> <span style="color:#06b;font-weight:bold">nrow</span>(df)) <span style="color:#333">*</span> <span style="color:#60e;font-weight:bold">100</span>, <span style="background-color:#fff0f0">&#34;% \n&#34;</span>)
+</code></pre></div><pre><code>## Percentage of influencers:  4.705503 %
+</code></pre>
+<div class="figure" style="text-align: center">
+<p><img src="/blog/posts/academicperf/index_files/figure-html/unnamed-chunk-64-1.png" alt="Cook's D for model4" width="672" /></p>
+<p class="caption">
+<p>Figure 21: Cook’s D for model4</p>
+</p>
+</div>
+<div class="figure" style="text-align: center">
+<p><img src="/blog/posts/academicperf/index_files/figure-html/unnamed-chunk-65-1.png" alt="Assess homocedasticity for model4" width="672" /></p>
+<p class="caption">
+<p>Figure 22: Assess homocedasticity for model4</p>
+</p>
+</div>
+<ul>
+<li>We can see there is absolutely no heteroscedastity, we see a completely random, equal distribution of points throughout the range of X axis and a flat red line. There is no pattern in the residuals.</li>
+</ul>
+<div class="figure" style="text-align: center">
+<p><img src="/blog/posts/academicperf/index_files/figure-html/unnamed-chunk-66-1.png" alt="Histogram and density plot of the residuals for model4" width="672" /></p>
+<p class="caption">
+<p>Figure 23: Histogram and density plot of the residuals for model4</p>
+</p>
+</div>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">residuals <span style="color:#333">&lt;-</span> <span style="color:#06b;font-weight:bold">residuals</span>(model3)
+resids<span style="color:#333">&lt;-</span> <span style="color:#06b;font-weight:bold">abs</span>(residuals)
+<span style="color:#06b;font-weight:bold">cat</span>(<span style="background-color:#fff0f0">&#34;Percentage greater than 1.96 SDs:&#34;</span>, FSA<span style="color:#333">::</span><span style="color:#06b;font-weight:bold">perc</span>(<span style="color:#06b;font-weight:bold">as.numeric</span>(resids), <span style="color:#60e;font-weight:bold">1.96</span>, <span style="background-color:#fff0f0">&#34;gt&#34;</span>),<span style="background-color:#fff0f0">&#34;% \n&#34;</span>)
+</code></pre></div><pre><code>## Percentage greater than 1.96 SDs: 0.8621384 %
+</code></pre>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#06b;font-weight:bold">cat</span>(<span style="background-color:#fff0f0">&#34;Percentage greater than 3.29 SDs:&#34;</span>,FSA<span style="color:#333">::</span><span style="color:#06b;font-weight:bold">perc</span>(<span style="color:#06b;font-weight:bold">as.numeric</span>(resids), <span style="color:#60e;font-weight:bold">3.29</span>, <span style="background-color:#fff0f0">&#34;gt&#34;</span>), <span style="background-color:#fff0f0">&#34;%&#34;</span>)
+</code></pre></div><pre><code>## Percentage greater than 3.29 SDs: 0.0402868 %
+</code></pre>
+<ul>
+<li>almost 0% outliers at 3.29 standards deviations from mean and for a data set this size. We can accept the distribution as normal.</li>
+</ul>
+<div class="figure" style="text-align: center">
+<p><img src="/blog/posts/academicperf/index_files/figure-html/unnamed-chunk-68-1.png" alt="QQ plot of the residuals for model4" width="672" /></p>
+<p class="caption">
+<p>Figure 24: QQ plot of the residuals for model4</p>
+</p>
+</div>
+<pre><code>## [1] 1336 7721
+</code></pre>
+<h3 id="collinearity-2">Collinearity:</h3>
+<p>Calculate Collinearity:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">vifmodel<span style="color:#333">&lt;-</span>car<span style="color:#333">::</span><span style="color:#06b;font-weight:bold">vif</span>(model4)
+vifmodel
+</code></pre></div><pre><code>## df$scale_MAT_S11  df$scale_CR_S11 df$scale_ENG_S11 
+##         1.849495         1.803992         1.753561
+</code></pre>
+<ul>
+<li>As a rule of thumb, a VIF score over 5 is a problem. A score over 10 should be remedied and you should consider dropping the problematic variable from the regression model</li>
+</ul>
+<p>Calculate tolerance:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#60e;font-weight:bold">1</span><span style="color:#333">/</span>vifmodel
+</code></pre></div><pre><code>## df$scale_MAT_S11  df$scale_CR_S11 df$scale_ENG_S11 
+##        0.5406883        0.5543261        0.5702683
+</code></pre>
+<ul>
+<li>
+<p>If the VIF value is greater than 2.5 or the Tolerance is less than 0.4, then you have concerns over multicollinearity.</p>
+</li>
+<li>
+<p>Collinearity occurs when two or more independent variables are giving the same information, one could be redundant.</p>
+</li>
+<li>
+<p>To check collinearity, we examine the correlation matrix that compares the independent variables with each other.</p>
+</li>
+<li>
+<p>If we get a correlation coefficient of above 0.8, then we may have collinearity.</p>
+</li>
+</ul>
+<div class="figure" style="text-align: center">
+<p><img src="/blog/posts/academicperf/index_files/figure-html/unnamed-chunk-71-1.png" alt="correlation matrix for model4" width="672" /></p>
+<p class="caption">
+<p>Figure 25: correlation matrix for model4</p>
+</p>
+</div>
+<ul>
+<li>the result from our correlation matrix for model4 show that these variables have a correlation less than 0.8, so we don’t have collinearity.</li>
+</ul>
+<p>Reporting:</p>
+<blockquote class="blockquote">
+<p>Tests to see if the data met the assumption of collinearity indicated that multicollinearity was not a concern (MAT_S11, Tolerance = .63, VIF = 1.6; CR_S11, Tolerance = .63 VIF = 1.6; ENG_S11, Tolerance = .57 VIF = 1.7).</p>
+</blockquote>
+<h3 id="reporting-my-model-1">Reporting my model</h3>
+<blockquote class="blockquote">
+<p>A multiple regression analysis was conducted to determine if a student’s high school Mathematics (MAT_S11) score,high school Critical Reading (CR_S11) and English (ENG_S11) scores could predict a student’s Overall average score (G_SC) in Engineering in college.</p>
+<p>Examination of the histogram, normal Q-Q plots of standardized residuals and the scatterplot of the dependent variable, academic satisfaction, and standardized residuals showed that the some outliers existed. However, examination of the standardized residuals showed that none could be considered to have undue influence (95% within limits of -3.29 to plus 3.29 and less than 5% with a Cook’s distance three times the mean.</p>
+<p>Examination for multicollinearity showed that the tolerance and variance influence factor measures were within acceptable levels (tolerance &gt;0.4, VIF &lt;2.5 ) as outlined in Tarling (2008). The scatterplot of standardized residuals showed that the data met the assumptions of homogeneity of variance and linearity. The data also meets the assumption of non-zero variances of the predictors.</p>
+</blockquote>
+<p>The z-scale standardized equation of model4 is:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#06b;font-weight:bold">coef</span>(model4)
+</code></pre></div><pre><code>##             (Intercept)        df$scale_MAT_S11         df$scale_CR_S11 
+## 0.000000000000001380494 0.263880736301899343488 0.300575704588454950539 
+##        df$scale_ENG_S11 
+## 0.330537537075545562182
+</code></pre>
+<pre><code> G_SC = 0 + 0.26 * MAT_S11 + 0.3 * CR_S11 + 0.3 * _ENG_S11
+</code></pre><ul>
+<li>explaining 58.5% of the variation in G_SC</li>
+</ul>
+<p>This would mean a student who achieves a mean score for MAT_S11, CR_S11 and ENG_S11 would get a z-scaled G_SC results which is also the mean score for G_SC:</p>
+<pre><code> G_SC = 0 + 0.26 * 0 + 0.3 * 0 + 0.3 * 0 = 0 
+</code></pre><p>A student who achieves a score 1 standard deviation above mean for those three subjects will achieve a score which less than one stanard deviation above the mean in G_SC, thus we can see that more variables are also responsible for thhis G_SC variation:</p>
+<pre><code> G_SC = 0 + 0.26 * 1 + 0.3 * 1 + 0.3 * 1 = 0.86
+</code></pre><h2 id="differential-effect">Differential effect</h2>
+<p>I tried to include the variables which were ordinal and nominal into my model however the both failed Levene’s Test for Homogeneity of Variance.</p>
+<p>I will try to include COMPUTER into my model as a differential variable. Let’s check out that variable:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">df <span style="color:#333">%&gt;%</span>
+  <span style="color:#06b;font-weight:bold">ggplot</span>(<span style="color:#06b;font-weight:bold">aes</span>(x<span style="color:#333">=</span>COMPUTER, y<span style="color:#333">=</span>G_SC, fill<span style="color:#333">=</span>COMPUTER)) <span style="color:#333">+</span>
+    <span style="color:#06b;font-weight:bold">geom_boxplot</span>() <span style="color:#333">+</span>
+    <span style="color:#06b;font-weight:bold">scale_fill_viridis</span>(discrete <span style="color:#333">=</span> <span style="color:#080;font-weight:bold">TRUE</span>, alpha<span style="color:#333">=</span><span style="color:#60e;font-weight:bold">0.6</span>) <span style="color:#333">+</span>
+    <span style="color:#06b;font-weight:bold">geom_jitter</span>(color<span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;black&#34;</span>, size<span style="color:#333">=</span><span style="color:#60e;font-weight:bold">0.4</span>, alpha<span style="color:#333">=</span><span style="color:#60e;font-weight:bold">0.9</span>) <span style="color:#333">+</span>
+    <span style="color:#06b;font-weight:bold">ggtitle</span>(<span style="background-color:#fff0f0">&#34;A boxplot with COMPUTER and the Overall average score (G_SC)&#34;</span>) <span style="color:#333">+</span>
+    <span style="color:#06b;font-weight:bold">ylab</span>(<span style="background-color:#fff0f0">&#34;Overall average score (G_SC) &#34;</span>)
+</code></pre></div><p><img src="/blog/posts/academicperf/index_files/figure-html/unnamed-chunk-73-1.png" width="672" /></p>
+<p>stats for COMPUTER:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">psych<span style="color:#333">::</span><span style="color:#06b;font-weight:bold">describeBy</span>(df<span style="color:#333">$</span>G_SC, df<span style="color:#333">$</span>COMPUTER, mat<span style="color:#333">=</span><span style="color:#080;font-weight:bold">TRUE</span>)
+</code></pre></div><pre><code>##     item group1 vars     n     mean       sd median  trimmed     mad min max
+## X11    1     No    1  2237 155.9526 21.86040    156 156.0815 22.2390  76 226
+## X12    2    Yes    1 10174 164.1964 23.11635    165 164.4912 23.7216  37 247
+##     range        skew    kurtosis        se
+## X11   150 -0.07375166 -0.02764496 0.4621948
+## X12   210 -0.11780745 -0.07145279 0.2291782
+</code></pre>
+<p>Checking again for Levene’s Test for Homogeneity of Variance:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">car<span style="color:#333">::</span><span style="color:#06b;font-weight:bold">leveneTest</span>(G_SC <span style="color:#333">~</span> COMPUTER, data<span style="color:#333">=</span>df)
+</code></pre></div><pre><code>## Warning in leveneTest.default(y = y, group = group, ...): group coerced to
+## factor.
+
+## Levene's Test for Homogeneity of Variance (center = median)
+##          Df F value    Pr(&gt;F)    
+## group     1  13.994 0.0001842 ***
+##       12409                      
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+</code></pre>
+<p>Again this variable is failing Levene’s Test for Homogeneity of Variance.</p>
+<p>We will go ahead and include it to see if it may be useful in our model. First we need a dummy variable for COMPUTER:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">df <span style="color:#333">&lt;-</span> df <span style="color:#333">%&gt;%</span>
+  <span style="color:#06b;font-weight:bold">mutate</span>(dummy_COMPUTER <span style="color:#333">=</span> <span style="color:#06b;font-weight:bold">if_else</span>(COMPUTER <span style="color:#333">==</span> <span style="background-color:#fff0f0">&#34;Yes&#34;</span>,<span style="color:#60e;font-weight:bold">1</span>, <span style="color:#60e;font-weight:bold">0</span>))
+</code></pre></div><p>stats for dummy_COMPUTER:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">psych<span style="color:#333">::</span><span style="color:#06b;font-weight:bold">describeBy</span>(df<span style="color:#333">$</span>G_SC, df<span style="color:#333">$</span>dummy_COMPUTER, mat<span style="color:#333">=</span><span style="color:#080;font-weight:bold">TRUE</span>)
+</code></pre></div><pre><code>##     item group1 vars     n     mean       sd median  trimmed     mad min max
+## X11    1      0    1  2237 155.9526 21.86040    156 156.0815 22.2390  76 226
+## X12    2      1    1 10174 164.1964 23.11635    165 164.4912 23.7216  37 247
+##     range        skew    kurtosis        se
+## X11   150 -0.07375166 -0.02764496 0.4621948
+## X12   210 -0.11780745 -0.07145279 0.2291782
+</code></pre>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">userfriendlyscience<span style="color:#333">::</span><span style="color:#06b;font-weight:bold">oneway</span>(<span style="color:#06b;font-weight:bold">as.factor</span>(df<span style="color:#333">$</span>dummy_COMPUTER),y<span style="color:#333">=</span>df<span style="color:#333">$</span>G_SC,posthoc<span style="color:#333">=</span><span style="background-color:#fff0f0">&#39;Tukey&#39;</span>)
+</code></pre></div><pre><code>## Registered S3 methods overwritten by 'lme4':
+##   method                          from
+##   cooks.distance.influence.merMod car 
+##   influence.merMod                car 
+##   dfbeta.influence.merMod         car 
+##   dfbetas.influence.merMod        car
+
+## ### Oneway Anova for y=G_SC and x=dummy_COMPUTER (groups: 0, 1)
+
+## Registered S3 methods overwritten by 'ufs':
+##   method                     from               
+##   grid.draw.ggProportionPlot userfriendlyscience
+##   pander.associationMatrix   userfriendlyscience
+##   pander.dataShape           userfriendlyscience
+##   pander.descr               userfriendlyscience
+##   pander.normalityAssessment userfriendlyscience
+##   print.CramersV             userfriendlyscience
+##   print.associationMatrix    userfriendlyscience
+##   print.confIntOmegaSq       userfriendlyscience
+##   print.confIntV             userfriendlyscience
+##   print.dataShape            userfriendlyscience
+##   print.descr                userfriendlyscience
+##   print.ggProportionPlot     userfriendlyscience
+##   print.meanConfInt          userfriendlyscience
+##   print.multiVarFreq         userfriendlyscience
+##   print.normalityAssessment  userfriendlyscience
+##   print.regrInfluential      userfriendlyscience
+##   print.scaleDiagnosis       userfriendlyscience
+##   print.scaleStructure       userfriendlyscience
+##   print.scatterMatrix        userfriendlyscience
+
+## Omega squared: 95% CI = [.01; .02], point estimate = .02
+## Eta Squared: 95% CI = [.02; .02], point estimate = .02
+## 
+##                                        SS    Df        MS      F     p
+## Between groups (error + effect) 124624.22     1 124624.22 237.75 &lt;.001
+## Within groups (error only)      6504632.6 12409    524.19             
+## 
+## 
+## ### Post hoc test: Tukey
+## 
+##     diff lwr upr  p adj
+## 1-0 8.24 7.2 9.29 &lt;.001
+</code></pre>
+<p>Reporting the results with eta squared effect:</p>
+<blockquote class="blockquote">
+<p>A one-way between-groups analysis of variance (ANOVA) was conducted to explore the impact of having a computer, as measured by the overall engineering scores. Participants were divided into two groups, one with a computer and one without. There was a statistically significant difference at the p &lt; .05 level in G_SC scores for the two groups: (F(1, 12409)= 237.75, p&lt;0.05. Despite reaching statistical significance, the actual difference in mean scores between groups was quite small. The effect size, calculated using eta squared was (0.02). Post-hoc comparisons using the Tukey HSD test indicated that the mean score for Group 1 (M=155.9, SD=21.8) was significantly different to that for Group 2 (M=164.19, SD=23.12).</p>
+</blockquote>
+<p>Creating a new model5 with dummy_COMPUTER</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">model5<span style="color:#333">&lt;-</span><span style="color:#06b;font-weight:bold">lm</span>(df<span style="color:#333">$</span>scale_G_SC<span style="color:#333">~</span>df<span style="color:#333">$</span>scale_MAT_S11<span style="color:#333">+</span>df<span style="color:#333">$</span>scale_CR_S11<span style="color:#333">+</span>df<span style="color:#333">$</span>scale_ENG_S11<span style="color:#333">+</span>df<span style="color:#333">$</span>dummy_COMPUTER)
+stargazer<span style="color:#333">::</span><span style="color:#06b;font-weight:bold">stargazer</span>(model1, model4, model5, type<span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;text&#34;</span>)
+</code></pre></div><pre><code>## 
+## ==========================================================================================================
+##                                                      Dependent variable:                                  
+##                     --------------------------------------------------------------------------------------
+##                                                           scale_G_SC                                      
+##                                 (1)                          (2)                          (3)             
+## ----------------------------------------------------------------------------------------------------------
+## scale_MAT_S11                 0.644***                     0.264***                     0.264***          
+##                               (0.007)                      (0.008)                      (0.008)           
+##                                                                                                           
+## scale_CR_S11                                               0.301***                     0.301***          
+##                                                            (0.008)                      (0.008)           
+##                                                                                                           
+## scale_ENG_S11                                              0.331***                     0.329***          
+##                                                            (0.008)                      (0.008)           
+##                                                                                                           
+## dummy_COMPUTER                                                                           0.021            
+##                                                                                         (0.015)           
+##                                                                                                           
+## Constant                       0.000                        0.000                        -0.017           
+##                               (0.007)                      (0.006)                      (0.014)           
+##                                                                                                           
+## ----------------------------------------------------------------------------------------------------------
+## Observations                   12,411                       12,411                       12,411           
+## R2                             0.415                        0.585                        0.585            
+## Adjusted R2                    0.414                        0.585                        0.585            
+## Residual Std. Error      0.765 (df = 12409)           0.644 (df = 12407)           0.644 (df = 12406)     
+## F Statistic         8,785.839*** (df = 1; 12409) 5,834.986*** (df = 3; 12407) 4,377.053*** (df = 4; 12406)
+## ==========================================================================================================
+## Note:                                                                          *p&lt;0.1; **p&lt;0.05; ***p&lt;0.01
+</code></pre>
+<ul>
+<li>Adding the dummy_COMPUTER is not statisically significant</li>
+</ul>
 <h1 id="discussionconclusion">Discussion/Conclusion</h1>
 <h1 id="references">References</h1>
 <div id="refs" class="references">
@@ -916,9 +1337,12 @@ vifmodel
           <ol>
             <li><a href="#mathematics-mat_s11">Mathematics (MAT_S11)</a></li>
             <li><a href="#critical-reading-cr_s11">Critical Reading (CR_S11)</a></li>
+            <li><a href="#english-eng_s11">English (ENG_S11)</a></li>
             <li><a href="#gender-variable">Gender variable</a></li>
             <li><a href="#school-variable">School variable</a></li>
             <li><a href="#biology-bio_s11">Biology (BIO_S11)</a></li>
+            <li><a href="#revenue-variable">REVENUE variable</a></li>
+            <li><a href="#school-variable-1">School variable</a></li>
           </ol>
         </li>
       </ol>
@@ -944,6 +1368,14 @@ vifmodel
             <li><a href="#collinearity-1">Collinearity:</a></li>
           </ol>
         </li>
+        <li><a href="#adding-revenue">Adding REVENUE</a></li>
+        <li><a href="#adding-english-eng_s11">Adding English (ENG_S11)</a>
+          <ol>
+            <li><a href="#collinearity-2">Collinearity:</a></li>
+            <li><a href="#reporting-my-model-1">Reporting my model</a></li>
+          </ol>
+        </li>
+        <li><a href="#differential-effect">Differential effect</a></li>
       </ol>
     </li>
     <li><a href="#discussionconclusion">Discussion/Conclusion</a></li>

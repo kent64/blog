@@ -34,7 +34,7 @@ li.nav-item {
 
 pre {
     background-color: #f2f2f2;
-    border-style: ridge;
+#    border-style: ridge;
 }
 
 </style>
@@ -128,7 +128,7 @@ Figure 1: Five test results and overall grade in Engineering
 
 </div>
 
-Assessing them for normality:
+Assessing them for normality and assessing other qualities if not continuous:
 
 ### Mathematics (MAT\_S11)
 
@@ -172,6 +172,26 @@ Critical Reading (CR\_S11) scores was assessed for normality. Visual inspection 
 
 </blockquote>
 
+### English (ENG\_S11)
+
+    ## skew (g1) 
+    ##  27.60265 
+    ## Excess Kur (g2) 
+    ##       -8.432497
+
+Both skew and kurtosis are high. The cut off is +/- 1.96, anything above this is considered significant. Let’s check the outliers:
+
+    ## Percentage greater than 1.96 SDs: 5.648215 % 
+    ## Percentage greater than 3.29 SDs: 0 %
+
+Almost zero outliers outside the 3.29 SD of mean and about 5% were outside of 1.96 SD of mean, so we can treat this variable as normal as the data set is larger than 80 (12411 records).
+
+<blockquote class="blockquote">
+
+English (ENG\_S11) scores was assessed for normality. Visual inspection of the histogram and QQ-Plot (see Figure 1) identified some issues with skewness and kurtosis. The standardised score for kurtosis (10.87) was considered unacceptable using the criteria proposed by West, Finch and Curran (1996), also the standardised score for skewness (9.74) was outside the acceptable range. However 99.4% of standardised scores for English (ENG\_S11) fall within the bounds of +/- 3.29, using the guidance of Field, Miles and Field (2013) the data can be considered to approximate a normal distribution (m=61.8, sd=14.3, n=12411).
+
+</blockquote>
+
 ### Gender variable
 
 WE need to access the GENDER variable. It is a variable of type “Nominal”. Let’s take a quick look at a visual:
@@ -186,7 +206,7 @@ df %>%
     ylab("Overall average score (G_SC) ")
 ```
 
-<img src="{{< relref "posts/2021-01-04-dataset-of-academic-performance-evolution/index.markdown" >}}index_files/figure-html/unnamed-chunk-10-1.png" width="672" />
+<img src="{{< relref "posts/2021-01-04-dataset-of-academic-performance-evolution/index.markdown" >}}index_files/figure-html/unnamed-chunk-12-1.png" width="672" />
 
 stats for GENDER:
 
@@ -215,7 +235,7 @@ df %>%
     ylab("Overall average score (G_SC) ")
 ```
 
-<img src="{{< relref "posts/2021-01-04-dataset-of-academic-performance-evolution/index.markdown" >}}index_files/figure-html/unnamed-chunk-12-1.png" width="672" />
+<img src="{{< relref "posts/2021-01-04-dataset-of-academic-performance-evolution/index.markdown" >}}index_files/figure-html/unnamed-chunk-14-1.png" width="672" />
 
 stats for SCHOOL\_NAT:
 
@@ -250,6 +270,78 @@ Biology (BIO\_S11) scores was assessed for normality. Visual inspection of the h
 
 </blockquote>
 
+### REVENUE variable
+
+We need to access the REVENUE variable. It is a variable of type “Ordinal”. Let’s take a quick look at a visual:
+
+<div class="figure" style="text-align: center">
+
+<img src="{{< relref "posts/2021-01-04-dataset-of-academic-performance-evolution/index.markdown" >}}index_files/figure-html/unnamed-chunk-18-1.png" alt="A boxplot with REVENUE and the Overall average score (G_SC)" width="960" />
+
+<p class="caption">
+
+Figure 2: A boxplot with REVENUE and the Overall average score (G\_SC)
+
+</p>
+
+</div>
+
+stats for GENDER:
+
+``` r
+psych::describeBy(df$G_SC, df$REVENUE, mat=TRUE)
+```
+
+    ##     item                          group1 vars    n     mean       sd median
+    ## X11    1                               0    1  279 169.7168 22.63700    172
+    ## X12    2                 10 or more LMMW    1  718 183.6727 20.72211    185
+    ## X13    3  Between 1 and less than 2 LMMW    1 3873 156.7705 22.04578    157
+    ## X14    4  Between 2 and less than 3 LMMW    1 2783 160.9429 21.63347    162
+    ## X15    5  Between 3 and less than 5 LMMW    1 2239 165.3363 22.07567    167
+    ## X16    6  Between 5 and less than 7 LMMW    1  973 170.8602 21.78682    172
+    ## X17    7 Between 7 and less than 10 LMMW    1  509 176.1768 19.96434    178
+    ## X18    8                less than 1 LMMW    1 1037 153.3144 22.01468    153
+    ##      trimmed     mad min max range         skew     kurtosis        se
+    ## X11 170.7244 22.2390  37 228   191 -0.943347983  3.641999614 1.3552419
+    ## X12 184.2622 19.2738 114 246   132 -0.280403866  0.326046072 0.7733424
+    ## X13 156.7670 22.2390  75 237   162 -0.014011136 -0.033082696 0.3542433
+    ## X14 161.2236 22.2390  72 247   175 -0.122777144 -0.096571942 0.4100810
+    ## X15 165.7959 22.2390  91 238   147 -0.170770997 -0.206646615 0.4665377
+    ## X16 171.5212 23.7216  76 239   163 -0.310366669  0.352605142 0.6984535
+    ## X17 176.9487 19.2738 118 240   122 -0.290540077  0.008686752 0.8849039
+    ## X18 153.2575 22.2390  81 226   145  0.003089345 -0.036601838 0.6836331
+
+  - We can see that students with a REVENUE of zero are under-represented in this data set.
+
+### School variable
+
+We need to access the SCHOOL\_NAT variable. It is a variable of type “Nominal”. Let’s take a quick look at a visual:
+
+``` r
+df %>%
+  ggplot(aes(x=SCHOOL_NAT, y=G_SC, fill=SCHOOL_NAT)) +
+    geom_boxplot() +
+    scale_fill_viridis(discrete = TRUE, alpha=0.6) +
+    geom_jitter(color="black", size=0.4, alpha=0.9) +
+    ggtitle("A boxplot with SCHOOL_NAT and the Overall average score (G_SC)") +
+    ylab("Overall average score (G_SC) ")
+```
+
+<img src="{{< relref "posts/2021-01-04-dataset-of-academic-performance-evolution/index.markdown" >}}index_files/figure-html/unnamed-chunk-20-1.png" width="672" />
+
+stats for SCHOOL\_NAT:
+
+``` r
+psych::describeBy(df$G_SC, df$SCHOOL_NAT, mat=TRUE)
+```
+
+    ##     item  group1 vars    n     mean       sd median  trimmed     mad min max
+    ## X11    1 PRIVATE    1 6565 168.2158 22.82366    170 168.7379 23.7216  37 247
+    ## X12    2  PUBLIC    1 5846 156.5281 21.83817    157 156.5667 22.2390  72 228
+    ##     range        skew    kurtosis        se
+    ## X11   210 -0.20406097  0.02424670 0.2816877
+    ## X12   156 -0.05215938 -0.01912125 0.2856189
+
 # Results
 
 In this section, I will being to put together a model to predict G\_SC results.
@@ -278,11 +370,11 @@ df %>%
 
 <div class="figure" style="text-align: center">
 
-<img src="{{< relref "posts/2021-01-04-dataset-of-academic-performance-evolution/index.markdown" >}}index_files/figure-html/unnamed-chunk-16-1.png" alt="Correlation Scatter plot (MAT_S11 and G_SC)" width="672" />
+<img src="{{< relref "posts/2021-01-04-dataset-of-academic-performance-evolution/index.markdown" >}}index_files/figure-html/unnamed-chunk-22-1.png" alt="Correlation Scatter plot (MAT_S11 and G_SC)" width="672" />
 
 <p class="caption">
 
-Figure 2: Correlation Scatter plot (MAT\_S11 and G\_SC)
+Figure 3: Correlation Scatter plot (MAT\_S11 and G\_SC)
 
 </p>
 
@@ -403,11 +495,11 @@ df %>%
 
 <div class="figure" style="text-align: center">
 
-<img src="{{< relref "posts/2021-01-04-dataset-of-academic-performance-evolution/index.markdown" >}}index_files/figure-html/unnamed-chunk-20-1.png" alt="Correlation Scatter plot (CR_S11 and G_SC)" width="672" />
+<img src="{{< relref "posts/2021-01-04-dataset-of-academic-performance-evolution/index.markdown" >}}index_files/figure-html/unnamed-chunk-26-1.png" alt="Correlation Scatter plot (CR_S11 and G_SC)" width="672" />
 
 <p class="caption">
 
-Figure 3: Correlation Scatter plot (CR\_S11 and G\_SC)
+Figure 4: Correlation Scatter plot (CR\_S11 and G\_SC)
 
 </p>
 
@@ -485,11 +577,11 @@ One of the assumptions of a multiple linear regression model is that the residua
 
 <div class="figure" style="text-align: center">
 
-<img src="{{< relref "posts/2021-01-04-dataset-of-academic-performance-evolution/index.markdown" >}}index_files/figure-html/unnamed-chunk-23-1.png" alt="Cook's D for model2" width="672" />
+<img src="{{< relref "posts/2021-01-04-dataset-of-academic-performance-evolution/index.markdown" >}}index_files/figure-html/unnamed-chunk-29-1.png" alt="Cook's D for model2" width="672" />
 
 <p class="caption">
 
-Figure 4: Cook’s D for model2
+Figure 5: Cook’s D for model2
 
 </p>
 
@@ -497,11 +589,11 @@ Figure 4: Cook’s D for model2
 
 <div class="figure" style="text-align: center">
 
-<img src="{{< relref "posts/2021-01-04-dataset-of-academic-performance-evolution/index.markdown" >}}index_files/figure-html/unnamed-chunk-24-1.png" alt="Cook's D for model2" width="672" />
+<img src="{{< relref "posts/2021-01-04-dataset-of-academic-performance-evolution/index.markdown" >}}index_files/figure-html/unnamed-chunk-30-1.png" alt="Cook's D for model2" width="672" />
 
 <p class="caption">
 
-Figure 5: Cook’s D for model2
+Figure 6: Cook’s D for model2
 
 </p>
 
@@ -557,11 +649,11 @@ car::outlierTest(model2)
 
 <div class="figure" style="text-align: center">
 
-<img src="{{< relref "posts/2021-01-04-dataset-of-academic-performance-evolution/index.markdown" >}}index_files/figure-html/unnamed-chunk-27-1.png" alt="leverage plots for model2" width="672" />
+<img src="{{< relref "posts/2021-01-04-dataset-of-academic-performance-evolution/index.markdown" >}}index_files/figure-html/unnamed-chunk-33-1.png" alt="leverage plots for model2" width="672" />
 
 <p class="caption">
 
-Figure 6: leverage plots for model2
+Figure 7: leverage plots for model2
 
 </p>
 
@@ -569,11 +661,11 @@ Figure 6: leverage plots for model2
 
 <div class="figure" style="text-align: center">
 
-<img src="{{< relref "posts/2021-01-04-dataset-of-academic-performance-evolution/index.markdown" >}}index_files/figure-html/unnamed-chunk-28-1.png" alt="Assess homocedasticity for model2" width="672" />
+<img src="{{< relref "posts/2021-01-04-dataset-of-academic-performance-evolution/index.markdown" >}}index_files/figure-html/unnamed-chunk-34-1.png" alt="Assess homocedasticity for model2" width="672" />
 
 <p class="caption">
 
-Figure 7: Assess homocedasticity for model2
+Figure 8: Assess homocedasticity for model2
 
 </p>
 
@@ -583,11 +675,11 @@ Figure 7: Assess homocedasticity for model2
 
 <div class="figure" style="text-align: center">
 
-<img src="{{< relref "posts/2021-01-04-dataset-of-academic-performance-evolution/index.markdown" >}}index_files/figure-html/unnamed-chunk-29-1.png" alt="Histogram and density plot of the residuals for model2" width="672" />
+<img src="{{< relref "posts/2021-01-04-dataset-of-academic-performance-evolution/index.markdown" >}}index_files/figure-html/unnamed-chunk-35-1.png" alt="Histogram and density plot of the residuals for model2" width="672" />
 
 <p class="caption">
 
-Figure 8: Histogram and density plot of the residuals for model2
+Figure 9: Histogram and density plot of the residuals for model2
 
 </p>
 
@@ -615,11 +707,11 @@ cat("Percentage greater than 3.29 SDs:",FSA::perc(as.numeric(resids), 3.29, "gt"
 
 <div class="figure" style="text-align: center">
 
-<img src="{{< relref "posts/2021-01-04-dataset-of-academic-performance-evolution/index.markdown" >}}index_files/figure-html/unnamed-chunk-31-1.png" alt="QQ plot of the residuals for model2" width="672" />
+<img src="{{< relref "posts/2021-01-04-dataset-of-academic-performance-evolution/index.markdown" >}}index_files/figure-html/unnamed-chunk-37-1.png" alt="QQ plot of the residuals for model2" width="672" />
 
 <p class="caption">
 
-Figure 9: QQ plot of the residuals for model2
+Figure 10: QQ plot of the residuals for model2
 
 </p>
 
@@ -662,11 +754,11 @@ Calculate tolerance:
 
 <div class="figure" style="text-align: center">
 
-<img src="{{< relref "posts/2021-01-04-dataset-of-academic-performance-evolution/index.markdown" >}}index_files/figure-html/unnamed-chunk-34-1.png" alt="correlation matrix for model2" width="672" />
+<img src="{{< relref "posts/2021-01-04-dataset-of-academic-performance-evolution/index.markdown" >}}index_files/figure-html/unnamed-chunk-40-1.png" alt="correlation matrix for model2" width="672" />
 
 <p class="caption">
 
-Figure 10: correlation matrix for model2
+Figure 11: correlation matrix for model2
 
 </p>
 
@@ -813,11 +905,11 @@ df %>%
 
 <div class="figure" style="text-align: center">
 
-<img src="{{< relref "posts/2021-01-04-dataset-of-academic-performance-evolution/index.markdown" >}}index_files/figure-html/unnamed-chunk-38-1.png" alt="Correlation Scatter plot (BIO_S11 and G_SC)" width="672" />
+<img src="{{< relref "posts/2021-01-04-dataset-of-academic-performance-evolution/index.markdown" >}}index_files/figure-html/unnamed-chunk-44-1.png" alt="Correlation Scatter plot (BIO_S11 and G_SC)" width="672" />
 
 <p class="caption">
 
-Figure 11: Correlation Scatter plot (BIO\_S11 and G\_SC)
+Figure 12: Correlation Scatter plot (BIO\_S11 and G\_SC)
 
 </p>
 
@@ -896,11 +988,11 @@ One of the assumptions of a multiple linear regression model is that the residua
 
 <div class="figure" style="text-align: center">
 
-<img src="{{< relref "posts/2021-01-04-dataset-of-academic-performance-evolution/index.markdown" >}}index_files/figure-html/unnamed-chunk-41-1.png" alt="Cook's D for model3" width="672" />
+<img src="{{< relref "posts/2021-01-04-dataset-of-academic-performance-evolution/index.markdown" >}}index_files/figure-html/unnamed-chunk-47-1.png" alt="Cook's D for model3" width="672" />
 
 <p class="caption">
 
-Figure 12: Cook’s D for model3
+Figure 13: Cook’s D for model3
 
 </p>
 
@@ -933,11 +1025,11 @@ cat ("Percentage of influencers: ", (length(influential) / nrow(df)) * 100, "% \
 
 <div class="figure" style="text-align: center">
 
-<img src="{{< relref "posts/2021-01-04-dataset-of-academic-performance-evolution/index.markdown" >}}index_files/figure-html/unnamed-chunk-43-1.png" alt="Cook's D for model3" width="672" />
+<img src="{{< relref "posts/2021-01-04-dataset-of-academic-performance-evolution/index.markdown" >}}index_files/figure-html/unnamed-chunk-49-1.png" alt="Cook's D for model3" width="672" />
 
 <p class="caption">
 
-Figure 13: Cook’s D for model3
+Figure 14: Cook’s D for model3
 
 </p>
 
@@ -945,11 +1037,11 @@ Figure 13: Cook’s D for model3
 
 <div class="figure" style="text-align: center">
 
-<img src="{{< relref "posts/2021-01-04-dataset-of-academic-performance-evolution/index.markdown" >}}index_files/figure-html/unnamed-chunk-44-1.png" alt="Assess homocedasticity for model3" width="672" />
+<img src="{{< relref "posts/2021-01-04-dataset-of-academic-performance-evolution/index.markdown" >}}index_files/figure-html/unnamed-chunk-50-1.png" alt="Assess homocedasticity for model3" width="672" />
 
 <p class="caption">
 
-Figure 14: Assess homocedasticity for model3
+Figure 15: Assess homocedasticity for model3
 
 </p>
 
@@ -959,11 +1051,11 @@ Figure 14: Assess homocedasticity for model3
 
 <div class="figure" style="text-align: center">
 
-<img src="{{< relref "posts/2021-01-04-dataset-of-academic-performance-evolution/index.markdown" >}}index_files/figure-html/unnamed-chunk-45-1.png" alt="Histogram and density plot of the residuals for model3" width="672" />
+<img src="{{< relref "posts/2021-01-04-dataset-of-academic-performance-evolution/index.markdown" >}}index_files/figure-html/unnamed-chunk-51-1.png" alt="Histogram and density plot of the residuals for model3" width="672" />
 
 <p class="caption">
 
-Figure 15: Histogram and density plot of the residuals for model3
+Figure 16: Histogram and density plot of the residuals for model3
 
 </p>
 
@@ -987,11 +1079,11 @@ cat("Percentage greater than 3.29 SDs:",FSA::perc(as.numeric(resids), 3.29, "gt"
 
 <div class="figure" style="text-align: center">
 
-<img src="{{< relref "posts/2021-01-04-dataset-of-academic-performance-evolution/index.markdown" >}}index_files/figure-html/unnamed-chunk-47-1.png" alt="QQ plot of the residuals for model3" width="672" />
+<img src="{{< relref "posts/2021-01-04-dataset-of-academic-performance-evolution/index.markdown" >}}index_files/figure-html/unnamed-chunk-53-1.png" alt="QQ plot of the residuals for model3" width="672" />
 
 <p class="caption">
 
-Figure 16: QQ plot of the residuals for model3
+Figure 17: QQ plot of the residuals for model3
 
 </p>
 
@@ -1034,11 +1126,11 @@ Calculate tolerance:
 
 <div class="figure" style="text-align: center">
 
-<img src="{{< relref "posts/2021-01-04-dataset-of-academic-performance-evolution/index.markdown" >}}index_files/figure-html/unnamed-chunk-50-1.png" alt="correlation matrix for model3" width="672" />
+<img src="{{< relref "posts/2021-01-04-dataset-of-academic-performance-evolution/index.markdown" >}}index_files/figure-html/unnamed-chunk-56-1.png" alt="correlation matrix for model3" width="672" />
 
 <p class="caption">
 
-Figure 17: correlation matrix for model3
+Figure 18: correlation matrix for model3
 
 </p>
 
@@ -1055,6 +1147,509 @@ Tests to see if the data met the assumption of collinearity indicated that multi
 </blockquote>
 
 Therefore BIO\_S11 cannot be added to the model. We do not need any further tests.
+
+## Adding REVENUE
+
+Let’s check the relationship between REVENUE and G\_SC.
+
+First, I need to test for homogeneity of variance. Using Levene’s test, our Null hypothesis is that there is no difference in variance.
+
+``` r
+car::leveneTest(G_SC ~ REVENUE, data=df)
+```
+
+    ## Warning in leveneTest.default(y = y, group = group, ...): group coerced to
+    ## factor.
+
+    ## Levene's Test for Homogeneity of Variance (center = median)
+    ##          Df F value  Pr(>F)   
+    ## group     7  2.7166 0.00817 **
+    ##       12403                   
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+  - The null hypothesis is rejected and so we can not consider the data to have homogeneity of variance and therefore cannot use it in our model.
+
+Checking Bartlett’s test for homogeneity of variance also:
+
+``` r
+stats::bartlett.test(G_SC~ REVENUE, data=df)
+```
+
+    ## 
+    ##  Bartlett test of homogeneity of variances
+    ## 
+    ## data:  G_SC by REVENUE
+    ## Bartlett's K-squared = 14.006, df = 7, p-value = 0.05108
+
+  - again result is statistically significant and so we reject the null hypothesis again.
+
+## Adding English (ENG\_S11)
+
+Correlation Scatter plot (ENG\_S11 and G\_SC):
+
+``` r
+df %>%
+  ggplot(aes(x=scale_ENG_S11, y=scale_G_SC)) +
+  geom_point() + 
+  geom_smooth(method = "lm", colour = "Green", se = F) + 
+  labs(x = "English (ENG_S11)", y = "Overall average score (G_SC)") 
+```
+
+    ## `geom_smooth()` using formula 'y ~ x'
+
+<div class="figure" style="text-align: center">
+
+<img src="{{< relref "posts/2021-01-04-dataset-of-academic-performance-evolution/index.markdown" >}}index_files/figure-html/unnamed-chunk-59-1.png" alt="Correlation Scatter plot (ENG_S11 and G_SC)" width="672" />
+
+<p class="caption">
+
+Figure 19: Correlation Scatter plot (ENG\_S11 and G\_SC)
+
+</p>
+
+</div>
+
+``` r
+#Pearson Correlation
+cor.test(df$scale_ENG_S11, df$scale_G_SC, method='pearson')
+```
+
+    ## 
+    ##  Pearson's product-moment correlation
+    ## 
+    ## data:  df$scale_ENG_S11 and df$scale_G_SC
+    ## t = 98.435, df = 12409, p-value < 0.00000000000000022
+    ## alternative hypothesis: true correlation is not equal to 0
+    ## 95 percent confidence interval:
+    ##  0.6521731 0.6719345
+    ## sample estimates:
+    ##       cor 
+    ## 0.6621689
+
+The correlation coefficient is a commonly used measure of the size of an effect: values of ±.1 represent a small effect, ±.3 is a medium effect and ±.5 is a large effect
+
+The correlation between English (ENG\_S11) and overall score(G\_SC) is statistically significant.
+
+To report Pearson coefficient here we say:
+
+<blockquote class="blockquote">
+
+12411 English (ENG\_S11)(M=61.8, SD=14.3) high school results and a college Engineering overall score(G\_SC) (M=162.7, SD=23.1) were investigated. A positive Pearson r correlation coefficient of 0.67 was revealed. There is strong correlation between English (ENG\_S11) results and the college Engineering overall score(G\_SC) with t(12409) = 98.4 and a p-value \< 0.001. The size of the effect is large.
+
+</blockquote>
+
+Creating a new model4 with English (ENG\_S11)
+
+``` r
+model4<-lm(df$scale_G_SC~df$scale_MAT_S11+df$scale_CR_S11+df$scale_ENG_S11)
+stargazer::stargazer(model1, model2, model4, type="text")
+```
+
+    ## 
+    ## ==========================================================================================================
+    ##                                                      Dependent variable:                                  
+    ##                     --------------------------------------------------------------------------------------
+    ##                                                           scale_G_SC                                      
+    ##                                 (1)                          (2)                          (3)             
+    ## ----------------------------------------------------------------------------------------------------------
+    ## scale_MAT_S11                 0.644***                     0.390***                     0.264***          
+    ##                               (0.007)                      (0.008)                      (0.008)           
+    ##                                                                                                           
+    ## scale_CR_S11                                               0.415***                     0.301***          
+    ##                                                            (0.008)                      (0.008)           
+    ##                                                                                                           
+    ## scale_ENG_S11                                                                           0.331***          
+    ##                                                                                         (0.008)           
+    ##                                                                                                           
+    ## Constant                       0.000                        0.000                        0.000            
+    ##                               (0.007)                      (0.006)                      (0.006)           
+    ##                                                                                                           
+    ## ----------------------------------------------------------------------------------------------------------
+    ## Observations                   12,411                       12,411                       12,411           
+    ## R2                             0.415                        0.523                        0.585            
+    ## Adjusted R2                    0.414                        0.523                        0.585            
+    ## Residual Std. Error      0.765 (df = 12409)           0.691 (df = 12408)           0.644 (df = 12407)     
+    ## F Statistic         8,785.839*** (df = 1; 12409) 6,799.872*** (df = 2; 12408) 5,834.986*** (df = 3; 12407)
+    ## ==========================================================================================================
+    ## Note:                                                                          *p<0.1; **p<0.05; ***p<0.01
+
+Some outcomes from model 4:
+
+  - The Adjusted R squared has improved from 0.4145 to 0.523 and now to 0.585, meaning we can now explain more of variation in G\_SC by including ENG\_S11 into our model
+  - ENG\_S11 is statically significant to p\<0.01.
+
+One of the assumptions of a multiple linear regression model is that the residuals follow a normal distribution. We need to check this now on our model2. We can do this by finding any influential outliers by using cook’s distance.
+
+<div class="figure" style="text-align: center">
+
+<img src="{{< relref "posts/2021-01-04-dataset-of-academic-performance-evolution/index.markdown" >}}index_files/figure-html/unnamed-chunk-62-1.png" alt="Cook's D for model4" width="672" />
+
+<p class="caption">
+
+Figure 20: Cook’s D for model4
+
+</p>
+
+</div>
+
+``` r
+influential <- as.numeric(names(cooksd)[(cooksd > 4*mean(cooksd, na.rm=T))])  # influential row numbers
+cat("Number of influencers:", length(influential), "\n")
+```
+
+    ## Number of influencers: 584
+
+``` r
+cat ("20 influencers in MAT_S11",head(df[influential, ]$MAT_S11, n = 20),"\n")
+```
+
+    ## 20 influencers in MAT_S11 54 45 82 47 69 40 61 78 85 46 81 76 39 60 45 50 97 52 65 88
+
+``` r
+cat ("20 influencers in CR_S11",head(df[influential, ]$CR_S11, n = 20),"\n")
+```
+
+    ## 20 influencers in CR_S11 41 47 98 54 66 40 53 69 60 43 75 69 39 69 52 62 87 45 65 62
+
+``` r
+cat ("20 influencers in ENG_S11",head(df[influential, ]$ENG_S11, n = 20),"\n")
+```
+
+    ## 20 influencers in ENG_S11 52 54 58 46 85 53 52 67 70 53 85 90 43 67 32 76 95 46 44 48
+
+``` r
+cat ("Percentage of influencers: ", (length(influential) / nrow(df)) * 100, "% \n")
+```
+
+    ## Percentage of influencers:  4.705503 %
+
+<div class="figure" style="text-align: center">
+
+<img src="{{< relref "posts/2021-01-04-dataset-of-academic-performance-evolution/index.markdown" >}}index_files/figure-html/unnamed-chunk-64-1.png" alt="Cook's D for model4" width="672" />
+
+<p class="caption">
+
+Figure 21: Cook’s D for model4
+
+</p>
+
+</div>
+
+<div class="figure" style="text-align: center">
+
+<img src="{{< relref "posts/2021-01-04-dataset-of-academic-performance-evolution/index.markdown" >}}index_files/figure-html/unnamed-chunk-65-1.png" alt="Assess homocedasticity for model4" width="672" />
+
+<p class="caption">
+
+Figure 22: Assess homocedasticity for model4
+
+</p>
+
+</div>
+
+  - We can see there is absolutely no heteroscedastity, we see a completely random, equal distribution of points throughout the range of X axis and a flat red line. There is no pattern in the residuals.
+
+<div class="figure" style="text-align: center">
+
+<img src="{{< relref "posts/2021-01-04-dataset-of-academic-performance-evolution/index.markdown" >}}index_files/figure-html/unnamed-chunk-66-1.png" alt="Histogram and density plot of the residuals for model4" width="672" />
+
+<p class="caption">
+
+Figure 23: Histogram and density plot of the residuals for model4
+
+</p>
+
+</div>
+
+``` r
+residuals <- residuals(model3)
+resids<- abs(residuals)
+cat("Percentage greater than 1.96 SDs:", FSA::perc(as.numeric(resids), 1.96, "gt"),"% \n")
+```
+
+    ## Percentage greater than 1.96 SDs: 0.8621384 %
+
+``` r
+cat("Percentage greater than 3.29 SDs:",FSA::perc(as.numeric(resids), 3.29, "gt"), "%")
+```
+
+    ## Percentage greater than 3.29 SDs: 0.0402868 %
+
+  - almost 0% outliers at 3.29 standards deviations from mean and for a data set this size. We can accept the distribution as normal.
+
+<div class="figure" style="text-align: center">
+
+<img src="{{< relref "posts/2021-01-04-dataset-of-academic-performance-evolution/index.markdown" >}}index_files/figure-html/unnamed-chunk-68-1.png" alt="QQ plot of the residuals for model4" width="672" />
+
+<p class="caption">
+
+Figure 24: QQ plot of the residuals for model4
+
+</p>
+
+</div>
+
+    ## [1] 1336 7721
+
+### Collinearity:
+
+Calculate Collinearity:
+
+``` r
+vifmodel<-car::vif(model4)
+vifmodel
+```
+
+    ## df$scale_MAT_S11  df$scale_CR_S11 df$scale_ENG_S11 
+    ##         1.849495         1.803992         1.753561
+
+  - As a rule of thumb, a VIF score over 5 is a problem. A score over 10 should be remedied and you should consider dropping the problematic variable from the regression model
+
+Calculate tolerance:
+
+``` r
+1/vifmodel
+```
+
+    ## df$scale_MAT_S11  df$scale_CR_S11 df$scale_ENG_S11 
+    ##        0.5406883        0.5543261        0.5702683
+
+  - If the VIF value is greater than 2.5 or the Tolerance is less than 0.4, then you have concerns over multicollinearity.
+
+  - Collinearity occurs when two or more independent variables are giving the same information, one could be redundant.
+
+  - To check collinearity, we examine the correlation matrix that compares the independent variables with each other.
+
+  - If we get a correlation coefficient of above 0.8, then we may have collinearity.
+
+<div class="figure" style="text-align: center">
+
+<img src="{{< relref "posts/2021-01-04-dataset-of-academic-performance-evolution/index.markdown" >}}index_files/figure-html/unnamed-chunk-71-1.png" alt="correlation matrix for model4" width="672" />
+
+<p class="caption">
+
+Figure 25: correlation matrix for model4
+
+</p>
+
+</div>
+
+  - the result from our correlation matrix for model4 show that these variables have a correlation less than 0.8, so we don’t have collinearity.
+
+Reporting:
+
+<blockquote class="blockquote">
+
+Tests to see if the data met the assumption of collinearity indicated that multicollinearity was not a concern (MAT\_S11, Tolerance = .63, VIF = 1.6; CR\_S11, Tolerance = .63 VIF = 1.6; ENG\_S11, Tolerance = .57 VIF = 1.7).
+
+</blockquote>
+
+### Reporting my model
+
+<blockquote class="blockquote">
+
+A multiple regression analysis was conducted to determine if a student’s high school Mathematics (MAT\_S11) score,high school Critical Reading (CR\_S11) and English (ENG\_S11) scores could predict a student’s Overall average score (G\_SC) in Engineering in college.
+
+Examination of the histogram, normal Q-Q plots of standardized residuals and the scatterplot of the dependent variable, academic satisfaction, and standardized residuals showed that the some outliers existed. However, examination of the standardized residuals showed that none could be considered to have undue influence (95% within limits of -3.29 to plus 3.29 and less than 5% with a Cook’s distance three times the mean.
+
+Examination for multicollinearity showed that the tolerance and variance influence factor measures were within acceptable levels (tolerance \>0.4, VIF \<2.5 ) as outlined in Tarling (2008). The scatterplot of standardized residuals showed that the data met the assumptions of homogeneity of variance and linearity. The data also meets the assumption of non-zero variances of the predictors.
+
+</blockquote>
+
+The z-scale standardized equation of model4 is:
+
+``` r
+coef(model4)
+```
+
+    ##             (Intercept)        df$scale_MAT_S11         df$scale_CR_S11 
+    ## 0.000000000000001380494 0.263880736301899343488 0.300575704588454950539 
+    ##        df$scale_ENG_S11 
+    ## 0.330537537075545562182
+
+``` 
+ G_SC = 0 + 0.26 * MAT_S11 + 0.3 * CR_S11 + 0.3 * _ENG_S11
+```
+
+  - explaining 58.5% of the variation in G\_SC
+
+This would mean a student who achieves a mean score for MAT\_S11, CR\_S11 and ENG\_S11 would get a z-scaled G\_SC results which is also the mean score for G\_SC:
+
+``` 
+ G_SC = 0 + 0.26 * 0 + 0.3 * 0 + 0.3 * 0 = 0 
+```
+
+A student who achieves a score 1 standard deviation above mean for those three subjects will achieve a score which less than one stanard deviation above the mean in G\_SC, thus we can see that more variables are also responsible for thhis G\_SC variation:
+
+``` 
+ G_SC = 0 + 0.26 * 1 + 0.3 * 1 + 0.3 * 1 = 0.86
+```
+
+## Differential effect
+
+I tried to include the variables which were ordinal and nominal into my model however the both failed Levene’s Test for Homogeneity of Variance.
+
+I will try to include COMPUTER into my model as a differential variable. Let’s check out that variable:
+
+``` r
+df %>%
+  ggplot(aes(x=COMPUTER, y=G_SC, fill=COMPUTER)) +
+    geom_boxplot() +
+    scale_fill_viridis(discrete = TRUE, alpha=0.6) +
+    geom_jitter(color="black", size=0.4, alpha=0.9) +
+    ggtitle("A boxplot with COMPUTER and the Overall average score (G_SC)") +
+    ylab("Overall average score (G_SC) ")
+```
+
+<img src="{{< relref "posts/2021-01-04-dataset-of-academic-performance-evolution/index.markdown" >}}index_files/figure-html/unnamed-chunk-73-1.png" width="672" />
+
+stats for COMPUTER:
+
+``` r
+psych::describeBy(df$G_SC, df$COMPUTER, mat=TRUE)
+```
+
+    ##     item group1 vars     n     mean       sd median  trimmed     mad min max
+    ## X11    1     No    1  2237 155.9526 21.86040    156 156.0815 22.2390  76 226
+    ## X12    2    Yes    1 10174 164.1964 23.11635    165 164.4912 23.7216  37 247
+    ##     range        skew    kurtosis        se
+    ## X11   150 -0.07375166 -0.02764496 0.4621948
+    ## X12   210 -0.11780745 -0.07145279 0.2291782
+
+Checking again for Levene’s Test for Homogeneity of Variance:
+
+``` r
+car::leveneTest(G_SC ~ COMPUTER, data=df)
+```
+
+    ## Warning in leveneTest.default(y = y, group = group, ...): group coerced to
+    ## factor.
+
+    ## Levene's Test for Homogeneity of Variance (center = median)
+    ##          Df F value    Pr(>F)    
+    ## group     1  13.994 0.0001842 ***
+    ##       12409                      
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Again this variable is failing Levene’s Test for Homogeneity of Variance.
+
+We will go ahead and include it to see if it may be useful in our model. First we need a dummy variable for COMPUTER:
+
+``` r
+df <- df %>%
+  mutate(dummy_COMPUTER = if_else(COMPUTER == "Yes",1, 0))
+```
+
+stats for dummy\_COMPUTER:
+
+``` r
+psych::describeBy(df$G_SC, df$dummy_COMPUTER, mat=TRUE)
+```
+
+    ##     item group1 vars     n     mean       sd median  trimmed     mad min max
+    ## X11    1      0    1  2237 155.9526 21.86040    156 156.0815 22.2390  76 226
+    ## X12    2      1    1 10174 164.1964 23.11635    165 164.4912 23.7216  37 247
+    ##     range        skew    kurtosis        se
+    ## X11   150 -0.07375166 -0.02764496 0.4621948
+    ## X12   210 -0.11780745 -0.07145279 0.2291782
+
+``` r
+userfriendlyscience::oneway(as.factor(df$dummy_COMPUTER),y=df$G_SC,posthoc='Tukey')
+```
+
+    ## Registered S3 methods overwritten by 'lme4':
+    ##   method                          from
+    ##   cooks.distance.influence.merMod car 
+    ##   influence.merMod                car 
+    ##   dfbeta.influence.merMod         car 
+    ##   dfbetas.influence.merMod        car
+
+    ## ### Oneway Anova for y=G_SC and x=dummy_COMPUTER (groups: 0, 1)
+
+    ## Registered S3 methods overwritten by 'ufs':
+    ##   method                     from               
+    ##   grid.draw.ggProportionPlot userfriendlyscience
+    ##   pander.associationMatrix   userfriendlyscience
+    ##   pander.dataShape           userfriendlyscience
+    ##   pander.descr               userfriendlyscience
+    ##   pander.normalityAssessment userfriendlyscience
+    ##   print.CramersV             userfriendlyscience
+    ##   print.associationMatrix    userfriendlyscience
+    ##   print.confIntOmegaSq       userfriendlyscience
+    ##   print.confIntV             userfriendlyscience
+    ##   print.dataShape            userfriendlyscience
+    ##   print.descr                userfriendlyscience
+    ##   print.ggProportionPlot     userfriendlyscience
+    ##   print.meanConfInt          userfriendlyscience
+    ##   print.multiVarFreq         userfriendlyscience
+    ##   print.normalityAssessment  userfriendlyscience
+    ##   print.regrInfluential      userfriendlyscience
+    ##   print.scaleDiagnosis       userfriendlyscience
+    ##   print.scaleStructure       userfriendlyscience
+    ##   print.scatterMatrix        userfriendlyscience
+
+    ## Omega squared: 95% CI = [.01; .02], point estimate = .02
+    ## Eta Squared: 95% CI = [.02; .02], point estimate = .02
+    ## 
+    ##                                        SS    Df        MS      F     p
+    ## Between groups (error + effect) 124624.22     1 124624.22 237.75 <.001
+    ## Within groups (error only)      6504632.6 12409    524.19             
+    ## 
+    ## 
+    ## ### Post hoc test: Tukey
+    ## 
+    ##     diff lwr upr  p adj
+    ## 1-0 8.24 7.2 9.29 <.001
+
+Reporting the results with eta squared effect:
+
+<blockquote class="blockquote">
+
+A one-way between-groups analysis of variance (ANOVA) was conducted to explore the impact of having a computer, as measured by the overall engineering scores. Participants were divided into two groups, one with a computer and one without. There was a statistically significant difference at the p \< .05 level in G\_SC scores for the two groups: (F(1, 12409)= 237.75, p\<0.05. Despite reaching statistical significance, the actual difference in mean scores between groups was quite small. The effect size, calculated using eta squared was (0.02). Post-hoc comparisons using the Tukey HSD test indicated that the mean score for Group 1 (M=155.9, SD=21.8) was significantly different to that for Group 2 (M=164.19, SD=23.12).
+
+</blockquote>
+
+Creating a new model5 with dummy\_COMPUTER
+
+``` r
+model5<-lm(df$scale_G_SC~df$scale_MAT_S11+df$scale_CR_S11+df$scale_ENG_S11+df$dummy_COMPUTER)
+stargazer::stargazer(model1, model4, model5, type="text")
+```
+
+    ## 
+    ## ==========================================================================================================
+    ##                                                      Dependent variable:                                  
+    ##                     --------------------------------------------------------------------------------------
+    ##                                                           scale_G_SC                                      
+    ##                                 (1)                          (2)                          (3)             
+    ## ----------------------------------------------------------------------------------------------------------
+    ## scale_MAT_S11                 0.644***                     0.264***                     0.264***          
+    ##                               (0.007)                      (0.008)                      (0.008)           
+    ##                                                                                                           
+    ## scale_CR_S11                                               0.301***                     0.301***          
+    ##                                                            (0.008)                      (0.008)           
+    ##                                                                                                           
+    ## scale_ENG_S11                                              0.331***                     0.329***          
+    ##                                                            (0.008)                      (0.008)           
+    ##                                                                                                           
+    ## dummy_COMPUTER                                                                           0.021            
+    ##                                                                                         (0.015)           
+    ##                                                                                                           
+    ## Constant                       0.000                        0.000                        -0.017           
+    ##                               (0.007)                      (0.006)                      (0.014)           
+    ##                                                                                                           
+    ## ----------------------------------------------------------------------------------------------------------
+    ## Observations                   12,411                       12,411                       12,411           
+    ## R2                             0.415                        0.585                        0.585            
+    ## Adjusted R2                    0.414                        0.585                        0.585            
+    ## Residual Std. Error      0.765 (df = 12409)           0.644 (df = 12407)           0.644 (df = 12406)     
+    ## F Statistic         8,785.839*** (df = 1; 12409) 5,834.986*** (df = 3; 12407) 4,377.053*** (df = 4; 12406)
+    ## ==========================================================================================================
+    ## Note:                                                                          *p<0.1; **p<0.05; ***p<0.01
+
+  - Adding the dummy\_COMPUTER is not statisically significant
 
 # Discussion/Conclusion
 
